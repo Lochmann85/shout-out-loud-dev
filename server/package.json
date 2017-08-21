@@ -1,0 +1,37 @@
+{
+   "name": "shout-out-loud-server",
+   "version": "0.0.1",
+   "description": "server for the shout out load webpage",
+   "scripts": {
+      "start": "nodemon ./lib/server.js --exec babel-node",
+      "lint": "eslint .",
+      "build": "babel -d ./build ./lib"
+   },
+   "dependencies": {
+      "body-parser": "^1.17.2",
+      "dotenv": "^4.0.0",
+      "express": "4.15.3",
+      "graphql": "^0.10.3",
+      "graphql-server-express": "^1.0.0",
+      "graphql-tools": "^1.1.0"
+   },
+   "devDependencies": {
+      "babel-cli": "^6.24.1",
+      "babel-core": "^6.25.0",
+      "babel-eslint": "^7.2.3",
+      "babel-preset-es2015": "^6.24.1",
+      "babel-preset-stage-0": "^6.24.1",
+      "eslint": "^4.1.1",
+      "eslint-plugin-import": "^2.6.1",
+      "nodemon": "^1.11.0"
+   },
+   "eslintConfig": {
+      "extends": "./config/eslint.js"
+   },
+   "author": "Georg Lochmann <georg.lochmann@gmail.com>",
+   "license": "CC-BY-1.0",
+   "repository": {
+      "type": "git",
+      "url": "http://github.com/Lochmann85/shout-out-load-dev.git"
+   }
+}
