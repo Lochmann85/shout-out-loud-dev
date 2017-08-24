@@ -1,34 +1,36 @@
 {
-   "name": "shout-out-loud-client",
-   "version": "0.0.1",
-   "proxy": "http://localhost:3001",
-   "devDependencies": {
-      "babel-eslint": "^7.2.3",
-      "eslint": "^4.0.0",
-      "eslint-plugin-flowtype": "^2.34.0",
-      "eslint-plugin-react": "^7.1.0",
-      "react-scripts": "1.0.7"
-   },
-   "dependencies": {
-      "prop-types": "^15.5.10",
-      "react": "^15.6.1",
-      "react-apollo": "^1.4.2",
-      "react-dom": "^15.6.1",
-      "semantic-ui-css": "^2.2.10",
-      "semantic-ui-react": "^0.68.5"
-   },
-   "scripts": {
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "lint": "eslint . --ext .jsx,.js"
-   },
-   "eslintConfig": {
-      "extends": "./config/eslint.js"
-   },
-   "author": "Georg Lochmann <georg.lochmann@gmail.com>",
-   "license": "CC-BY-1.0",
-   "repository": {
-      "type": "git",
-      "url": "http://github.com/Lochmann85/shout-out-load-dev.git"
-   }
+  "name": "shout-out-loud-client",
+  "version": "0.0.1",
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^4.0.0",
+    "eslint-plugin-flowtype": "^2.34.0",
+    "eslint-plugin-react": "^7.1.0",
+    "react-scripts": "1.0.7"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-apollo": "^1.4.2",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.2.0",
+    "semantic-ui-css": "^2.2.10",
+    "semantic-ui-react": "^0.68.5",
+    "styled-components": "^2.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "lint": "eslint . --ext .jsx,.js"
+  },
+  "eslintConfig": {
+    "extends": "./config/eslint.js"
+  },
+  "author": "Georg Lochmann <georg.lochmann@gmail.com>",
+  "license": "CC-BY-1.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/Lochmann85/shout-out-load-dev.git"
+  }
 }
