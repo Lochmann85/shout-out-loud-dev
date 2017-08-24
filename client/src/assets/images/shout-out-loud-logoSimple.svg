@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="50"
+   height="50"
+   id="svg5366"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   viewBox="0 0 50 50"
+   sodipodi:docname="shout-out-loud-logoSimple.svg"
+   inkscape:export-filename="/home/georg/Dokumente/shout-out-loud-logo16.png"
+   inkscape:export-xdpi="42.074493"
+   inkscape:export-ydpi="42.074493">
+  <defs
+     id="defs5368" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7"
+     inkscape:cx="-49.071429"
+     inkscape:cy="34.285714"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1029"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     showborder="false"
+     inkscape:snap-others="false"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-nodes="false"
+     showguides="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid5972" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5371">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="visible"
+     inkscape:groupmode="layer"
+     transform="translate(0,2)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#5f5f5f;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 19.512307,8.1228584 c -4.649266,0.8790959 -4.437083,3.8271846 -4.462978,6.0356356 -0.07034,5.999214 -2.634492,8.553715 -5.121157,8.926762"
+       id="path5993"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csc"
+       inkscape:label="#{up"
+       inkscape:export-filename="/home/georg/Dokumente/shout-out-loud-logo64.png"
+       inkscape:export-xdpi="168.29797"
+       inkscape:export-ydpi="168.29797" />
+    <path
+       inkscape:label="#{up"
+       sodipodi:nodetypes="csc"
+       inkscape:connector-curvature="0"
+       id="path6031"
+       d="M 19.512307,38.084197 C 14.863041,37.205101 15.075224,34.257013 15.049329,32.048562 14.978989,26.049348 12.414837,23.494847 9.928172,23.1218"
+       style="fill:none;fill-rule:evenodd;stroke:#5f5f5f;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-filename="/home/georg/Dokumente/shout-out-loud-logo64.png"
+       inkscape:export-xdpi="168.29797"
+       inkscape:export-ydpi="168.29797" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#5f5f5f;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 26.75542,14.333446 c 8.056769,8.610357 -0.197281,17.674373 -0.197281,17.564325"
+       id="path6059"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:label="#shout1"
+       inkscape:export-filename="/home/georg/Dokumente/shout-out-loud-logo64.png"
+       inkscape:export-xdpi="168.29797"
+       inkscape:export-ydpi="168.29797" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#5f5f5f;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 34.388905,8.581969 C 47.541462,23.255947 34.1002,38.074981 34.1002,37.891346"
+       id="path6060"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:label="#shout2"
+       inkscape:export-filename="/home/georg/Dokumente/shout-out-loud-logo64.png"
+       inkscape:export-xdpi="168.29797"
+       inkscape:export-ydpi="168.29797" />
+  </g>
+</svg>
