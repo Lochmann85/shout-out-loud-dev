@@ -81,13 +81,15 @@ const _buildExecutableSchema = () => {
  * @function buildSchema
  * @description builds the graphql schema
  */
-const buildSchema = () => {
+const buildSchema = () => new Promise((resolve, reject) => {
    _requireAllGraphQLServices();
 
    _replaceNeedlesInSchema();
 
    _buildExecutableSchema();
-};
+
+   resolve();
+});
 
 export {
    graphQLServices,
