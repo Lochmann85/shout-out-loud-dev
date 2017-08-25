@@ -4,6 +4,11 @@ const FullHeightWrapper = styled.div`
 height:100%;
 `;
 
+const HiddenWrapper = styled.div`
+display:none;
+`;
+
 export {
-   FullHeightWrapper
+   FullHeightWrapper,
+   HiddenWrapper
 };
