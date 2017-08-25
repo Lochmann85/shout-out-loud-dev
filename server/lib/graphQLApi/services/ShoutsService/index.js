@@ -1,19 +1,35 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
+const shouts = [
+   {
+      message: "In",
+      type: "Custom"
+   },
+   {
+      message: "Your",
+      type: "Custom"
+   },
+   {
+      message: "Face",
+      type: "Custom"
+   }
+];
+
 const types = `
-      type ShownData {
-         value: Float!
+      type Shout {
+         message: String!
+         type: String!
       }
    `;
 
 const queries = `
-      getShownData: String
+      getShoutsQueue: [Shout!]!
  `;
 
 const _queriesResolver = {
    Query: {
-      getShownData() {
-         return "test";
+      getShoutsQueue() {
+         return shouts;
       },
    }
 };

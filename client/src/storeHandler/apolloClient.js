@@ -1,14 +1,14 @@
 import { ApolloClient } from 'react-apollo';
-import { createNetworkInterface } from 'apollo-client';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 
-let serverUri = "http://localhost:3001/graphql";
+let serverUri = "ws://localhost:8080/graphql";
 
 if (process.env.NODE_ENV === "production") {
-   serverUri = "http://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com/graphql";
+   serverUri = "ws://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com/graphql";
 }
 
-const network = createNetworkInterface({
-   uri: serverUri,
+const webSocketClient = new SubscriptionClient(serverUri, {
+   reconnect: true
 });
 
 const apolloClient = new ApolloClient({
@@ -20,7 +20,7 @@ const apolloClient = new ApolloClient({
       return null;
    },
    initialState: window.__APOLLO_STATE__, // eslint-disable-line no-underscore-dangle
-   networkInterface: network,
+   networkInterface: webSocketClient,
    ssrForceFetchDelay: 100
 });
 
