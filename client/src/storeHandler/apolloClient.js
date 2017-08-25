@@ -1,10 +1,10 @@
 import { ApolloClient } from 'react-apollo';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 
-let serverUri = "ws://localhost:8000/graphql";
+let serverUri = "ws://localhost:8080/graphql";
 
 if (process.env.NODE_ENV === "production") {
-   serverUri = "ws://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com:8000/graphql";
+   serverUri = "ws://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com/graphql";
 }
 
 const webSocketClient = new SubscriptionClient(serverUri, {
