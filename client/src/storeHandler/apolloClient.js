@@ -1,8 +1,14 @@
 import { ApolloClient } from 'react-apollo';
 import { createNetworkInterface } from 'apollo-client';
 
+let serverUri = "http://localhost:3001/graphql";
+
+if (process.env.NODE_ENV === "production") {
+   serverUri = "http://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com/graphql";
+}
+
 const network = createNetworkInterface({
-   uri: 'http://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com/',
+   uri: serverUri,
 });
 
 const apolloClient = new ApolloClient({
