@@ -12,8 +12,18 @@ class ShownShoutsQueue {
       this._numberOfShouts = 0;
    }
 
-   cycle(item) {
-      this._array.push(item);
+   cycle(shout) {
+      if (shout) {
+         if (this._numberOfShouts < MAX_SHOWN_SHOUTS) {
+            ++this._numberOfShouts;
+         }
+      }
+      else {
+         if (this._numberOfShouts > 0) {
+            --this._numberOfShouts;
+         }
+      }
+      this._array.push(shout);
       return this._array.shift();
    }
 
