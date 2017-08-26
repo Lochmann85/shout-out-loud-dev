@@ -1,4 +1,4 @@
-const MAX_SHOWN_SHOUTS = 5;
+import Configurations from './../Configurations';
 
 /**
  * @public
@@ -7,24 +7,19 @@ const MAX_SHOWN_SHOUTS = 5;
  */
 class ShownShoutsQueue {
 
-   constructor() {
-      this._array = new Array(MAX_SHOWN_SHOUTS);
-      this._numberOfShouts = 0;
+   constructor(pendingShoutsQueue) {
+      this._pendingShoutsQueue = pendingShoutsQueue;
+      this._array = new Array(Configurations.MAX_SHOWN_SHOUTS);
    }
 
-   cycle(shout) {
-      if (shout) {
-         if (this._numberOfShouts < MAX_SHOWN_SHOUTS) {
-            ++this._numberOfShouts;
-         }
-      }
-      else {
-         if (this._numberOfShouts > 0) {
-            --this._numberOfShouts;
-         }
-      }
+   cycle() {
+      const shout = this._pendingShoutsQueue.dequeue();
+      this._baseCycle(shout);
+   }
+
+   _baseCycle(shout) {
       this._array.push(shout);
-      return this._array.shift();
+      this._array.shift();
    }
 
    asArray() {

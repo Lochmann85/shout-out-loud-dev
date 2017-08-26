@@ -1,9 +1,9 @@
 import ShownShoutsQueue from './ShownShoutsQueue';
 import BaseQueue from './BaseQueue';
 
-const shownShoutsQueue = new ShownShoutsQueue();
-
 const pendingShoutsQueue = new BaseQueue();
+
+const shownShoutsQueue = new ShownShoutsQueue(pendingShoutsQueue);
 
 export {
    shownShoutsQueue,

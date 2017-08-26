@@ -44,16 +44,6 @@ class BaseQueue {
    get size() {
       return this._array.length;
    }
-
-   /**
-    * @public
-    * @function asArray
-    * @returns {array} the internal array
-    */
-   asArray() {
-      return this._array;
-   }
-
 };
 
 export default BaseQueue;
