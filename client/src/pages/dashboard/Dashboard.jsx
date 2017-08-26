@@ -1,9 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
 
-import { Card } from 'semantic-ui-react';
-
+import ShoutActionContainer from './components/ShoutActionContainer';
+import ShoutScreen from './components/ShoutScreen';
+import { HiddenWrapper, FullHeightWrapper } from './../../assets/styled/Wrapper';
 import BaseLayoutLoader from './../../components/layout/BaseLayoutLoader';
 import shoutsQueueQuery from './graphql/queries/shoutsQueueQuery';
+
+const WrapperWithOffset = styled(FullHeightWrapper) `
+padding:3%;
+`;
 
 const Dashboard = ({ shoutsQueueQuery }) => {
 
@@ -12,19 +18,19 @@ const Dashboard = ({ shoutsQueueQuery }) => {
    }
    else if (shoutsQueueQuery.error) {
       console.log(shoutsQueueQuery.error);
-      return <div>Error</div>;
+      return <BaseLayoutLoader />;
    }
 
    const { getShoutsQueue } = shoutsQueueQuery;
 
-   const ShoutsGroup = getShoutsQueue.map((shout, index) =>
-      <Card description={shout.message} key={index} />
-   );
-
    return (
-      <Card.Group>
-         {ShoutsGroup}
-      </Card.Group>
+      <WrapperWithOffset>
+         <HiddenWrapper>
+            <h1>Shout out your thought!</h1>
+         </HiddenWrapper>
+         <ShoutScreen shoutsQueue={getShoutsQueue} />
+         <ShoutActionContainer shoutsQueue={getShoutsQueue} />
+      </WrapperWithOffset >
    );
 };
 

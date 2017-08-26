@@ -10,7 +10,6 @@ import colors from './../../assets/colors/shout-out-loud-colors.json';
 const NavigationWrapper = styled.div`
 background-color:${colors.logoText};
 border-bottom:1px solid ${colors.logoDarkerBackground};
-margin-bottom:2.5rem;
 `;
 
 const HeaderText = styled.span`
@@ -35,8 +34,7 @@ const Navigation = () => (
       <Menu secondary>
          <Grid container>
             <Grid.Row>
-               <Grid.Column only="tablet" tablet={1} />
-               <Grid.Column only="computer" computer={1} largeScreen={2} />
+               <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} />
                <Grid.Column mobile={12} tablet={11} computer={12} largeScreen={10}>
                   <Menu.Item header >
                      <Link to="/">
