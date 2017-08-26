@@ -10,7 +10,6 @@ import colors from './../../assets/colors/shout-out-loud-colors.json';
 const NavigationWrapper = styled.div`
 background-color:${colors.logoText};
 border-bottom:1px solid ${colors.logoDarkerBackground};
-margin-bottom:2.5rem;
 `;
 
 const HeaderText = styled.span`
