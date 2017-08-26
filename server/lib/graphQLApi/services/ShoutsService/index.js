@@ -1,19 +1,6 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
-const shouts = [
-   {
-      message: "In",
-      type: "Custom"
-   },
-   {
-      message: "Your",
-      type: "Custom"
-   },
-   {
-      message: "Face",
-      type: "Custom"
-   }
-];
+import { shownShoutsQueue, pendingShoutsQueue } from './../../../storageApi';
 
 const types = `
 type Shout {
@@ -32,7 +19,7 @@ getShoutsQueue: [Shout!]!
 const _queriesResolver = {
    Query: {
       getShoutsQueue() {
-         return shouts;
+         return shownShoutsQueue.asArray();
       },
    }
 };
@@ -47,7 +34,7 @@ const _mutationsResolver = {
          return new Promise((resolve, reject) => {
             if (shout && shout.message) {
                shout.type = "Custom";
-               shouts.push(shout);
+               pendingShoutsQueue.enqueue(shout);
                resolve(true);
             }
             else {
