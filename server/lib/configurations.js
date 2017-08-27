@@ -1,0 +1,7 @@
+const TIMER_INTERVAL = 3000,
+   MAX_SHOWN_SHOUTS = 5;
+
+export {
+   TIMER_INTERVAL,
+   MAX_SHOWN_SHOUTS
+};

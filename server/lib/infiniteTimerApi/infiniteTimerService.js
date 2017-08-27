@@ -1,7 +1,7 @@
 import subscriptionHandler from './../graphQLApi/subscription/subscriptionHandler';
 import { shownShoutsQueue } from './../storageApi';
 
-import Configurations from './../Configurations';
+import { TIMER_INTERVAL } from './../configurations';
 
 /**
  * @private
@@ -16,7 +16,7 @@ const _timeStep = () => {
          subscriptionHandler.publish("shoutsQueueChangedChannel", shownShoutsQueue);
 
          resolve();
-      }, Configurations.TIMER_INTERVAL);
+      }, TIMER_INTERVAL);
    });
 };
 
