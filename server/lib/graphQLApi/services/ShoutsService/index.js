@@ -1,6 +1,7 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
 import { shownShoutsQueue, pendingShoutsQueue } from './../../../storageApi';
+import subscriptionHandler from './../../../graphQLApi/subscription/subscriptionHandler';
 
 const types = `
 type Shout {
@@ -13,7 +14,7 @@ input ShoutInput {
 `;
 
 const queries = `
-getShoutsQueue: [Shout!]!
+getShoutsQueue: [Shout]!
 `;
 
 const _queriesResolver = {
@@ -45,6 +46,19 @@ const _mutationsResolver = {
    }
 };
 
+const subscriptions = `
+shoutsQueueChanged: [Shout]!
+`;
+
+const _subscriptionResolver = {
+   Subscription: {
+      shoutsQueueChanged: {
+         resolve: payload => payload.asArray(),
+         subscribe: () => subscriptionHandler.asyncIterator("shoutsQueueChangedChannel"),
+      },
+   }
+};
+
 /**
  * @public
  * @function addResolversTo
@@ -54,11 +68,13 @@ const _mutationsResolver = {
 const addResolversTo = (executableSchema) => {
    addResolveFunctionsToSchema(executableSchema, _queriesResolver);
    addResolveFunctionsToSchema(executableSchema, _mutationsResolver);
+   addResolveFunctionsToSchema(executableSchema, _subscriptionResolver);
 };
 
 export {
    types,
    queries,
    mutations,
+   subscriptions,
    addResolversTo,
 };
