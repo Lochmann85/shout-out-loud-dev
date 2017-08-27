@@ -8,7 +8,7 @@ import BaseLayoutLoader from './../../components/layout/BaseLayoutLoader';
 import shoutsQueueQuery from './graphql/queries/shoutsQueueQuery';
 
 const WrapperWithOffset = styled(FullHeightWrapper) `
-padding:3%;
+padding:3% 0;
 `;
 
 const Dashboard = ({ shoutsQueueQuery }) => {
@@ -29,7 +29,7 @@ const Dashboard = ({ shoutsQueueQuery }) => {
             <h1>Shout out your thought!</h1>
          </HiddenWrapper>
          <ShoutScreen shoutsQueue={getShoutsQueue} />
-         <ShoutActionContainer shoutsQueue={getShoutsQueue} />
+         <ShoutActionContainer shoutsQueueQuery={shoutsQueueQuery} />
       </WrapperWithOffset >
    );
 };

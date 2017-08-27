@@ -19,11 +19,19 @@ class SoutPreview extends React.Component {
    render() {
       const { shout } = this.props;
 
-      return (
-         <Background>
-            {shout.message}
-         </Background>
-      );
+      if (shout) {
+         return (
+            <Background>
+               {shout.message}
+            </Background>
+         );
+      }
+      else {
+         return (
+            <Background />
+         );
+      }
+
    }
 };
 
