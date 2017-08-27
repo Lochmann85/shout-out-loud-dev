@@ -9,6 +9,38 @@ query shoutsQueueQuery {
 }
 `;
 
+const shoutsQueueSubscription = gql`
+subscription shoutsQueueSubscription {
+   shoutsQueueChanged {
+      message
+      type
+   }
+}
+`;
+
 export default graphql(shoutsQueueQuery, {
    name: "shoutsQueueQuery",
+   props: props => ({
+      shoutsQueueQuery: {
+         ...props.shoutsQueueQuery,
+         subscribeToShoutsQueueChanged: () => {
+
+            return props.shoutsQueueQuery.subscribeToMore({
+               document: shoutsQueueSubscription,
+
+               updateQuery: (previousResult, { subscriptionData }) => {
+                  if (subscriptionData.data && subscriptionData.data.shoutsQueueChanged) {
+                     const newv = Object.assign({}, previousResult, {
+                        getShoutsQueue: subscriptionData.data.shoutsQueueChanged,
+                     });
+                     return newv;
+                  }
+                  return previousResult;
+               }
+
+            });
+
+         },
+      }
+   }),
 });

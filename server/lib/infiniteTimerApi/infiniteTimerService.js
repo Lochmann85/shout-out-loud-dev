@@ -1,3 +1,4 @@
+import subscriptionHandler from './../graphQLApi/subscription/subscriptionHandler';
 import { shownShoutsQueue } from './../storageApi';
 
 import Configurations from './../Configurations';
@@ -11,6 +12,9 @@ const _timeStep = () => {
    return new Promise((resolve, reject) => {
       setTimeout(() => {
          shownShoutsQueue.cycle();
+
+         subscriptionHandler.publish("shoutsQueueChangedChannel", shownShoutsQueue);
+
          resolve();
       }, Configurations.TIMER_INTERVAL);
    });
