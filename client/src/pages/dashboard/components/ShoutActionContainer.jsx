@@ -17,34 +17,53 @@ height:33%;
 margin: 0 -1rem!important;
 `;
 
-const ShoutActionContainer = ({ shoutsQueue }) => {
+class ShoutActionContainer extends React.Component {
 
-   const length = shoutsQueue.length,
-      onlyProp = { only: "tablet" };
+   constructor(props) {
+      super(props);
 
-   const ShoutsGroup = shoutsQueue.map((shout, index) => {
-      let additionalProp = null;
-      if (index === 0 || index === length - 1) {
-         additionalProp = onlyProp;
+      this.unsubscribe = null;
+   }
+
+   componentWillMount() {
+      this.unsubscribe = this.props.shoutsQueueQuery.subscribeToShoutsQueueChanged();
+   }
+
+   componentWillUnmount() {
+      if (this.unsubscribe) {
+         this.unsubscribe();
       }
+   }
 
-      return <Grid.Column key={index} {...additionalProp} tablet={3} computer={3} largeScreen={3} textAlign="center">
-         <ShoutPreview shout={shout} />
-      </Grid.Column>;
-   });
+   render() {
+      const { shoutsQueueQuery: { getShoutsQueue } } = this.props,
+         length = getShoutsQueue.length,
+         onlyProp = { only: "tablet" };
 
-   return (
-      <ShoutActionBackground>
-         <Grid.Row>
-            {ShoutsGroup}
-         </Grid.Row>
-         <Grid.Row>
-            <Grid.Column>
-               <PushShoutForm />
-            </Grid.Column>
-         </Grid.Row>
-      </ShoutActionBackground>
-   );
+      const ShoutsGroup = getShoutsQueue.map((shout, index) => {
+         let additionalProp = null;
+         if (index === 0 || index === length - 1) {
+            additionalProp = onlyProp;
+         }
+
+         return <Grid.Column key={index} {...additionalProp} tablet={3} computer={3} largeScreen={3} textAlign="center">
+            <ShoutPreview shout={shout} />
+         </Grid.Column>;
+      });
+
+      return (
+         <ShoutActionBackground>
+            <Grid.Row>
+               {ShoutsGroup}
+            </Grid.Row>
+            <Grid.Row>
+               <Grid.Column>
+                  <PushShoutForm />
+               </Grid.Column>
+            </Grid.Row>
+         </ShoutActionBackground>
+      );
+   }
 };
 
 export default ShoutActionContainer;
