@@ -8,13 +8,35 @@ import colors from './../../../assets/colors/shout-out-loud-colors.json';
 import ShoutPreview from './ShoutPreview';
 import PushShoutForm from './PushShoutForm';
 
-const ShoutActionBackground = styled(Grid) `
-background-color:${colors.logoText};
--webkit-border-radius:0.7rem;
-border-radius:0.7rem;
-border:1px solid ${colors.logoDarkerBackground};
-height:33%;
-margin: 0 -1rem!important;
+const ShoutActionBackground = styled.div`
+   background-color:${colors.logoText};
+   -webkit-border-radius:0.7rem;
+   border-radius:0.7rem;
+   border:1px solid ${colors.logoDarkerBackground};
+   height:36%;
+   margin: 0 -1rem;
+   padding: 1rem 0;
+`;
+
+const PastShoutsGrid = styled(Grid) `
+   height: calc(100% - 38px);
+   border-top:1px solid ${colors.logoDarkerBackground};
+   background-color:${colors.screenBackground};
+   margin: 1rem 0!important;
+   -webkit-border-radius: 0 0 0.65rem 0.65rem;
+   border-radius: 0 0 0.65rem 0.65rem;
+   padding:0 0.7rem!important;
+   -webkit-box-shadow:inset 0 0 15px 1px ${colors.logoDarkerBackground};
+   -moz-box-shadow:inset 0 0 15px 1px ${colors.logoDarkerBackground};
+   box-shadow:inset 0 0 15px 1px ${colors.logoDarkerBackground};
+`;
+
+const PastShoutColumn = styled(Grid.Column) `
+   width:20%!important;
+   @media only screen and (max-width:991px) { 
+	   width:33%!important;
+   };
+   padding:0 0.1rem!important;
 `;
 
 class ShoutActionContainer extends React.Component {
@@ -38,7 +60,7 @@ class ShoutActionContainer extends React.Component {
    render() {
       const { shoutsQueueQuery: { getShoutsQueue } } = this.props,
          length = getShoutsQueue.length,
-         onlyProp = { only: "tablet" };
+         onlyProp = { only: "computer" };
 
       const ShoutsGroup = getShoutsQueue.map((shout, index) => {
          let additionalProp = null;
@@ -46,21 +68,25 @@ class ShoutActionContainer extends React.Component {
             additionalProp = onlyProp;
          }
 
-         return <Grid.Column key={index} {...additionalProp} tablet={3} computer={3} largeScreen={3} textAlign="center">
+         return <PastShoutColumn key={index} {...additionalProp} className="computer large-screen widescreen" textAlign="center">
             <ShoutPreview shout={shout} />
-         </Grid.Column>;
+         </PastShoutColumn>;
       });
 
       return (
          <ShoutActionBackground>
-            <Grid.Row>
-               {ShoutsGroup}
-            </Grid.Row>
-            <Grid.Row>
-               <Grid.Column>
-                  <PushShoutForm />
-               </Grid.Column>
-            </Grid.Row>
+            <Grid>
+               <Grid.Row>
+                  <Grid.Column>
+                     <PushShoutForm />
+                  </Grid.Column>
+               </Grid.Row>
+            </Grid>
+            <PastShoutsGrid>
+               <Grid.Row centered>
+                  {ShoutsGroup}
+               </Grid.Row>
+            </PastShoutsGrid>
          </ShoutActionBackground>
       );
    }
