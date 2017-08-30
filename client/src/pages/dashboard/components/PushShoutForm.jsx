@@ -8,7 +8,7 @@ import colors from './../../../assets/colors/shout-out-loud-colors.json';
 import pushShoutMutation from './../graphql/mutations/pushShoutMutation';
 
 const ThoughtLabel = styled.label`
-color:${colors.logoLighterBackground}
+   color:${colors.logoLighterBackground}
 `;
 
 class PushShoutForm extends React.Component {
