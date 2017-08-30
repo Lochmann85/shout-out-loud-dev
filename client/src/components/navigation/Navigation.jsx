@@ -8,25 +8,25 @@ import logo from './../../assets/images/shout-out-loud-logo.svg';
 import colors from './../../assets/colors/shout-out-loud-colors.json';
 
 const NavigationWrapper = styled.div`
-background-color:${colors.logoText};
-border-bottom:1px solid ${colors.logoDarkerBackground};
+   background-color:${colors.logoText};
+   border-bottom:1px solid ${colors.logoDarkerBackground};
 `;
 
 const HeaderText = styled.span`
-margin-left:0.7rem;
-font-size:1.5rem;
-color:${colors.logoLighterBackground};
-vertical-align:middle;
+   margin-left:0.7rem;
+   font-size:1.5rem;
+   color:${colors.logoLighterBackground};
+   vertical-align:middle;
 `;
 
 const LogoImage = styled(Image) `
-display:inline-block!important;
+   display:inline-block!important;
 `;
 
 const FullHeightMenuItem = styled(Menu.Item) `
-height:100%;
-float:right;
-color:${colors.logoLighterBackground}!important;
+   height:100%;
+   float:right;
+   color:${colors.logoLighterBackground}!important;
 `;
 
 const Navigation = () => (

@@ -11,11 +11,11 @@ import Navigation from './components/navigation/Navigation';
 import Routes from './Routes';
 
 const FullHeightGrid = styled(Grid) `
-height:calc(100% - 59px);
+   height:calc(100% - 59px);
 `;
 
 const AppRow = styled(Grid.Row) `
-padding-bottom:0!important;
+   padding-bottom:0!important;
 `;
 
 const App = () => (
