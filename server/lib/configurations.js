@@ -1,4 +1,4 @@
-const TIMER_INTERVAL = 3000,
+const TIMER_INTERVAL = 7000,
    MAX_SHOWN_SHOUTS = 5;
 
 export {
