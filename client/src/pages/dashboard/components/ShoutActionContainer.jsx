@@ -47,7 +47,7 @@ class ShoutActionContainer extends React.Component {
       this.unsubscribe = null;
    }
 
-   componentWillMount() {
+   componentDidMount() {
       this.unsubscribe = this.props.shoutsQueueQuery.subscribeToShoutsQueueChanged();
    }
 
@@ -58,20 +58,15 @@ class ShoutActionContainer extends React.Component {
    }
 
    render() {
-      const { shoutsQueueQuery: { getShoutsQueue } } = this.props,
-         length = getShoutsQueue.length,
-         onlyProp = { only: "computer" };
+      const { shoutsQueueQuery: { getShoutsQueue } } = this.props;
 
-      const ShoutsGroup = getShoutsQueue.map((shout, index) => {
-         let additionalProp = null;
-         if (index === 0 || index === length - 1) {
-            additionalProp = onlyProp;
-         }
-
-         return <PastShoutColumn key={index} {...additionalProp} className="computer large-screen widescreen" textAlign="center">
+      const ShoutsGroup = [];
+      for (let index = 0; index < 5; ++index) {
+         const shout = getShoutsQueue[index];
+         ShoutsGroup.push(<PastShoutColumn key={index} textAlign="center">
             <ShoutPreview shout={shout} />
-         </PastShoutColumn>;
-      });
+         </PastShoutColumn>);
+      }
 
       return (
          <ShoutActionBackground>

@@ -21,14 +21,12 @@ const Dashboard = ({ shoutsQueueQuery }) => {
       return <BaseLayoutLoader />;
    }
 
-   const { getShoutsQueue } = shoutsQueueQuery;
-
    return (
       <WrapperWithOffset>
          <HiddenWrapper>
             <h1>Shout out your thought!</h1>
          </HiddenWrapper>
-         <ShoutScreen shoutsQueue={getShoutsQueue} />
+         <ShoutScreen />
          <ShoutActionContainer shoutsQueueQuery={shoutsQueueQuery} />
       </WrapperWithOffset >
    );

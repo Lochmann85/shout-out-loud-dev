@@ -2,8 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
-import { TextEllipsisWrapper } from './../../../assets/styled/Wrapper';
+import { VerticalAlignTextWrapper } from './../../../assets/styled/Wrapper';
 import fontSizeCalculation from './../../../helper/fontSizeCalculation';
+
+import BaseLayoutLoader from './../../../components/layout/BaseLayoutLoader';
+import currentShoutQuery from './../graphql/queries/currentShoutQuery';
 
 const ShoutScreenBackground = styled.div`
    background-color:${colors.screenBackground};
@@ -39,16 +42,17 @@ class ShoutsScreen extends React.Component {
       super(props);
 
       this.resized = false;
+      this.unsubscribe = null;
 
       this.state = {
          fontSize: "0px",
       };
    }
 
-   componentDidUpdate() {
-      const currentShout = this.props.shoutsQueue[2];
-      let shoutFontSize;
+   _updateFontSize() {
+      const currentShout = this.props.currentShoutQuery.getCurrentShout;
 
+      let shoutFontSize;
       if (currentShout) {
          shoutFontSize = fontSizeCalculation.calculate(this.shoutContainer, "60", currentShout.message);
       }
@@ -60,30 +64,46 @@ class ShoutsScreen extends React.Component {
       }
    }
 
-   render() {
-      const currentShout = this.props.shoutsQueue[2];
+   componentDidMount() {
+      this.unsubscribe = this.props.currentShoutQuery.subscribeToCurrentShoutChanged();
+      this._updateFontSize();
+   }
 
-      const CurrentShoutText = styled(TextEllipsisWrapper) `
-         font-size:${this.state.fontSize};
-         display: flex;
-         justify-content:center;
-         align-content:center;
-         flex-direction:column;
-         height:100%;
-      `;
+   componentWillUnmount() {
+      if (this.unsubscribe) {
+         this.unsubscribe();
+      }
+   }
+
+   componentDidUpdate() {
+      this._updateFontSize();
+   }
+
+   render() {
+      const { currentShoutQuery } = this.props;
+
+      if (currentShoutQuery.loading) {
+         return <BaseLayoutLoader />;
+      }
+      else if (currentShoutQuery.error) {
+         console.log(currentShoutQuery.error);
+         return <BaseLayoutLoader />;
+      }
+
+      const currentShout = currentShoutQuery.getCurrentShout;
 
       return (
          <ShoutScreenBackground>
             <ShoutScreen
                innerRef={shoutContainer => this.shoutContainer = shoutContainer}
             >
-               <CurrentShoutText>
+               <VerticalAlignTextWrapper fontSize={this.state.fontSize}>
                   {currentShout ? currentShout.message : ""}
-               </CurrentShoutText>
+               </VerticalAlignTextWrapper>
             </ShoutScreen>
          </ShoutScreenBackground>
       );
    }
 }
 
-export default ShoutsScreen;
+export default currentShoutQuery(ShoutsScreen);
