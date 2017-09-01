@@ -15,10 +15,37 @@ const ShoutScreenBackground = styled.div`
    -moz-box-shadow:inset 0 0 15px 1px ${colors.logoDarkerBackground};
    box-shadow:inset 0 0 15px 1px ${colors.logoDarkerBackground};
    margin:0 -1rem 3% -1rem;
-   padding:60px;
+   padding:90px;
    @media only screen and (max-width:767px) { 
-	   padding:50px;
+	   padding:80px;
    };
+   div > div {
+      opacity: 0;
+   }
+   -webkit-transition: all 0.4s ease-out;
+   -moz-transition: all 0.4s ease-out;
+   -ms-transition: all 0.4s ease-out;
+   -o-transition: all 0.4s ease-out;
+   transition: all 0.4s ease-out;
+   &.init {
+      -webkit-transition: all 0.1s ease-in;
+      -moz-transition: all 0.1s ease-in;
+      -ms-transition: all 0.1s ease-in;
+      -o-transition: all 0.1s ease-in;
+      transition: all 0.1s ease-in;
+      padding:40px;
+   };
+   &.visible {
+      -webkit-transition: all 0.2s ease-out;
+      -moz-transition: all 0.2s ease-out;
+      -ms-transition: all 0.2s ease-out;
+      -o-transition: all 0.2s ease-out;
+      transition: all 0.2s ease-out;
+      padding:60px;
+      div > div {
+         opacity: 1;
+      }
+   }
    border:1px solid ${colors.logoDarkerBackground};
    -webkit-border-radius:2rem;
    border-radius:2rem;
@@ -46,6 +73,7 @@ class ShoutsScreen extends React.Component {
 
       this.state = {
          fontSize: "0px",
+         transitionClass: ""
       };
    }
 
@@ -65,7 +93,6 @@ class ShoutsScreen extends React.Component {
    }
 
    componentDidMount() {
-      console.log("mount");
       this.unsubscribe = this.props.currentShoutQuery.subscribeToCurrentShoutChanged();
       this._updateFontSize();
    }
@@ -73,6 +100,16 @@ class ShoutsScreen extends React.Component {
    componentWillUnmount() {
       if (this.unsubscribe) {
          this.unsubscribe();
+      }
+   }
+
+   componentWillReceiveProps(nextProps) {
+      if (nextProps.currentShoutQuery.getCurrentShout && nextProps.currentShoutQuery.getCurrentShout.type !== "Empty") {
+         this.setState({ transitionClass: "init" }, () => {
+            setTimeout(() => this.setState({ transitionClass: "visible" }, () => {
+               setTimeout(() => this.setState({ transitionClass: "" }), 5600);
+            }), 100);
+         });
       }
    }
 
@@ -94,7 +131,7 @@ class ShoutsScreen extends React.Component {
       const currentShout = currentShoutQuery.getCurrentShout;
 
       return (
-         <ShoutScreenBackground>
+         <ShoutScreenBackground className={this.state.transitionClass}>
             <ShoutScreen
                innerRef={shoutContainer => this.shoutContainer = shoutContainer}
             >
