@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
-import { TextEllipsisWrapper } from './../../../assets/styled/Wrapper';
+import { VerticalAlignTextWrapper } from './../../../assets/styled/Wrapper';
 import fontSizeCalculation from './../../../helper/fontSizeCalculation';
 
 const Background = styled.div`
@@ -11,7 +11,7 @@ const Background = styled.div`
    padding:2%;
 `;
 
-const ShoutMessage = styled(TextEllipsisWrapper) `
+const ShoutMessage = styled.div`
    background-color:${colors.logoLighterBackground};
    color:${colors.logoText};
    text-align:left;
@@ -40,9 +40,8 @@ class ShoutPreview extends React.Component {
       };
    }
 
-   componentDidUpdate() {
+   _updateFontSize() {
       let shoutFontSize;
-
       if (this.props.shout) {
          shoutFontSize = fontSizeCalculation.calculate(this.shoutContainer, "10", this.props.shout.message);
       }
@@ -54,26 +53,25 @@ class ShoutPreview extends React.Component {
       }
    }
 
+   componentDidMount() {
+      this._updateFontSize();
+   }
+
+   componentDidUpdate() {
+      this._updateFontSize();
+   }
+
    render() {
       const { shout } = this.props;
-
-      const ShoutText = styled(TextEllipsisWrapper) `
-         font-size:${this.state.fontSize};
-         display: flex;
-         justify-content:center;
-         align-content:center;
-         flex-direction:column;
-         height:100%;
-      `;
 
       return (
          <Background>
             <ShoutMessage
                innerRef={shoutContainer => this.shoutContainer = shoutContainer}
             >
-               <ShoutText>
+               <VerticalAlignTextWrapper fontSize={this.state.fontSize}>
                   {shout ? shout.message : ""}
-               </ShoutText>
+               </VerticalAlignTextWrapper>
             </ShoutMessage>
             <ShoutOfUser>
                User

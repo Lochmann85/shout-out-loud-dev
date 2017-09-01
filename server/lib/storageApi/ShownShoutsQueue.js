@@ -11,32 +11,23 @@ class ShownShoutsQueue {
     * @public
     * @function constructor
     * @description initializes the array
-    * @param {object} pendingShoutsQueue - the queue for the pending shouts
     */
-   constructor(pendingShoutsQueue) {
-      this._pendingShoutsQueue = pendingShoutsQueue;
-      this._array = new Array(MAX_SHOWN_SHOUTS);
+   constructor() {
+      this._array = [];
+      for (let index = 0; index < MAX_SHOWN_SHOUTS; ++index) {
+         this._array.push(null);
+      }
    }
 
    /**
     * @public
     * @function cycle
     * @description cycles the fixed size shown shouts queue
+    * @param {object} shout - new shout to push front
     */
-   cycle() {
-      const shout = this._pendingShoutsQueue.dequeue();
-      this._baseCycle(shout);
-   }
-
-   /**
-    * @private
-    * @function _baseCycle
-    * @description the basic cycle functionality
-    * @param {object} shout - new entered shout
-    */
-   _baseCycle(shout) {
-      this._array.push(shout);
-      this._array.shift();
+   cycle(shout) {
+      this._array.unshift(shout);
+      this._array.pop();
    }
 
    /**

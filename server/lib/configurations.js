@@ -1,5 +1,5 @@
 const TIMER_INTERVAL = 7000,
-   MAX_SHOWN_SHOUTS = 5;
+   MAX_SHOWN_SHOUTS = 100;
 
 export {
    TIMER_INTERVAL,

@@ -14,8 +14,18 @@ const TextEllipsisWrapper = styled.div`
    white-space: nowrap;
 `;
 
+const VerticalAlignTextWrapper = styled(TextEllipsisWrapper) `
+   font-size:${props => props.fontSize ? props.fontSize : "20px"};
+   display: flex;
+   justify-content:center;
+   align-content:center;
+   flex-direction:column;
+   height:100%;
+`;
+
 export {
    FullHeightWrapper,
    HiddenWrapper,
-   TextEllipsisWrapper
+   TextEllipsisWrapper,
+   VerticalAlignTextWrapper
 };
