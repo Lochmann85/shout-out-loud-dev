@@ -1,6 +1,11 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
-import { shownShoutsQueue, pendingShoutsQueue } from './../../../storageApi';
+import {
+   currentShownShout,
+   shownShoutsQueue,
+   pendingShoutsQueue
+} from './../../../storageApi';
+import { CustomShout } from './../../../shoutApi';
 import subscriptionHandler from './../../../graphQLApi/subscription/subscriptionHandler';
 
 const types = `
@@ -15,6 +20,7 @@ input ShoutInput {
 
 const queries = `
 getShoutsQueue: [Shout]!
+getCurrentShout: Shout
 `;
 
 const _queriesResolver = {
@@ -22,6 +28,9 @@ const _queriesResolver = {
       getShoutsQueue() {
          return shownShoutsQueue.asArray();
       },
+      getCurrentShout() {
+         return currentShownShout;
+      }
    }
 };
 
@@ -34,8 +43,7 @@ const _mutationsResolver = {
       pushShout(_, { shout }) {
          return new Promise((resolve, reject) => {
             if (shout && shout.message) {
-               shout.type = "Custom";
-               pendingShoutsQueue.enqueue(shout);
+               pendingShoutsQueue.enqueue(new CustomShout(shout));
                resolve(true);
             }
             else {
@@ -48,6 +56,7 @@ const _mutationsResolver = {
 
 const subscriptions = `
 shoutsQueueChanged: [Shout]!
+currentShoutChanged: Shout
 `;
 
 const _subscriptionResolver = {
@@ -55,6 +64,10 @@ const _subscriptionResolver = {
       shoutsQueueChanged: {
          resolve: payload => payload.asArray(),
          subscribe: () => subscriptionHandler.asyncIterator("shoutsQueueChangedChannel"),
+      },
+      currentShoutChanged: {
+         resolve: payload => payload,
+         subscribe: () => subscriptionHandler.asyncIterator("currentShoutChangedChannel"),
       },
    }
 };
