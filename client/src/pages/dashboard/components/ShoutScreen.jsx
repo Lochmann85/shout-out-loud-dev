@@ -65,6 +65,7 @@ class ShoutsScreen extends React.Component {
    }
 
    componentDidMount() {
+      console.log("mount");
       this.unsubscribe = this.props.currentShoutQuery.subscribeToCurrentShoutChanged();
       this._updateFontSize();
    }
