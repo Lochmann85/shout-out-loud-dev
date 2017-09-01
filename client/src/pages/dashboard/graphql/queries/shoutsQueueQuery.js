@@ -30,10 +30,10 @@ export default graphql(shoutsQueueQuery, {
 
                updateQuery: (previousResult, { subscriptionData }) => {
                   if (subscriptionData.data && subscriptionData.data.shoutsQueueChanged) {
-                     const newv = Object.assign({}, previousResult, {
+                     const newQueue = Object.assign({}, previousResult, {
                         getShoutsQueue: subscriptionData.data.shoutsQueueChanged,
                      });
-                     return newv;
+                     return newQueue;
                   }
                   return previousResult;
                }
