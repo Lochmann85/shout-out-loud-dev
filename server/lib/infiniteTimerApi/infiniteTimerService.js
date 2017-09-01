@@ -1,7 +1,10 @@
-import subscriptionHandler from './../graphQLApi/subscription/subscriptionHandler';
-import { shownShoutsQueue } from './../storageApi';
+import { storeUpdater } from './../storageApi';
 
 import { TIMER_INTERVAL } from './../configurations';
+
+if (typeof storeUpdater.update !== "function") {
+   throw new Error("FATAL ERROR: storeUpdater needs an 'update' Promise function");
+}
 
 /**
  * @private
@@ -11,11 +14,9 @@ import { TIMER_INTERVAL } from './../configurations';
 const _timeStep = () => {
    return new Promise((resolve, reject) => {
       setTimeout(() => {
-         shownShoutsQueue.cycle();
-
-         subscriptionHandler.publish("shoutsQueueChangedChannel", shownShoutsQueue);
-
-         resolve();
+         storeUpdater.update()
+            .then(resolve)
+            .catch(reject);
       }, TIMER_INTERVAL);
    });
 };
