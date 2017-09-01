@@ -3,8 +3,7 @@ import { addResolveFunctionsToSchema } from 'graphql-tools';
 import {
    currentShownShout,
    shownShoutsQueue,
-   pendingShoutsQueue,
-   storeUpdater
+   pendingShoutsQueue
 } from './../../../storageApi';
 import { CustomShout } from './../../../shoutApi';
 import subscriptionHandler from './../../../graphQLApi/subscription/subscriptionHandler';
@@ -45,14 +44,7 @@ const _mutationsResolver = {
          return new Promise((resolve, reject) => {
             if (shout && shout.message) {
                pendingShoutsQueue.enqueue(new CustomShout(shout));
-               if (!currentShownShout.shouldBeShown()) {
-                  storeUpdater.update()
-                     .then(() => resolve(true))
-                     .catch(reject);
-               }
-               else {
-                  resolve(true);
-               }
+               resolve(true);
             }
             else {
                reject(`Please enter a message`);
