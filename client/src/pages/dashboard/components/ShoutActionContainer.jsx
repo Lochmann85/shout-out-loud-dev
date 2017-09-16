@@ -3,6 +3,11 @@ import styled from 'styled-components';
 
 import { Grid } from 'semantic-ui-react';
 
+import {
+   addResizeObserver,
+   removeResizeObserver,
+   windowIsAtLeastTablet,
+} from './../../../storeHandler/windowSizeStore';
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
 import ShoutPreview from './ShoutPreview';
@@ -39,15 +44,22 @@ const PastShoutColumn = styled(Grid.Column) `
    padding:0 0.1rem!important;
 `;
 
+const SHOWN_SHOUTS_MOBILE = 3;
+const SHOWN_SHOUTS_COMPUTER = 5;
+
 class ShoutActionContainer extends React.Component {
 
    constructor(props) {
       super(props);
 
       this.unsubscribe = null;
+      this.state = {
+         shownShouts: windowIsAtLeastTablet() ? SHOWN_SHOUTS_MOBILE : SHOWN_SHOUTS_COMPUTER,
+      };
    }
 
    componentDidMount() {
+      addResizeObserver(this);
       this.unsubscribe = this.props.shoutsQueueQuery.subscribeToShoutsQueueChanged();
    }
 
@@ -55,13 +67,14 @@ class ShoutActionContainer extends React.Component {
       if (this.unsubscribe) {
          this.unsubscribe();
       }
+      removeResizeObserver(this);
    }
 
    render() {
       const { shoutsQueueQuery: { getShoutsQueue } } = this.props;
 
       const ShoutsGroup = [];
-      for (let index = 0; index < 5; ++index) {
+      for (let index = 0; index < this.state.shownShouts; ++index) {
          const shout = getShoutsQueue[index];
          ShoutsGroup.push(<PastShoutColumn key={index} textAlign="center">
             <ShoutPreview shout={shout} />
@@ -84,6 +97,12 @@ class ShoutActionContainer extends React.Component {
             </PastShoutsGrid>
          </ShoutActionBackground>
       );
+   }
+
+   updateOnResize = () => {
+      this.setState({
+         shownShouts: windowIsAtLeastTablet() ? SHOWN_SHOUTS_MOBILE : SHOWN_SHOUTS_COMPUTER,
+      });
    }
 };
 
