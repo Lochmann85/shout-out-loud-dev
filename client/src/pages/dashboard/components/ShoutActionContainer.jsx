@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { propType } from 'graphql-anywhere';
+import PropTypes from 'prop-types';
 
 import { Grid } from 'semantic-ui-react';
 
@@ -10,6 +12,7 @@ import {
 } from './../../../storeHandler/windowSizeStore';
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
+import shoutActionContainerFragments from './../graphql/fragments/shoutActionContainer';
 import ShoutPreview from './ShoutPreview';
 import PushShoutForm from './PushShoutForm';
 
@@ -48,6 +51,12 @@ const SHOWN_SHOUTS_MOBILE = 3;
 const SHOWN_SHOUTS_COMPUTER = 5;
 
 class ShoutActionContainer extends React.Component {
+
+   static fragments = {
+      shoutsQueueQuery: PropTypes.shape({
+         getShoutsQueue: propType(shoutActionContainerFragments.shouts.document)
+      })
+   }
 
    constructor(props) {
       super(props);

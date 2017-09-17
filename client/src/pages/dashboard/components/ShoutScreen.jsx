@@ -1,11 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { propType } from 'graphql-anywhere';
 
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 import { VerticalAlignTextWrapper } from './../../../assets/styled/Wrapper';
 import fontSizeCalculation from './../../../helper/fontSizeCalculation';
 
 import BaseLayoutLoader from './../../../components/layout/BaseLayoutLoader';
+import shoutScreenFragment from './../graphql/fragments/shoutScreen';
 import currentShoutQuery from './../graphql/queries/currentShoutQuery';
 
 const ShoutScreenBackground = styled.div`
@@ -64,6 +67,12 @@ const ShoutScreen = styled.div`
 `;
 
 class ShoutsScreen extends React.Component {
+
+   static propTypes = {
+      currentShoutQuery: PropTypes.shape({
+         getCurrentShout: propType(shoutScreenFragment.shouts.document)
+      })
+   }
 
    constructor(props) {
       super(props);
