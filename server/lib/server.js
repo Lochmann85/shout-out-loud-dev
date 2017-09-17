@@ -9,12 +9,14 @@ import { initializeSubscriptionService } from './graphQLApi/subscriptionService'
 
 import { startTimer } from './infiniteTimerApi/infiniteTimerService';
 
-// initializeMongoDb(serverConfig)
-//    .then(
-buildSchema();
-// .then(() => {
-initializeGraphQLService(serverConfig).then(() => {
-   return initializeSubscriptionService(serverConfig);
-}).then(() => {
-   return startTimer();
-}).catch(error => console.log(error));
+initializeMongoDb(serverConfig)
+   .then(buildSchema)
+   .then(() => {
+      return initializeGraphQLService(serverConfig);
+   })
+   .then(() => {
+      return initializeSubscriptionService(serverConfig);
+   })
+   .then(() => {
+      return startTimer();
+   }).catch(error => console.log(error));
