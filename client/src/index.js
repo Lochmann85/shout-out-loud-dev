@@ -6,8 +6,11 @@ import { ApolloProvider } from 'react-apollo';
 
 import apolloClient from './storeHandler/apolloClient';
 import routerHistory from './storeHandler/routerHistory';
+import { initializeStore } from './storeHandler/windowSizeStore';
 
 import App from './App';
+
+initializeStore(window);
 
 ReactDOM.render((
    <ApolloProvider client={apolloClient}>

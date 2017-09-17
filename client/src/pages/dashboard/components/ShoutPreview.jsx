@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { propType } from 'graphql-anywhere';
 
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 import { VerticalAlignTextWrapper } from './../../../assets/styled/Wrapper';
 import fontSizeCalculation from './../../../helper/fontSizeCalculation';
+import shoutPreviewFragment from './../graphql/fragments/shoutPreview';
 
 const Background = styled.div`
    width:100%;
@@ -29,6 +31,10 @@ const ShoutOfUser = styled.div`
 `;
 
 class ShoutPreview extends React.Component {
+
+   static fragments = {
+      shout: propType(shoutPreviewFragment.shouts.document),
+   }
 
    constructor(props) {
       super(props);
