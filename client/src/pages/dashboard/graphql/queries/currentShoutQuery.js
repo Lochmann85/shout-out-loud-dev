@@ -1,46 +1,56 @@
 import { graphql, gql } from 'react-apollo';
 
-const currentShoutQuery = gql`
-query currentShoutQuery {
-   getCurrentShout {
-      message
-      type
-   }
-}
-`;
+import graphQLStore from './../../../../storeHandler/graphQLStore';
 
-const currentShoutSubscription = gql`
-subscription currentShoutSubscription {
-   currentShoutChanged {
-      message
-      type
-   }
-}
-`;
+let query;
 
-export default graphql(currentShoutQuery, {
-   name: "currentShoutQuery",
-   props: props => ({
-      currentShoutQuery: {
-         ...props.currentShoutQuery,
-         subscribeToCurrentShoutChanged: () => {
-
-            return props.currentShoutQuery.subscribeToMore({
-               document: currentShoutSubscription,
-
-               updateQuery: (previousResult, { subscriptionData }) => {
-                  if (subscriptionData.data) {
-                     const newShout = Object.assign({}, previousResult, {
-                        getCurrentShout: subscriptionData.data.currentShoutChanged,
-                     });
-                     return newShout;
-                  }
-                  return previousResult;
-               }
-
-            });
-
-         },
+const shoutsFragment = graphQLStore.findFragment("ShoutScreenShouts");
+if (shoutsFragment) {
+   const currentShoutQuery = gql`
+   query currentShoutQuery {
+      getCurrentShout {
+         ...${shoutsFragment.name}
       }
-   }),
-});
+   }
+   ${shoutsFragment.document}`;
+
+   const currentShoutSubscription = gql`
+   subscription currentShoutSubscription {
+      currentShoutChanged {
+         ...${shoutsFragment.name}
+      }
+   }
+   ${shoutsFragment.document}`;
+
+   query = graphql(currentShoutQuery, {
+      name: "currentShoutQuery",
+      props: props => ({
+         currentShoutQuery: {
+            ...props.currentShoutQuery,
+            subscribeToCurrentShoutChanged: () => {
+
+               return props.currentShoutQuery.subscribeToMore({
+                  document: currentShoutSubscription,
+
+                  updateQuery: (previousResult, { subscriptionData }) => {
+                     if (subscriptionData.data) {
+                        const newShout = Object.assign({}, previousResult, {
+                           getCurrentShout: subscriptionData.data.currentShoutChanged,
+                        });
+                        return newShout;
+                     }
+                     return previousResult;
+                  }
+
+               });
+
+            },
+         }
+      }),
+   });
+}
+else {
+   throw new Error("FATAL ERROR, could not generate currentShoutQuery");
+}
+
+export default query;

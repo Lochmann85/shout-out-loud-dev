@@ -8,7 +8,7 @@ import { Grid } from 'semantic-ui-react';
 
 import { FullHeightWrapper } from './assets/styled/Wrapper';
 import Navigation from './components/navigation/Navigation';
-import Routes from './Routes';
+import Routes from './pages/Routes';
 
 const FullHeightGrid = styled(Grid) `
    height:calc(100% - 59px);

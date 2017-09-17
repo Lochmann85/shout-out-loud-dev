@@ -108,11 +108,6 @@ class PushShoutForm extends React.Component {
 
       this.props.pushShout(this.state).catch(error => console.log(error));
    }
-
-   _openModal = (event) => {
-      event.preventDefault();
-      console.log("here");
-   }
 };
 
 export default pushShoutMutation(PushShoutForm);
