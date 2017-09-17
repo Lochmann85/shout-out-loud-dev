@@ -4,9 +4,9 @@ import {
    currentShownShout,
    shownShoutsQueue,
    pendingShoutsQueue
-} from './../../../storageApi';
-import { CustomShout } from './../../../shoutApi';
-import subscriptionHandler from './../../../graphQLApi/subscription/subscriptionHandler';
+} from './../../storageApi';
+import { CustomShout } from './../../shoutApi';
+import subscriptionHandler from './../../graphQLApi/subscription/subscriptionHandler';
 
 const types = `
 type Shout {

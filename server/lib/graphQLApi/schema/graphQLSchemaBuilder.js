@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import { makeExecutableSchema } from 'graphql-tools';
 
 import { typeDefinitionsTemplate, schema } from './schema';
@@ -19,12 +20,13 @@ const graphQLServices = {};
  * @description loops through directory and requires all folders
  */
 const _requireAllGraphQLServices = () => {
-   const searchPatch = `${__dirname}/../services`;
+   const searchPatch = path.join(__dirname, "..", "services");
 
-   const directories = fs.readdirSync(searchPatch).filter(file => fs.statSync(`${searchPatch}/${file}`).isDirectory());
+   const files = fs.readdirSync(searchPatch);
 
-   directories.forEach(graphQLService => {
-      graphQLServices[graphQLService] = require(`${searchPatch}/${graphQLService}`);
+   files.forEach(graphQLServiceFile => {
+      const graphQLService = graphQLServiceFile.split(".")[0];
+      graphQLServices[graphQLService] = require(path.join(searchPatch, graphQLServiceFile));
    });
 };
 
@@ -81,15 +83,13 @@ const _buildExecutableSchema = () => {
  * @function buildSchema
  * @description builds the graphql schema
  */
-const buildSchema = () => new Promise((resolve, reject) => {
+const buildSchema = () => {
    _requireAllGraphQLServices();
 
    _replaceNeedlesInSchema();
 
    _buildExecutableSchema();
-
-   resolve();
-});
+};
 
 export {
    graphQLServices,
