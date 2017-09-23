@@ -1,10 +1,6 @@
-import { storeUpdater } from './../storageApi';
+import { storeUpdater } from './../storageApi/storageService';
 
 import { TIMER_INTERVAL } from './../configurations';
-
-if (typeof storeUpdater.update !== "function") {
-   throw new Error("FATAL ERROR: storeUpdater needs an 'update' Promise function");
-}
 
 /**
  * @private

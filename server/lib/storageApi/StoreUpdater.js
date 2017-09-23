@@ -1,12 +1,17 @@
+import Queue from './Queue';
 import subscriptionHandler from './../graphQLApi/subscription/subscriptionHandler';
-import { EmptyShout } from './../shoutApi';
+import { shoutModel } from './../mongoDbApi/models';
+
+import {
+   cycle,
+   alterShoutInput
+} from './../mongoDbApi/services/shout/shoutDbService';
 
 class StoreUpdater {
 
-   constructor(pendingShoutsQueue, shownShoutsQueue, currentShownShout) {
-      this._pendingShoutsQueue = pendingShoutsQueue;
-      this._shownShoutsQueue = shownShoutsQueue;
-      this._currentShownShout = currentShownShout;
+   constructor(pendingShoutsQueue) {
+      this._pendingShoutsQueue = new Queue();
+      this._currentShownShout = shoutModel.getEmptyShout();
    }
 
    /**
@@ -18,24 +23,45 @@ class StoreUpdater {
    update() {
       return new Promise((resolve, reject) => {
          if (this._pendingShoutsQueue.hasAnItem()) {
-            if (this._currentShownShout.shouldBeShown()) {
-               this._shownShoutsQueue.cycle(this._currentShownShout);
-               subscriptionHandler.publish("shoutsQueueChangedChannel", this._shownShoutsQueue);
+            if (this._currentShownShout.shouldBeShown) {
+               subscriptionHandler.publish("shoutsQueueChangedChannel", cycle(this._currentShownShout));
             }
             this._currentShownShout = this._pendingShoutsQueue.dequeue();
             subscriptionHandler.publish("currentShoutChangedChannel", this._currentShownShout);
          }
          else {
-            if (this._currentShownShout.shouldBeShown()) {
-               this._shownShoutsQueue.cycle(this._currentShownShout);
-               subscriptionHandler.publish("shoutsQueueChangedChannel", this._shownShoutsQueue);
+            if (this._currentShownShout.shouldBeShown) {
+               subscriptionHandler.publish("shoutsQueueChangedChannel", cycle(this._currentShownShout));
 
-               this._currentShownShout = new EmptyShout();
+               this._currentShownShout = shoutModel.getEmptyShout();
                subscriptionHandler.publish("currentShoutChangedChannel", this._currentShownShout);
             }
          }
          resolve();
       });
+   }
+
+   /**
+    * @public
+    * @function enqueue
+    * @description enqueues the next shout
+    * @param {object} shoutData - shout to enqueue
+    * @returns {Promise} pending shout queue
+    */
+   enqueue = (shoutData) => {
+      return alterShoutInput(shoutData).then(alteredShout => {
+         return this._pendingShoutsQueue.enqueue(alteredShout);
+      });
+   }
+
+   /**
+    * @public
+    * @function getCurrentShownShout
+    * @description getter for the current shown shout skeleton
+    * @returns {object} current shown shout
+    */
+   getCurrentShownShout = () => {
+      return this._currentShownShout;
    }
 };
 
