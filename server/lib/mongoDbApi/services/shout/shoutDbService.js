@@ -5,16 +5,8 @@ import { shoutModel } from './../../models';
 import convertMongooseError from './../../convertMongooseToReadableError';
 
 import {
-   CustomError,
    MongooseSingleError
 } from './../../../errorsApi';
-
-/**
- * @private
- * @member _firstShoutId
- * @description id of the first shout, saved for deleting
- */
-let _firstShoutId;
 
 /**
  * @public
@@ -26,20 +18,6 @@ const findAllShouts = () => {
    return shoutModel.find().exec()
       .then(shoutsQueue => shoutsQueue.reverse())
       .catch(error => new MongooseSingleError(error));
-};
-
-/**
- * @public
- * @function initializeShoutsQueue
- * @description gets the id of the first Shout
- * @returns {Promise} of initialized shouts queue
- */
-const initializeShoutsQueue = () => {
-   return findAllShouts().then(shoutsQueue => {
-      if (shoutsQueue.length > 0) {
-         _firstShoutId = shoutsQueue[shoutsQueue.length - 1].id;
-      }
-   });
 };
 
 /**
@@ -101,7 +79,6 @@ const createShout = (shoutData) => new Promise((resolve, reject) => {
 
 export {
    findAllShouts,
-   initializeShoutsQueue,
    cycle,
    createShout
 };
