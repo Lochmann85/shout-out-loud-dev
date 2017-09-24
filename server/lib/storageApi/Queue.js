@@ -1,9 +1,9 @@
 /**
  * @public
- * @function BaseQueue
+ * @function Queue
  * @description base class for a queue
  */
-class BaseQueue {
+class Queue {
 
    /**
     * @public
@@ -56,4 +56,4 @@ class BaseQueue {
    }
 };
 
-export default BaseQueue;
+export default Queue;

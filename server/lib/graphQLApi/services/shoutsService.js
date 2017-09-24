@@ -1,11 +1,12 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
 import {
-   currentShownShout,
-   shownShoutsQueue,
-   pendingShoutsQueue
-} from './../../storageApi';
-import { CustomShout } from './../../shoutApi';
+   storeUpdater
+} from './../../storageApi/storageService';
+import {
+   findAllShouts
+} from './../../mongoDbApi/services/shout/shoutDbService';
+
 import subscriptionHandler from './../../graphQLApi/subscription/subscriptionHandler';
 
 const types = `
@@ -26,30 +27,22 @@ getCurrentShout: Shout
 const _queriesResolver = {
    Query: {
       getShoutsQueue() {
-         return shownShoutsQueue.asArray();
+         return findAllShouts();
       },
       getCurrentShout() {
-         return currentShownShout;
+         return storeUpdater.getCurrentShownShout();
       }
    }
 };
 
 const mutations = `
-pushShout(shout: ShoutInput!): Boolean
+pushShout(shout: ShoutInput): Boolean
 `;
 
 const _mutationsResolver = {
    Mutation: {
       pushShout(_, { shout }) {
-         return new Promise((resolve, reject) => {
-            if (shout && shout.message) {
-               pendingShoutsQueue.enqueue(new CustomShout(shout));
-               resolve(true);
-            }
-            else {
-               reject(`Please enter a message`);
-            }
-         });
+         return storeUpdater.enqueue(shout);
       },
    }
 };
@@ -62,7 +55,7 @@ currentShoutChanged: Shout
 const _subscriptionResolver = {
    Subscription: {
       shoutsQueueChanged: {
-         resolve: payload => payload.asArray(),
+         resolve: payload => payload,
          subscribe: () => subscriptionHandler.asyncIterator("shoutsQueueChangedChannel"),
       },
       currentShoutChanged: {
