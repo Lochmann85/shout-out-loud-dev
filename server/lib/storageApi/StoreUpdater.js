@@ -4,7 +4,7 @@ import { shoutModel } from './../mongoDbApi/models';
 
 import {
    cycle,
-   alterShoutInput
+   createShout
 } from './../mongoDbApi/services/shout/shoutDbService';
 
 class StoreUpdater {
@@ -49,8 +49,8 @@ class StoreUpdater {
     * @returns {Promise} pending shout queue
     */
    enqueue = (shoutData) => {
-      return alterShoutInput(shoutData).then(alteredShout => {
-         return this._pendingShoutsQueue.enqueue(alteredShout);
+      return createShout(shoutData).then(createdShout => {
+         return this._pendingShoutsQueue.enqueue(createdShout);
       });
    }
 

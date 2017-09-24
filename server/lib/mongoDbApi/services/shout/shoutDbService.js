@@ -43,20 +43,38 @@ const initializeShoutsQueue = () => {
 };
 
 /**
+ * @private
+ * @function _manageQueueSize
+ * @description checks if the queue size is too large, if so deletes the first
+ * @param {array} shownShoutsQueue - array of shown shouts
+ * @returns {Promise} of shown shouts queue
+ */
+const _manageQueueSize = (shownShoutsQueue) => {
+   const length = shownShoutsQueue.length;
+   if (length > MAX_SHOWN_SHOUTS) {
+      return shoutModel.findByIdAndRemove(shownShoutsQueue[length - 1].id).exec()
+         .then(() => {
+            shownShoutsQueue.pop();
+            return shownShoutsQueue;
+         });
+   }
+   else {
+      return shownShoutsQueue;
+   }
+};
+
+/**
  * @public
  * @function cycle
  * @description cycles the table of shouts adds the new at front and deletes the last
- * @param {object} shoutData - data for the new Shout
+ * @param {object} shoutModel - data for the new Shout
  * @returns {Promise} of shouts queue
  */
-const cycle = (shoutData) => {
-   const shout = new shoutModel(shoutData); // eslint-disable-line new-cap
-
-   return shout.save()
+const cycle = (shoutModel) => {
+   return shoutModel.save()
       .then(newShout => {
-         return shoutModel.count().exec().then(numberOfShouts => {
-            console.log(numberOfShouts);
-            return findAllShouts();
+         return findAllShouts().then(allShouts => {
+            return _manageQueueSize(allShouts);
          });
       })
       .catch(convertMongooseError);
@@ -64,12 +82,12 @@ const cycle = (shoutData) => {
 
 /**
  * @public
- * @function alterShoutInput
- * @description validates and alters the shout input
+ * @function createShout
+ * @description creates the new shout
  * @param {object} shoutData - data for the new Shout
  * @returns {Promise} of validated shout
  */
-const alterShoutInput = (shoutData) => new Promise((resolve, reject) => {
+const createShout = (shoutData) => new Promise((resolve, reject) => {
    const shout = new shoutModel(shoutModel.alterShoutInput(shoutData)); // eslint-disable-line new-cap
    shout.validate(error => {
       if (error) {
@@ -85,5 +103,5 @@ export {
    findAllShouts,
    initializeShoutsQueue,
    cycle,
-   alterShoutInput
+   createShout
 };
