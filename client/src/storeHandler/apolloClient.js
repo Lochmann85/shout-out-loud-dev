@@ -3,10 +3,10 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 
 import fragmentMatcher from './fragmentMatcher';
 
-let serverUri = "ws://localhost:8080/graphql";
+let serverUri = "ws://localhost:8000/graphql";
 
 if (process.env.NODE_ENV === "production") {
-   serverUri = "ws://app-shout-out-loud.a3c1.starter-us-west-1.openshiftapps.com/graphql";
+   serverUri = "ws://shout-out-loud.herokuapp.com/graphql";
 }
 
 const webSocketClient = new SubscriptionClient(serverUri, {

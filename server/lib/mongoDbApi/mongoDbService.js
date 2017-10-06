@@ -11,15 +11,13 @@ mongoose.Promise = global.Promise;
  * @returns {Promise} of initialization
  */
 const initializeMongoDb = (config) => {
-   const mongoDbUrl = `mongodb://${config.MONGO_USER_NAME}:${config.MONGO_USER_PWD}@${config.MONGO_DB_URI}:27017/${config.MONGO_DB_NAME}`;
-
    return new Promise((resolve, reject) => {
-      mongoose.createConnection(mongoDbUrl, {
+      mongoose.createConnection(config.MONGODB_URI, {
          useMongoClient: true
       }).then(connection => {
          initializeDbModels(connection);
       }).then(() => {
-         console.log(`Connected to mongoDb on ${config.MONGO_DB_URI}:27017`); // eslint-disable-line no-console
+         console.log(`Connected to mongoDb on ${config.MONGODB_URI}`); // eslint-disable-line no-console
          resolve();
       }).catch(reject);
    });
