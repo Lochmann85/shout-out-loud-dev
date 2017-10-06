@@ -17,9 +17,26 @@ const HeaderText = styled.span`
    font-size:1.5rem;
    color:${colors.logoLighterBackground};
    vertical-align:middle;
+   @media only screen and (max-width: 767px) {
+      display: none;
+   };
+`;
+
+const MobileHeaderText = styled.span`
+   margin-left:0.7rem;
+   font-size:1.5rem;
+   color:${colors.logoLighterBackground};
+   vertical-align:middle;
+   @media only screen and (min-width: 768px) {
+      display: none;
+   };
 `;
 
 const LogoImage = styled(Image) `
+   @media only screen and (max-width: 767px) {
+      height:32px;
+      width:32px;
+   };
    display:inline-block!important;
 `;
 
@@ -35,15 +52,16 @@ const Navigation = () => (
          <Grid container>
             <Grid.Row>
                <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} />
-               <Grid.Column mobile={12} tablet={11} computer={12} largeScreen={10}>
+               <Grid.Column mobile={10} tablet={11} computer={12} largeScreen={10}>
                   <Menu.Item header >
                      <Link to="/">
                         <LogoImage src={logo} />
                         <HeaderText>Shout Out Loud</HeaderText>
+                        <MobileHeaderText>S-O-L</MobileHeaderText>
                      </Link>
                   </Menu.Item>
                </Grid.Column>
-               <Grid.Column mobile={4} tablet={3} computer={2} largeScreen={2}>
+               <Grid.Column mobile={6} tablet={3} computer={2} largeScreen={2}>
                   <FullHeightMenuItem content="Youre on!" position="right" />
                </Grid.Column>
             </Grid.Row>

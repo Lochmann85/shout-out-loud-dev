@@ -16,6 +16,17 @@ const FlexRoot = styled.div`
    flex-wrap: wrap;
    -ms-flex-align: stretch;
    align-items: stretch;
+   @media only screen and (max-width: 330px) {
+      display: none;
+   };
+`;
+
+const SmallestDeviceInput = styled(Form.Input) `
+   margin-left: 1rem!important;
+   margin-right: 1rem!important;
+   @media only screen and (min-width: 331px) {
+      display: none;
+   };
 `;
 
 const FlexRowStd = styled.div`
@@ -47,7 +58,7 @@ const ThoughtLabel = styled.label`
     flex:0 0 auto;
     @media only screen and (max-width: 767px) {
       display: none;
-   }
+   };
 `;
 
 const ShoutInputColumn = styled.div`
@@ -97,6 +108,10 @@ class PushShoutForm extends React.Component {
                   </ButtonColumn>
                </FlexRowStd>
             </FlexRoot>
+            <SmallestDeviceInput
+               name="message"
+               onChange={this._onInputChange}
+               action={<Button primary type="submit" content="Shout!" />} />
          </Form>
       );
    }

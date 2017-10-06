@@ -12,6 +12,9 @@ import Routes from './pages/Routes';
 
 const FullHeightGrid = styled(Grid) `
    height:calc(100% - 59px);
+   @media only screen and (max-width: 767px) {
+      height:calc(100% - 41px);
+   }
 `;
 
 const AppRow = styled(Grid.Row) `

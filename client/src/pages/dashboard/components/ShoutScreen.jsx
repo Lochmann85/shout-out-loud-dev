@@ -20,11 +20,11 @@ const ShoutScreenBackground = styled.div`
    margin:0 -1rem 3% -1rem;
    padding:90px;
    @media only screen and (max-width:767px) { 
-	   padding:80px;
+	   padding:60px;
    };
    div > div {
       opacity: 0;
-   }
+   };
    -webkit-transition: all 0.4s ease-out;
    -moz-transition: all 0.4s ease-out;
    -ms-transition: all 0.4s ease-out;
@@ -37,6 +37,9 @@ const ShoutScreenBackground = styled.div`
       -o-transition: all 0.1s ease-in;
       transition: all 0.1s ease-in;
       padding:40px;
+      @media only screen and (max-width:767px) { 
+         padding:30px;
+      };
    };
    &.visible {
       -webkit-transition: all 0.2s ease-out;
@@ -45,10 +48,13 @@ const ShoutScreenBackground = styled.div`
       -o-transition: all 0.2s ease-out;
       transition: all 0.2s ease-out;
       padding:60px;
+      @media only screen and (max-width:767px) { 
+         padding:40px;
+      };
       div > div {
          opacity: 1;
-      }
-   }
+      };
+   };
    border:1px solid ${colors.logoDarkerBackground};
    -webkit-border-radius:2rem;
    border-radius:2rem;
