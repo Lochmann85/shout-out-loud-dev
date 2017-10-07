@@ -1,41 +1,24 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
-// import {
-//    roleAdministration,
-// } from './../../authorizationApi/authorizationService';
-
-// import { possibleRules } from './../../authorizationApi/possibleRules';
+import {
+   findAllRules,
+} from './../../mongoDbApi/services/rule/ruleDbService';
 
 const types = `
-type Ruleset {
-   read: Boolean!
-   write: Boolean!
-   delete: Boolean!
-}
 type Rule {
    id: ID!
    name: String!
-   ruleset: Ruleset!
-}
-input RuleData {
-   name: String
-   ruleset: RulesetData
-}
-input RulesetData {
-   read: Boolean
-   write: Boolean
-   delete: Boolean
 }`;
 
 const queries = `
-getAllRuleNames: [String!]
+getAllRules: [Rule!]
 `;
 
 const _queriesResolver = {
    Query: {
-      getAllRuleNames: /*roleAdministration("rw")*/(() => {
-         return null;
-      })
+      getAllRules: () => {
+         return findAllRules();
+      }
    }
 };
 
