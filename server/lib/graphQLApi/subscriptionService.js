@@ -4,6 +4,9 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import { appServer } from './graphQLService';
 import executable from './schema/executableSchema';
+import { SubscriptionAuthenticationMiddleware } from './../authenticationApi/authenticationService';
+
+const authenticationMiddleware = new SubscriptionAuthenticationMiddleware();
 
 let subscriptionServer = null;
 
@@ -22,8 +25,10 @@ const initializeSubscriptionService = (serverConfig) => {
       subscriptionServer = SubscriptionServer.create(
          {
             schema: executable.schema,
-            execute,
             subscribe,
+            execute: (...args) => authenticationMiddleware.apply(args).then(args => {
+               return execute(...args);
+            })
          },
          {
             server: graphQlServer,
@@ -31,8 +36,8 @@ const initializeSubscriptionService = (serverConfig) => {
          },
       );
 
-      graphQlServer.listen(serverConfig.OPENSHIFT_PORT, serverConfig.OPENSHIFT_IP, () => {
-         console.log(`WebSocket Server is now running on http://${serverConfig.OPENSHIFT_IP}:${serverConfig.OPENSHIFT_PORT}/graphql`); // eslint-disable-line no-console
+      graphQlServer.listen(serverConfig.PORT, () => {
+         console.log(`WebSocket Server is now running on ws://0.0.0.0:${serverConfig.PORT}/graphql`); // eslint-disable-line no-console
 
          resolve();
       });
