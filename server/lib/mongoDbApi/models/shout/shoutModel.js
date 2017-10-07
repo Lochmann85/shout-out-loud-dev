@@ -13,7 +13,7 @@ const shoutSchema = new mongoose.Schema({
       type: Boolean,
       required: true,
    }
-});
+}, { timestamps: true });
 
 /**
  * @public
