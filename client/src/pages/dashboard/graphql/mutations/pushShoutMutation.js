@@ -1,7 +1,7 @@
 import { graphql, gql } from 'react-apollo';
 
 const pushShoutMutationDefinition = gql`
-mutation pushShout($shout: ShoutInput!) {
+mutation pushShoutMutation($shout: ShoutInput!) {
    pushShout(shout: $shout)}
 `;
 

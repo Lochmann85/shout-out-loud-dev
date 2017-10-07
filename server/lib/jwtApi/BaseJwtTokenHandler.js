@@ -74,4 +74,4 @@ class BaseJwtTokenHandler {
 
 };
 
-export default BaseJwtTokenHandler
+export default BaseJwtTokenHandler;
