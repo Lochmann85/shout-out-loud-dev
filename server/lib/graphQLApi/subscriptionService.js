@@ -4,6 +4,9 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import { appServer } from './graphQLService';
 import executable from './schema/executableSchema';
+import { SubscriptionAuthenticationMiddleware } from './../authenticationApi/authenticationService';
+
+const authenticationMiddleware = new SubscriptionAuthenticationMiddleware();
 
 let subscriptionServer = null;
 
@@ -22,8 +25,10 @@ const initializeSubscriptionService = (serverConfig) => {
       subscriptionServer = SubscriptionServer.create(
          {
             schema: executable.schema,
-            execute,
             subscribe,
+            execute: (...args) => authenticationMiddleware.apply(args).then(args => {
+               return execute(...args);
+            })
          },
          {
             server: graphQlServer,
