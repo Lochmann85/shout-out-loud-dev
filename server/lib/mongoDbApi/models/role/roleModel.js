@@ -1,11 +1,7 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
-import ruleModel from './ruleModel';
-// import {
-//    possibleRules,
-//    possibleRulesets
-// } from './../../../authorizationApi/possibleRules';
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const roleSchema = new mongoose.Schema({
    name: {
@@ -16,7 +12,7 @@ const roleSchema = new mongoose.Schema({
    isStatic: {
       type: Boolean,
    },
-   rules: [ruleModel.schema],
+   rules: [{ type: ObjectId, ref: "Rule" }],
 }, { timestamps: true });
 
 const duplicateErrorMessage = `There already exists a role with the given name.`;
@@ -53,51 +49,6 @@ roleSchema.post("findOneAndUpdate", (error, user, next) => {
       next(error);
    }
 });
-
-/**
- * @public
- * @function buildRoleWithRules
- * @description builds a new role with the selected rules
- * @param {object} roleData - user input
- * @returns {Promise} of new Instance of role model
- */
-// roleSchema.statics.buildRoleWithRules = function (roleData) {
-//    return new Promise((resolve, reject) => {
-//       const Rule = this.internalModels.Rule,
-//          rules = [];
-//       possibleRules.forEach(possibleRule => {
-//          const rule = {
-//             name: possibleRule.name,
-//             ruleset: {}
-//          };
-//          const foundRule = roleData.rules.find(rule => rule.name === possibleRule.name);
-//          if (foundRule)
-//             rule.ruleset = foundRule.ruleset;
-//          else
-//             possibleRulesets.forEach(possibleRule => {
-//                rule.ruleset[possibleRule] = false;
-//             });
-//          rules.push(new Rule(rule));
-//       });
-
-//       resolve(new this({
-//          name: roleData.name,
-//          rules,
-//          isStatic: false
-//       }));
-//    });
-// };
-
-/**
- * @public
- * @function instantiateInternalModels
- * @description instantiates the models of the internally used schemas
- * @param {object} mongoDbConnection - the connection to the mongoDb
- */
-roleSchema.statics.instantiateInternalModels = function (mongoDbConnection) {
-   this.internalModels = {};
-   this.internalModels[ruleModel.name] = mongoDbConnection.model(ruleModel.name, ruleModel.schema);
-};
 
 export default {
    schema: roleSchema,

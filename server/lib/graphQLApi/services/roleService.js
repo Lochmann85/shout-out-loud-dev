@@ -20,7 +20,7 @@ type Role {
 }
 input RoleData {
    name: String
-   rules: [RuleData]
+   rules: [ID!]
 }`;
 
 const queries = `
@@ -29,8 +29,8 @@ const queries = `
 `;
 
 const mutations = `
-   createRole(roleData: RoleData!): Role!
-   updateRole(roleData: RoleData!, roleId: ID!): Role!
+   createRole(roleData: RoleData): Role!
+   updateRole(roleData: RoleData, roleId: ID!): Role!
    deleteRole(roleId: ID!): Role!
 `;
 
