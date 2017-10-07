@@ -1,6 +1,6 @@
 const TIMER_INTERVAL = process.env.TIMER_INTERVAL || 7000,
    MAX_SHOWN_SHOUTS = process.env.MAX_SHOWN_SHOUTS || 100,
-   JWT_SECRET = process.env.JWT_SECRET || "development";
+   GRAPHQL_JWT_SECRET = process.env.GRAPHQL_JWT_SECRET || "development";
 
 const serverConfig = {
    PORT: process.env.PORT || 8000,
@@ -11,5 +11,5 @@ export {
    serverConfig,
    TIMER_INTERVAL,
    MAX_SHOWN_SHOUTS,
-   JWT_SECRET,
+   GRAPHQL_JWT_SECRET,
 };
