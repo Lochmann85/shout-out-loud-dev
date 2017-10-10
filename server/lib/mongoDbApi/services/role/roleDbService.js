@@ -23,7 +23,7 @@ const staticRoleError = new CustomError("StaticRole", {
  * @returns {Promise} of roles
  */
 const findAllRoles = () => {
-   return roleModel.find().exec()
+   return roleModel.find().populate("rules").exec()
       .catch(error => new MongooseSingleError(error));
 };
 
@@ -36,7 +36,7 @@ const findAllRoles = () => {
  */
 const _findRole = (mongooseQuery) => {
    return new Promise((resolve, reject) => {
-      mongooseQuery.exec().then(knownRole => {
+      mongooseQuery.populate("rules").exec().then(knownRole => {
          if (knownRole) {
             resolve(knownRole);
          }
@@ -71,9 +71,12 @@ const findRoleById = (roleId) => {
  * @returns {Promise} of new role
  */
 const createRole = (roleData) => {
-   return roleModel.buildRoleWithRules(roleData).then(newRole => {
-      return newRole.save().catch(convertMongooseError);
-   });
+   roleData.isStatic = false;
+   const role = new roleModel(roleData); // eslint-disable-line new-cap
+
+   return role.save().then(newRole => {
+      return findRoleById(newRole.id);
+   }).catch(convertMongooseError);
 };
 
 /**
@@ -85,7 +88,8 @@ const createRole = (roleData) => {
  */
 const updateRole = (roleData, roleId) => {
    const set = {
-      name: roleData.name
+      name: roleData.name,
+      rules: roleData.rules,
    };
    return findRoleById(roleId).then(role => {
       if (role.isStatic) {
@@ -93,7 +97,7 @@ const updateRole = (roleData, roleId) => {
       }
       else {
          return roleModel.findByIdAndUpdate(roleId, { $set: set })
-            .exec().catch(convertMongooseError);
+            .populate("rules").exec().catch(convertMongooseError);
       }
    });
 };
@@ -106,7 +110,7 @@ const updateRole = (roleData, roleId) => {
  * @returns {Promise} of default role
  */
 const _updateRelatedUser = (role) => {
-   const roleQuery = roleModel.findOne({ name: "LicenceUser" });
+   const roleQuery = roleModel.findOne({ name: "whisperer" });
 
    return _findRole(roleQuery).then(defaultRole => {
       const searchParams = { role: role.id },

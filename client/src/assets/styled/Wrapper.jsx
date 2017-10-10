@@ -23,9 +23,19 @@ const VerticalAlignTextWrapper = styled(TextEllipsisWrapper) `
    height:100%;
 `;
 
+const BasicFlexWrapper = styled.div.attrs({ direction: props => props.direction || "row" }) `
+   display: -ms-flexbox;
+   display: -webkit-flex;
+   display: flex;
+   -webkit-flex-direction: ${props => props.direction};
+   -ms-flex-direction: ${props => props.direction};
+   flex-direction: ${props => props.direction};
+`;
+
 export {
    FullHeightWrapper,
    HiddenWrapper,
    TextEllipsisWrapper,
-   VerticalAlignTextWrapper
+   VerticalAlignTextWrapper,
+   BasicFlexWrapper
 };

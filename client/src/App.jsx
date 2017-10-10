@@ -26,8 +26,8 @@ const App = () => (
       <Navigation />
       <FullHeightGrid container>
          <AppRow>
-            <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} />
-            <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12}>
+            <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
+            <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>
                <Routes />
             </Grid.Column>
          </AppRow>

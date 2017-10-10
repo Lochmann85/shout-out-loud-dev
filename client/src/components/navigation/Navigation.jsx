@@ -51,8 +51,8 @@ const Navigation = () => (
       <Menu secondary>
          <Grid container>
             <Grid.Row>
-               <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} />
-               <Grid.Column mobile={10} tablet={11} computer={12} largeScreen={10}>
+               <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
+               <Grid.Column mobile={10} tablet={11} computer={12} largeScreen={10} widescreen={10}>
                   <Menu.Item header >
                      <Link to="/">
                         <LogoImage src={logo} />
@@ -61,7 +61,7 @@ const Navigation = () => (
                      </Link>
                   </Menu.Item>
                </Grid.Column>
-               <Grid.Column mobile={6} tablet={3} computer={2} largeScreen={2}>
+               <Grid.Column mobile={6} tablet={3} computer={2} largeScreen={2} widescreen={2}>
                   <FullHeightMenuItem content="Youre on!" position="right" />
                </Grid.Column>
             </Grid.Row>
