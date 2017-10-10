@@ -3,15 +3,12 @@ import styled from 'styled-components';
 
 import { Form, Input, Button } from 'semantic-ui-react';
 
+import { BasicFlexWrapper } from './../../../assets/styled/Wrapper';
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
 import pushShoutMutation from './../graphql/mutations/pushShoutMutation';
 
-const FlexRoot = styled.div`
-   display: -ms-flexbox;
-   display: flex;
-   -ms-flex-direction: row;
-   flex-direction: row;
+const FlexRoot = styled(BasicFlexWrapper) `
    -ms-flex-wrap: wrap;
    flex-wrap: wrap;
    -ms-flex-align: stretch;
@@ -29,12 +26,8 @@ const SmallestDeviceInput = styled(Form.Input) `
    };
 `;
 
-const FlexRowStd = styled.div`
+const FlexRowStd = styled(BasicFlexWrapper) `
    position: relative;
-   display: -ms-flexbox;
-   display: flex;
-   -ms-flex-direction: row;
-   flex-direction: row;
    -ms-flex-wrap: wrap;
    flex-wrap: wrap;
    -ms-flex-pack: inherit;
