@@ -9,18 +9,6 @@ import {
    deleteUser
 } from './../../mongoDbApi/services/user/userDbService';
 
-// import {
-//    and,
-//    or
-// } from './../../helper/compositions';
-// import {
-//    userAdministration,
-//    roleAdministration,
-//    self,
-//    notSelf
-// } from './../../authorizationApi/authorizationService';
-// import NotSelf from './../../authorizationApi/check/NotSelf';
-
 const types = `
 interface IUser {
    id: ID!
@@ -29,11 +17,13 @@ interface IUser {
 }
 type User implements IUser {
    id: ID!
+   email: String!
    name: String!
    role: Role!
    createdAt: String!
 }
 input UserData {
+   email: String
    name: String
    role: ID
    password: String
@@ -52,12 +42,12 @@ getUser(userId: ID!): User!
 
 const _queriesResolver = {
    Query: {
-      getAllUsers: /*userAdministration("r")*/(() => {
+      getAllUsers: () => {
          return findAllUsers();
-      }),
-      getUser: /*or(userAdministration("r"), self())*/((_, { userId }) => {
+      },
+      getUser: (_, { userId }) => {
          return findUserById(userId);
-      })
+      }
    }
 };
 
@@ -70,26 +60,18 @@ deleteUser(userId: ID!): User!
 
 const _mutationsResolver = {
    Mutation: {
-      createUser: /*and(userAdministration("rw"), roleAdministration("r"))*/((_, { userData }) => {
+      createUser: (_, { userData }) => {
          return createUser(userData);
-      }),
-      updateUser: /*or(userAdministration("rw"), self())*/((_, { userData, userId }, { viewer }) => {
-         // const notSelf = new NotSelf();
-         // if (userData.role) {
-         //    return notSelf.isAllowed({ userId }, viewer).then(() => {
-         //       return updateUser(userData, userId);
-         //    });
-         // }
-         // else {
+      },
+      updateUser: (_, { userData, userId }, { viewer }) => {
          return updateUser(userData, userId);
-         // }
-      }),
-      changeUserPassword: /*or(userAdministration("rw"), self())*/((_, { passwordChangeData, userId }, context) => {
+      },
+      changeUserPassword: (_, { passwordChangeData, userId }, context) => {
          return changeUserPassword(passwordChangeData, userId);
-      }),
-      deleteUser: /*and(userAdministration("d"), notSelf())*/((_, { userId }) => {
+      },
+      deleteUser: (_, { userId }) => {
          return deleteUser(userId);
-      })
+      }
    }
 };
 

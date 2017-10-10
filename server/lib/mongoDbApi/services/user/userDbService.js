@@ -86,6 +86,7 @@ const createUser = (userData) => {
  */
 const updateUser = (userData, userId) => {
    const set = {
+      email: userData.email,
       name: userData.name
    };
    if (userData.role) {

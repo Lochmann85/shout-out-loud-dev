@@ -18,7 +18,8 @@
       "jsonwebtoken": "^7.4.1",
       "mongoose": "^4.11.11",
       "mongoose-unique-validator": "^1.0.5",
-      "subscriptions-transport-ws": "0.8.1"
+      "subscriptions-transport-ws": "0.8.1",
+      "validator": "^9.0.0"
    },
    "devDependencies": {
       "babel-cli": "^6.26.0",

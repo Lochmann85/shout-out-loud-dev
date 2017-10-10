@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import uniqueValidator from 'mongoose-unique-validator';
+import { isEmail } from 'validator';
 
 import {
    CustomError,
@@ -15,19 +16,34 @@ const passwordValidate = {
    validator: function (newPassword) {
       return (newPassword.length >= PASSWORD_LENGTH);
    },
-   message: "The new password is not of the required length (6+)"
+   message: "The new password is not of the required length (6+)."
+};
+
+const emailValidate = {
+   validator: function (newEMail) {
+      return isEmail(newEMail);
+   },
+   message: "Please provide a correct E-Mail."
 };
 
 const userSchema = new mongoose.Schema({
-   name: {
+   email: {
       type: String,
       required: true,
       unique: true,
+      validate: emailValidate
+   },
+   name: {
+      type: String,
+      required: true,
    },
    password: {
       type: String,
-      validate: passwordValidate,
       required: true,
+      validate: passwordValidate,
+   },
+   resetPasswordToken: {
+      type: String
    },
    role: {
       type: ObjectId,
@@ -36,7 +52,7 @@ const userSchema = new mongoose.Schema({
    }
 }, { timestamps: true });
 
-const duplicateErrorMessage = "There already exists a user with the given name.";
+const duplicateErrorMessage = "There already exists a user with the given E-Mail.";
 
 userSchema.plugin(uniqueValidator, { message: duplicateErrorMessage });
 
@@ -87,14 +103,20 @@ userSchema.pre("findOneAndUpdate", function (next) {
          _continueWithHashedPassword(next, update["$set"]);
       }
       else {
-         next({
-            errors: { new: { message: passwordValidate.message } }
-         });
+         next({ errors: { new: { message: passwordValidate.message } } });
+      }
+   }
+   else if (update["$set"] && update["$set"].email && update["$set"].email !== "") {
+      this.options.runValidators = true;
+      if (emailValidate.validator(update["$set"].email)) {
+         return next();
+      }
+      else {
+         next({ errors: { email: { message: emailValidate.message } } });
       }
    }
    else {
       this.options.runValidators = true;
-
       return next();
    }
 });
