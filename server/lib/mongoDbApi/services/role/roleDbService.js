@@ -71,9 +71,12 @@ const findRoleById = (roleId) => {
  * @returns {Promise} of new role
  */
 const createRole = (roleData) => {
-   return roleModel.buildRoleWithRules(roleData).then(newRole => {
-      return newRole.save().catch(convertMongooseError);
-   });
+   roleData.isStatic = false;
+   const role = new roleModel(roleData); // eslint-disable-line new-cap
+
+   return role.save().then(newRole => {
+      return findRoleById(newRole.id);
+   }).catch(convertMongooseError);
 };
 
 /**
