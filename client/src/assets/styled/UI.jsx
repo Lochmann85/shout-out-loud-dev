@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Message, Segment, Icon } from 'semantic-ui-react';
+import { Message, Segment, Icon, Form } from 'semantic-ui-react';
 
 import colors from './../colors/shout-out-loud-colors.json';
 
@@ -16,9 +16,13 @@ const SegmentBackground = styled(Segment) `
    border: 1px solid ${colors.logoDarkerBackground}!important;
 `;
 
-
-const ColoredFormLabel = styled.label`
-   color: ${colors.logoLighterBackground}!important;
+const ColoredFormField = styled(Form.Field) `
+   :not(.error)>label {
+      color: ${colors.logoLighterBackground}!important;
+   };
+   >label {
+      color: ${colors.lightErrorColor}!important;
+   };
 `;
 
 const BaseIcon = styled(Icon) `
@@ -30,6 +34,6 @@ font-size: 1.5em!important;
 export {
    InfoMessage,
    SegmentBackground,
-   ColoredFormLabel,
+   ColoredFormField,
    BaseIcon,
 };
