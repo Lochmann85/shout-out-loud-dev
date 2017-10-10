@@ -29,7 +29,15 @@ const fragments = {
             }
          }
       }`
-   }
+   },
+   rules: {
+      name: "UpdateRoleRules",
+      document: gql`
+      fragment UpdateRoleRules on Rule {
+         ...${roleFormFragments.rules.name}
+      }
+      ${roleFormFragments.rules.document}`
+   },
 };
 graphQLStore.addFragment(fragments.roles);
 

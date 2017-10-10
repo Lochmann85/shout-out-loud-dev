@@ -1,5 +1,6 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
+import gql from 'graphql-tag';
 
 import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
 
@@ -28,7 +29,7 @@ class UpdateRole extends React.Component {
    }
 
    render() {
-      const { getRoleQuery: { getRole }, viewer } = this.props;
+      const { getRoleQuery: { getRole }, getAllRulesForRoleUpdateQuery: { getAllRules }, viewer } = this.props;
 
       let updateRoleContent,
          title;
@@ -39,6 +40,7 @@ class UpdateRole extends React.Component {
             role={getRole}
             onSubmit={this._onSubmit}
             errors={this.state.errors}
+            rules={getAllRules}
             submitButtonTitle="Update"
             readOnly={this._formIsReadOnly(getRole, viewer)} />;
       }
@@ -72,4 +74,16 @@ class UpdateRole extends React.Component {
    _onShowError = (errors) => this.setState({ errors });
 };
 
-export default queryErrorHandling(getRoleQuery)(updateRoleMutation(UpdateRole));
+export default queryErrorHandling(getRoleQuery)(
+   queryErrorHandling({
+      document: gql`
+      query getAllRulesForRoleUpdateQuery {
+         getAllRules {
+            ...${updateRoleFragments.rules.name}
+         }
+      }
+      ${updateRoleFragments.rules.document}`,
+      config: {
+         name: "getAllRulesForRoleUpdateQuery",
+      }
+   })(updateRoleMutation(UpdateRole)));

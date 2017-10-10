@@ -14,4 +14,12 @@ export default {
          }
       }`
    },
+   rules: {
+      name: "RoleFormRules",
+      document: gql`
+      fragment RoleFormRules on Rule {
+         id
+         name
+      }`
+   }
 };
