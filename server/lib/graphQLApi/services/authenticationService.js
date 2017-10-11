@@ -1,22 +1,40 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
-import { authenticateUser } from './../../mongoDbApi/services/user/authenticationDbService';
-import { createNewToken } from './../../jwtApi/jwtService';
+import {
+   authenticateUser,
+   findUserByEMail,
+   updateResetPwdTokenInUser,
+} from './../../mongoDbApi/services/user/authenticationDbService';
+import {
+   createNewToken,
+   createNewResetPasswordToken
+} from './../../jwtApi/jwtService';
 
 const types = `
+type MenuItem {
+   label: String!
+   path: String!
+}
+type MenuGroup {
+   label: String!
+   menuItems: [MenuItem!]!
+   subMenus: [MenuGroup!]
+}
 interface IAuthorized {
    id: ID!
    name: String!
    role: Role!
+   navigation: [MenuGroup!]
 }
 type Viewer implements IUser, IAuthorized {
    id: ID!
    name: String!
    token: String!
    role: Role!
+   navigation: [MenuGroup!]
 }
 input Credentials {
-   name: String
+   email: String
    password: String
 }
 `;
@@ -44,6 +62,8 @@ const _queriesResolver = {
 
 const mutations = `
 login(credentials: Credentials): Viewer!
+sendResetPassword(email: String): Boolean!
+resetPassword(password: String, token: String): Boolean!
 `;
 
 const _mutationsResolver = {
@@ -56,10 +76,25 @@ const _mutationsResolver = {
          }).then(token => {
             return {
                id: knownUser.id,
-               name: knownUser.name,
                token
             };
+         }).catch(error => {
+            return Promise.reject(error);
          });
+      },
+      sendResetPassword(_, { email }) {
+         return findUserByEMail(email).then(knownUser => {
+            return createNewResetPasswordToken(knownUser).then(token => {
+               return updateResetPwdTokenInUser(token, knownUser.id).then(user => {
+                  return true;
+               });
+            });
+         }).catch(error => {
+            return Promise.reject(error);
+         });
+      },
+      resetPassword(_, { password, token }) {
+         return true;
       }
    }
 };

@@ -36,13 +36,15 @@ class UpdateRole extends React.Component {
 
       if (getRole) {
          title = `Update role: ${getRole.name}`;
-         updateRoleContent = <RoleForm
-            role={getRole}
-            onSubmit={this._onSubmit}
-            errors={this.state.errors}
-            rules={getAllRules}
-            submitButtonTitle="Update"
-            readOnly={this._formIsReadOnly(getRole, viewer)} />;
+         updateRoleContent = <SegmentBackground>
+            <RoleForm
+               role={getRole}
+               onSubmit={this._onSubmit}
+               errors={this.state.errors}
+               rules={getAllRules}
+               submitButtonTitle="Update"
+               readOnly={this._formIsReadOnly(getRole, viewer)} />
+         </SegmentBackground>;
       }
       else {
          title = "";
@@ -51,9 +53,7 @@ class UpdateRole extends React.Component {
 
       return (
          <BaseContentLayout title={title}>
-            <SegmentBackground>
-               {updateRoleContent}
-            </SegmentBackground>
+            {updateRoleContent}
          </BaseContentLayout>
       );
    }
