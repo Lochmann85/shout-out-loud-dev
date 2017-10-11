@@ -23,12 +23,12 @@ const AppRow = styled(Grid.Row) `
 
 const App = () => (
    <FullHeightWrapper>
-      <Navigation />
+      <Navigation viewer={null} />
       <FullHeightGrid container>
          <AppRow>
             <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
             <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>
-               <Routes />
+               <Routes viewer={null} />
             </Grid.Column>
          </AppRow>
       </FullHeightGrid>

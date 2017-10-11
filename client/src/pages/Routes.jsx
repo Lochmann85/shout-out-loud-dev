@@ -15,8 +15,12 @@ const Routes = () => (
    </Switch>
 );
 
-Routes.fragments = {
+Routes.propTypes = {
    viewer: propType(routesFragments.viewer.document)
+};
+
+Routes.fragments = {
+   viewer: routesFragments.viewer
 };
 
 export default Routes;
