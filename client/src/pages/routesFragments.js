@@ -1,7 +1,5 @@
 import gql from 'graphql-tag';
 
-import graphQLStore from './../storeHandler/graphQLStore';
-
 import privateRoutesFragments from './privateRoutesFragments';
 import dashboardFragments from './dashboard/graphql/fragments/dashboard';
 

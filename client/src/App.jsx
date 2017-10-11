@@ -1,10 +1,13 @@
 import React from 'react';
+import gql from 'graphql-tag';
 import styled from 'styled-components';
 
 import 'semantic-ui-css/semantic.min.css';
 import './helper/initialization';
 
 import { Grid } from 'semantic-ui-react';
+
+import graphQLStore from './storeHandler/graphQLStore';
 
 import { FullHeightWrapper } from './assets/styled/Wrapper';
 import Navigation from './components/navigation/Navigation';
@@ -34,5 +37,21 @@ const App = () => (
       </FullHeightGrid>
    </FullHeightWrapper>
 );
+
+App.fragments = {
+   viewer: {
+      name: "RootViewer",
+      typeName: "Viewer",
+      document: gql`
+      fragment RootViewer on Viewer {
+         token
+         ...${Routes.fragments.viewer.name}
+         ...${Navigation.fragments.viewer.name}
+      }
+      ${Routes.fragments.viewer.document}
+      ${Navigation.fragments.viewer.document}`
+   }
+};
+graphQLStore.addFragment(App.fragments.viewer);
 
 export default App;
