@@ -32,7 +32,7 @@ const ShoutOfUser = styled.div`
 
 class ShoutPreview extends React.Component {
 
-   static fragments = {
+   static propTypes = {
       shout: propType(shoutPreviewFragment.shouts.document),
    }
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { propType } from 'graphql-anywhere';
+import styled from 'styled-components';
+
 import { Form, Modal, Button, Message } from 'semantic-ui-react';
 
 import passwordChangerFragments from './../graphql/fragments/passwordChanger';
@@ -8,6 +10,9 @@ import changeUserPasswordMutation from './../graphql/mutations/changeUserPasswor
 import mutationErrorHandling from './../../../components/errorHandling/mutationErrorHandling';
 import checkForErrorInInput from './../../../helper/validation';
 
+const StyledDescription = styled(Modal.Description) `
+   margin-bottom: 1rem!important;
+`;
 
 class PasswordChanger extends React.Component {
 
@@ -46,10 +51,12 @@ class PasswordChanger extends React.Component {
          list={this.state.errors.map(error => error.message)} /> : null;
 
       return (
-         <Modal {...others}>
+         <Modal {...others} size="small">
             <Modal.Header content={header} />
             <Modal.Content>
-               {description}
+               <StyledDescription>
+                  {description}
+               </StyledDescription>
                <Form>
                   <Form.Input name="password"
                      label="Old password"
@@ -75,13 +82,12 @@ class PasswordChanger extends React.Component {
                {errorBox}
             </Modal.Content>
             <Modal.Actions>
+               <Button content="Close"
+                  onClick={this._onClose} />
                <Button primary
                   content="Confirm"
                   type="submit"
-                  onClick={this._onSubmit}
-                  floated="left" />
-               <Button content="Close"
-                  onClick={this._onClose} />
+                  onClick={this._onSubmit} />
             </Modal.Actions>
          </Modal>
       );
