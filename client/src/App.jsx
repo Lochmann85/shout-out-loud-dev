@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import gql from 'graphql-tag';
 import styled from 'styled-components';
 
@@ -24,34 +25,52 @@ const AppRow = styled(Grid.Row) `
    padding-bottom:0!important;
 `;
 
-const App = () => (
-   <FullHeightWrapper>
-      <Navigation viewer={null} />
-      <FullHeightGrid container>
-         <AppRow>
-            <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
-            <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>
-               <Routes viewer={null} />
-            </Grid.Column>
-         </AppRow>
-      </FullHeightGrid>
-   </FullHeightWrapper>
-);
+class App extends React.Component {
 
-App.fragments = {
-   viewer: {
-      name: "RootViewer",
-      typeName: "Viewer",
-      document: gql`
-      fragment RootViewer on Viewer {
-         token
-         ...${Routes.fragments.viewer.name}
-         ...${Navigation.fragments.viewer.name}
+   static fragments = {
+      viewer: {
+         name: "RootViewer",
+         typeName: "Viewer",
+         document: gql`
+         fragment RootViewer on Viewer {
+            token
+            ...${Routes.fragments.viewer.name}
+            ...${Navigation.fragments.viewer.name}
+         }
+         ${Routes.fragments.viewer.document}
+         ${Navigation.fragments.viewer.document}`
       }
-      ${Routes.fragments.viewer.document}
-      ${Navigation.fragments.viewer.document}`
+   };
+
+   render() {
+      const { getViewerQuery, location: { state } } = this.props;
+
+      let getViewer = null;
+      if (getViewerQuery) {
+         getViewer = getViewerQuery.getViewer;
+
+         if (localStorage.getItem("jwtToken") && getViewer.token) {
+            localStorage.setItem("jwtToken", getViewer.token);
+         }
+      }
+
+      return (
+         <FullHeightWrapper>
+            <Navigation viewer={getViewer} currentPathState={state} />
+            <FullHeightGrid container>
+               <AppRow>
+                  <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
+                  <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>
+                     <Routes viewer={getViewer} />
+                  </Grid.Column>
+               </AppRow>
+            </FullHeightGrid>
+         </FullHeightWrapper>
+      );
    }
 };
+
+
 graphQLStore.addFragment(App.fragments.viewer);
 
-export default App;
+export default withRouter(App);

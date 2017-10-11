@@ -6,7 +6,6 @@ import {
    updateResetPwdTokenInUser,
 } from './../../mongoDbApi/services/user/authenticationDbService';
 import {
-   createNewToken,
    createNewResetPasswordToken
 } from './../../jwtApi/jwtService';
 
@@ -45,14 +44,12 @@ getViewer: Viewer!
 
 const _queriesResolver = {
    Query: {
-      getViewer(_, args, context) {
-         let knownViewer = context.viewer;
-
-         return createNewToken(knownViewer).then(token => {
+      getViewer(_, args, { viewer, tokenHandler }) {
+         return tokenHandler.encrypt(viewer).then(token => {
             return {
-               id: knownViewer.id,
-               name: knownViewer.name,
-               role: knownViewer.role,
+               id: viewer.id,
+               name: viewer.name,
+               role: viewer.role,
                token,
             };
          });
@@ -68,18 +65,16 @@ resetPassword(password: String, token: String): Boolean!
 
 const _mutationsResolver = {
    Mutation: {
-      login(_, { credentials }) {
+      login(_, { credentials }, { tokenHandler }) {
          let knownUser = null;
          return authenticateUser(credentials).then(user => {
             knownUser = user;
-            return createNewToken(knownUser);
+            return tokenHandler.encrypt(knownUser);
          }).then(token => {
             return {
                id: knownUser.id,
                token
             };
-         }).catch(error => {
-            return Promise.reject(error);
          });
       },
       sendResetPassword(_, { email }) {
@@ -89,8 +84,6 @@ const _mutationsResolver = {
                   return true;
                });
             });
-         }).catch(error => {
-            return Promise.reject(error);
          });
       },
       resetPassword(_, { password, token }) {
