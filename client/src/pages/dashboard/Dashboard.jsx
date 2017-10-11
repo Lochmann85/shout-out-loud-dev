@@ -30,10 +30,11 @@ const Dashboard = ({ shoutsQueueQuery }) => {
    );
 };
 
-Dashboard.fragments = {
+Dashboard.propTypes = {
    shoutsQueueQuery: PropTypes.shape({
       getShoutsQueue: propType(dashboardFragments.shouts.document)
-   })
+   }),
+   viewer: propType(dashboardFragments.viewer.document)
 };
 
 export default shoutsQueueQuery(Dashboard);

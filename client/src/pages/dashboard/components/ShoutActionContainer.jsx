@@ -52,7 +52,7 @@ const SHOWN_SHOUTS_COMPUTER = 5;
 
 class ShoutActionContainer extends React.Component {
 
-   static fragments = {
+   static propTypes = {
       shoutsQueueQuery: PropTypes.shape({
          getShoutsQueue: propType(shoutActionContainerFragments.shouts.document)
       })

@@ -7,11 +7,11 @@ import Dashboard from './dashboard/Dashboard';
 import ErrorPage from './error/ErrorPage';
 import PrivateRoutes from './PrivateRoutes';
 
-const Routes = () => (
+const Routes = ({ viewer }) => (
    <Switch>
-      <Route exact path="/" component={Dashboard} />
+      <Route exact path="/" render={(props) => <Dashboard {...props} viewer={viewer} />} />
       <Route path="/error" component={ErrorPage} />
-      <Route path="/" render={(props) => <PrivateRoutes {...props} />} />
+      <Route path="/" render={(props) => <PrivateRoutes {...props} viewer={viewer} />} />
    </Switch>
 );
 
