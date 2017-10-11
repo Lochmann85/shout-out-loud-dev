@@ -1,18 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
 import { propType } from 'graphql-anywhere';
 import PropTypes from 'prop-types';
 
 import ShoutActionContainer from './components/ShoutActionContainer';
 import ShoutScreen from './components/ShoutScreen';
-import { HiddenWrapper, FullHeightWrapper } from './../../assets/styled/Wrapper';
+import { HiddenWrapper, WrapperWithOffset } from './../../assets/styled/Wrapper';
 import BaseLayoutLoader from './../../components/layout/BaseLayoutLoader';
 import dashboardFragments from './graphql/fragments/dashboard';
 import shoutsQueueQuery from './graphql/queries/shoutsQueueQuery';
-
-const WrapperWithOffset = styled(FullHeightWrapper) `
-   padding:4% 0;
-`;
 
 const Dashboard = ({ shoutsQueueQuery }) => {
 

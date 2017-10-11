@@ -4,6 +4,10 @@ const FullHeightWrapper = styled.div`
    height:100%;
 `;
 
+const WrapperWithOffset = styled(FullHeightWrapper) `
+padding:4% 0;
+`;
+
 const HiddenWrapper = styled.div`
    display:none;
 `;
@@ -34,6 +38,7 @@ const BasicFlexWrapper = styled.div.attrs({ direction: props => props.direction 
 
 export {
    FullHeightWrapper,
+   WrapperWithOffset,
    HiddenWrapper,
    TextEllipsisWrapper,
    VerticalAlignTextWrapper,
