@@ -12,7 +12,7 @@ const DeleteConfirmation = (props) => {
    };
 
    return (
-      <Modal {...others}>
+      <Modal {...others} size="small">
          <Modal.Header content="Are you sure you want to delete this item" />
          <Modal.Content>
             <Modal.Description>
