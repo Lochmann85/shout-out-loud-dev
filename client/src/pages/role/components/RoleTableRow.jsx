@@ -26,7 +26,7 @@ class RoleTableRow extends React.Component {
    render() {
       const { role, onDeleteClick } = this.props;
 
-      let isSelected = true,
+      let isSelected = this.state.mouseIsOver,
          parentOnDeleteClick = onDeleteClick;
 
       // if (readRoleAdministration.isAllowed(viewer.role)) {

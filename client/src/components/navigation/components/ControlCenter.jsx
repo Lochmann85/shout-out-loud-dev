@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { propType } from 'graphql-anywhere';
 
@@ -48,6 +49,9 @@ class ControlCenter extends React.Component {
          <FullHeightDrowdown item icon="content">
             <ColoredDrowdownMenu>
                <ViewerInfo viewer={viewer} />
+               <StyledDropdownHeader content={"Managment"} />
+               <Dropdown.Item as={Link} to="/user" content={<ColoredSpan>User</ColoredSpan>} />
+               <Dropdown.Item as={Link} to="/role" content={<ColoredSpan>Role</ColoredSpan>} />
                <StyledDropdownHeader content={"Action"} />
                <Dropdown.Item onClick={this._logout} content={<ColoredSpan>Logout</ColoredSpan>} />
             </ColoredDrowdownMenu>

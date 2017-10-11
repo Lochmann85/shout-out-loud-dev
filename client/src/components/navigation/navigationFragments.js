@@ -4,9 +4,9 @@ import controlCenterFragment from './graphql/fragments/controlCenter';
 
 export default {
    viewer: {
-      name: "ControlCenterViewer",
+      name: "NavigationViewer",
       document: gql`
-      fragment ControlCenterViewer on IAuthorized {
+      fragment NavigationViewer on IAuthorized {
          ...${controlCenterFragment.viewer.name}
       }
       ${controlCenterFragment.viewer.document}`
