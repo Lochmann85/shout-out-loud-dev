@@ -11,10 +11,10 @@ class BaseAuthenticationMiddleware {
     * @public
     * @function constructor
     * @description constructor for the base authentication
-    * @param {object} tokenHandler - the token handler object
+    * @param {object} tokenHandlerMap - the token handler map object
     */
-   constructor(tokenHandler) {
-      this._tokenHandler = tokenHandler;
+   constructor(tokenHandlerMap) {
+      this._tokenHandlerMap = tokenHandlerMap;
    }
 
    /**
@@ -27,13 +27,20 @@ class BaseAuthenticationMiddleware {
     */
    apply(args) {
       return new Promise((resolve, reject) => {
+         let tokenHandler;
+         try {
+            tokenHandler = this._getTokenHandlerFromRequest(args, this._tokenHandlerMap);
+         } catch (error) {
+            reject(new UnauthorizedError());
+         }
+
          const encryptedToken = this._getEncryptedToken(args);
          if (encryptedToken) {
-            this._tokenHandler.validate(encryptedToken).then(tokenData => {
+            tokenHandler.validate(encryptedToken).then(tokenData => {
                findUserById(tokenData.userId).then(knownViewer => {
                   this._addContext(args, {
                      viewer: knownViewer,
-                     tokenHandler: this._tokenHandler
+                     tokenHandler
                   });
                   resolve(args);
                }).catch(reject);
@@ -42,9 +49,7 @@ class BaseAuthenticationMiddleware {
          else {
             try {
                if (this._allowedRequests(args)) {
-                  this._addContext(args, {
-                     tokenHandler: this._tokenHandler
-                  });
+                  this._addContext(args, { tokenHandler });
                   resolve(args);
                }
                else {
@@ -55,6 +60,18 @@ class BaseAuthenticationMiddleware {
             }
          }
       });
+   }
+
+   /**
+    * @protected
+    * @function _getTokenHandlerFromRequest
+    * @description gets the encrypted token from the input and the token mapping
+    * @param {array} args the args array
+    * @param {object} tokenHandlerMap the token handler mapping
+    * @returns {bool} true when request is allowed
+    */
+   _getTokenHandlerFromRequest(args, tokenHandlerMap) {
+      throw new Error("FATAL ERROR: BaseAuthenticationMiddleware inherited class needs to implements _getTokenHandlerFromRequest.");
    }
 
    /**

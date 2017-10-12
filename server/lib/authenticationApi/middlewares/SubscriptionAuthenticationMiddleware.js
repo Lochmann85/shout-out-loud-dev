@@ -10,7 +10,11 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
     * @description constructor for the subscription authentication
     */
    constructor() {
-      super(new GraphQLTokenHandler());
+      super({
+         sendResetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
+         resetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
+         default: new GraphQLTokenHandler(),
+      });
       this._notAuthenticatedRequests = [
          {
             operationName: "shoutsQueueQuery",
@@ -57,6 +61,26 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
          }
       });
       return foundRequest;
+   }
+
+   /**
+    * @protected
+    * @function _getTokenHandlerFromRequest
+    * @description gets the encrypted token from the input and the token mapping
+    * @param {array} args the args array
+    * @param {object} tokenHandlerMap the token handler mapping
+    * @returns {bool} true when request is allowed
+    */
+   _getTokenHandlerFromRequest(args, tokenHandlerMap) {
+      const [schema, document, root, context, variables, operation] = args; // eslint-disable-line no-unused-vars
+
+      const tokenHandler = tokenHandlerMap.operation;
+      if (tokenHandler) {
+         return tokenHandler;
+      }
+      else {
+         return tokenHandlerMap.default;
+      }
    }
 
    /**
