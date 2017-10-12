@@ -2,12 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { propType } from 'graphql-anywhere';
+import PropTypes from 'prop-types';
 
 import { Dropdown } from 'semantic-ui-react';
 
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
-import browserHistory from './../../../storeHandler/routerHistory';
 import ViewerInfo from './ViewerInfo';
 
 import controlCenterFragments from './../graphql/fragments/controlCenter';
@@ -39,7 +39,8 @@ const ColoredSpan = styled.span`
 class ControlCenter extends React.Component {
 
    static propTypes = {
-      viewer: propType(controlCenterFragments.viewer.document)
+      viewer: propType(controlCenterFragments.viewer.document),
+      onLogout: PropTypes.func.isRequired,
    }
 
    render() {
@@ -59,9 +60,9 @@ class ControlCenter extends React.Component {
       );
    }
 
-   _logout = () => {
-      localStorage.removeItem("jwtToken");
-      browserHistory.push("/", { isLoginModalOpen: false });
+   _logout = (event) => {
+      event.preventDefault();
+      this.props.onLogout();
    }
 }
 

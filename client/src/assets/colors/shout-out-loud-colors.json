@@ -2,6 +2,7 @@
    "globalBackground": "#333333",
    "screenBackground": "#222222",
    "logoText": "#5f5f5f",
+   "darkerLogoText": "#595959",
    "logoDarkerBackground": "#a6a6a6",
    "logoLighterBackground": "#f5f5f5",
    "lightErrorColor": "#e0b4b4"

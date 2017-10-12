@@ -9,8 +9,8 @@ export default {
       typeName: "IAuthorized",
       document: gql`
       fragment PrivateViewer on IAuthorized {
-         ${userRoutesFragments.viewer.name}
-         ${roleRoutesFragments.viewer.name}
+         ...${userRoutesFragments.viewer.name}
+         ...${roleRoutesFragments.viewer.name}
       }
       ${userRoutesFragments.viewer.document}
       ${roleRoutesFragments.viewer.document}`

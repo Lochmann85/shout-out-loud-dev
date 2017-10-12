@@ -31,10 +31,8 @@ const fragments = {
          name
          role {
             rules {
-               ruleset {
-                  read
-                  write
-               }
+               id
+               name
             }
          }
       }`

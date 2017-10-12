@@ -18,12 +18,14 @@ webSocketClient.use([{
       if (!request.variables) {
          request.variables = {};
       }
+      else if (request.variables.token) {
+         request.variables.token = null;
+      }
 
       const jwtToken = localStorage.getItem("jwtToken");
       if (jwtToken) {
          request.variables.token = jwtToken;
       }
-
       next();
    }
 }]);

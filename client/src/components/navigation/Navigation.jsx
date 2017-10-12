@@ -70,6 +70,8 @@ class Navigation extends React.Component {
    static propTypes = {
       viewer: propType(navigationFragments.viewer.document),
       currentPathState: PropTypes.object,
+      onLoginSuccess: PropTypes.func.isRequired,
+      onLogout: PropTypes.func.isRequired,
    };
 
    static fragments = {
@@ -80,24 +82,33 @@ class Navigation extends React.Component {
       super(props);
 
       this.state = {
-         isLoginModalOpen: props.currentPathState ? props.currentPathState.isLoginModalOpen : false
+         isLoginModalOpen: false
       };
    }
 
+   componentWillReceiveProps(nextProp) {
+      if (nextProp.currentPathState && nextProp.currentPathState.isLoginModalOpen) {
+         this.setState({ isLoginModalOpen: nextProp.currentPathState.isLoginModalOpen });
+      }
+   }
+
    render() {
-      const { viewer } = this.props;
+      const { viewer, onLoginSuccess, onLogout } = this.props;
 
       let controlMenuItem;
       if (viewer) {
          controlMenuItem = <FullHeightMenuMenu position="right">
-            <ControlCenter viewer={viewer} />
+            <ControlCenter viewer={viewer} onLogout={onLogout} />
          </FullHeightMenuMenu>;
       }
       else {
          controlMenuItem = <FullHeightMenuMenu position="right">
             <FullHeightMenuItem onClick={this._openLoginModal}>Log In</FullHeightMenuItem>
             <SingupButton primary content="Sign Up" onClick={this._openSignUpModal} />
-            <LoginModal open={this.state.isLoginModalOpen} onCloseClick={this._closeLoginModal} />
+            <LoginModal
+               open={this.state.isLoginModalOpen}
+               onCloseClick={this._closeLoginModal}
+               onLoginSuccess={onLoginSuccess} />
          </FullHeightMenuMenu>;
       }
 

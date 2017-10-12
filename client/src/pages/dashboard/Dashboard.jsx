@@ -8,26 +8,41 @@ import { HiddenWrapper, WrapperWithOffset } from './../../assets/styled/Wrapper'
 import BaseLayoutLoader from './../../components/layout/BaseLayoutLoader';
 import dashboardFragments from './graphql/fragments/dashboard';
 import shoutsQueueQuery from './graphql/queries/shoutsQueueQuery';
+import queryErrorHandling from './../../components/errorHandling/queryErrorHandling';
+import { checkForUnauthorizedInErrors } from './../../components/errorHandling/checkForErrorTypes';
+import apolloClient from './../../storeHandler/apolloClient';
 
-const Dashboard = ({ shoutsQueueQuery }) => {
+class Dashboard extends React.Component {
 
-   if (shoutsQueueQuery.loading) {
-      return <BaseLayoutLoader />;
+   componentWillReceiveProps(nextProp) {
+      if (nextProp.location.state && nextProp.location.state.resetStore) {
+         nextProp.location.state.resetStore = false;
+
+         apolloClient.resetStore().catch(checkForUnauthorizedInErrors);
+      }
    }
-   else if (shoutsQueueQuery.error) {
-      console.log(shoutsQueueQuery.error);
-      return <BaseLayoutLoader />;
-   }
 
-   return (
-      <WrapperWithOffset>
-         <HiddenWrapper>
-            <h1>Shout out your thought!</h1>
-         </HiddenWrapper>
-         <ShoutScreen />
-         <ShoutActionContainer shoutsQueueQuery={shoutsQueueQuery} />
-      </WrapperWithOffset >
-   );
+   render() {
+      const { shoutsQueueQuery } = this.props;
+
+      if (shoutsQueueQuery.loading) {
+         return <BaseLayoutLoader />;
+      }
+      else if (shoutsQueueQuery.error) {
+         console.log(shoutsQueueQuery.error);
+         return <BaseLayoutLoader />;
+      }
+
+      return (
+         <WrapperWithOffset>
+            <HiddenWrapper>
+               <h1>Shout out your thought!</h1>
+            </HiddenWrapper>
+            <ShoutScreen />
+            <ShoutActionContainer shoutsQueueQuery={shoutsQueueQuery} />
+         </WrapperWithOffset >
+      );
+   }
 };
 
 Dashboard.propTypes = {
@@ -37,4 +52,4 @@ Dashboard.propTypes = {
    viewer: propType(dashboardFragments.viewer.document)
 };
 
-export default shoutsQueueQuery(Dashboard);
+export default queryErrorHandling(shoutsQueueQuery)(Dashboard);

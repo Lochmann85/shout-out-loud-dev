@@ -11,6 +11,9 @@ import viewerInfoFragments from './../graphql/fragments/viewerInfo';
 
 const ColoredHeader = styled(Header) `
    color:${colors.logoLighterBackground}!important;
+   > .sub.header {
+      color:${colors.logoLighterBackground}!important;
+   };
 `;
 
 const ViewerInfoWrapper = styled.div`
@@ -29,6 +32,15 @@ const ViewerIcon = styled(Icon) `
    font-size: 6em!important;
 `;
 
+const ColoredBasicButton = styled(Button) `
+   color:${colors.logoLighterBackground}!important;
+   background: transparent none!important;
+   border: 1px solid ${colors.logoDarkerBackground}!important;
+   :hover {
+      background: ${colors.darkerLogoText}!important;
+   };
+`;
+
 const ViewerInfo = ({ viewer }) => {
 
    let header,
@@ -39,7 +51,7 @@ const ViewerInfo = ({ viewer }) => {
          {viewer.name}
          <Header.Subheader content={viewer.role.name} />
       </ColoredHeader>;
-      profileButton = <Button basic as={Link} to={`/user/update/${viewer.id}`}>Profile</Button>;
+      profileButton = <ColoredBasicButton as={Link} to={`/user/update/${viewer.id}`}>Profile</ColoredBasicButton>;
    }
    else {
       header = <ColoredHeader>

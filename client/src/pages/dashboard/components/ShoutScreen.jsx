@@ -10,6 +10,7 @@ import fontSizeCalculation from './../../../helper/fontSizeCalculation';
 import BaseLayoutLoader from './../../../components/layout/BaseLayoutLoader';
 import shoutScreenFragment from './../graphql/fragments/shoutScreen';
 import currentShoutQuery from './../graphql/queries/currentShoutQuery';
+import queryErrorHandling from './../../../components/errorHandling/queryErrorHandling';
 
 const ShoutScreenBackground = styled.div`
    background-color:${colors.screenBackground};
@@ -86,6 +87,8 @@ class ShoutsScreen extends React.Component {
       this.resized = false;
       this.unsubscribe = null;
 
+      this.loaded = false;
+
       this.state = {
          fontSize: "0px",
          transitionClass: ""
@@ -134,8 +137,8 @@ class ShoutsScreen extends React.Component {
 
    render() {
       const { currentShoutQuery } = this.props;
-
-      if (currentShoutQuery.loading) {
+      if (currentShoutQuery.loading && !this.loaded) {
+         this.loaded = true;
          return <BaseLayoutLoader />;
       }
       else if (currentShoutQuery.error) {
@@ -159,4 +162,4 @@ class ShoutsScreen extends React.Component {
    }
 }
 
-export default currentShoutQuery(ShoutsScreen);
+export default queryErrorHandling(currentShoutQuery)(ShoutsScreen);

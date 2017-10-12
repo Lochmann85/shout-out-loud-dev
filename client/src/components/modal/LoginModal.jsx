@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Modal, Icon } from 'semantic-ui-react';
 
 import LoginForm from './components/LoginForm';
-import browserHistory from './../../storeHandler/routerHistory';
 import loginMutation from './graphql/mutations/loginMutation';
 import mutationErrorHandling from './../../components/errorHandling/mutationErrorHandling';
 
@@ -12,6 +11,7 @@ class LoginModal extends React.Component {
 
    static propTypes = {
       onCloseClick: PropTypes.func.isRequired,
+      onLoginSuccess: PropTypes.func.isRequired,
    }
 
    constructor(props) {
@@ -23,7 +23,7 @@ class LoginModal extends React.Component {
    }
 
    render() {
-      const { onCloseClick, login, ...others } = this.props; //eslint-disable-line no-unused-vars
+      const { onCloseClick, login, onLoginSuccess, ...others } = this.props; //eslint-disable-line no-unused-vars
 
       return (
          <Modal size="tiny" {...others} closeIcon={<Icon name="close" onClick={this._onCloseClick} />}>
@@ -38,9 +38,7 @@ class LoginModal extends React.Component {
    _onSubmit = (credentials) => {
       this.props.login(credentials).then(response => {
          if (response.data.login) {
-            localStorage.setItem("jwtToken", response.data.login.token);
-            this._onCloseClick();
-            browserHistory.push("/", { isLoginModalOpen: false });
+            this.props.onLoginSuccess(response.data.login.token);
          }
       }).catch(error => mutationErrorHandling(error, this._onShowError));
    }

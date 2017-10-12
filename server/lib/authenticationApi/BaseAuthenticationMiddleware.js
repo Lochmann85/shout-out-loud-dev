@@ -3,6 +3,8 @@ import {
    ForbiddenError
 } from './../errorsApi';
 
+import { findUserById } from './../mongoDbApi/services/user/userDbService';
+
 class BaseAuthenticationMiddleware {
 
    /**
@@ -27,12 +29,14 @@ class BaseAuthenticationMiddleware {
       return new Promise((resolve, reject) => {
          const encryptedToken = this._getEncryptedToken(args);
          if (encryptedToken) {
-            this._tokenHandler.validate(encryptedToken).then(knownViewer => {
-               this._addContext(args, {
-                  viewer: knownViewer,
-                  tokenHandler: this._tokenHandler
-               });
-               resolve(args);
+            this._tokenHandler.validate(encryptedToken).then(tokenData => {
+               findUserById(tokenData.userId).then(knownViewer => {
+                  this._addContext(args, {
+                     viewer: knownViewer,
+                     tokenHandler: this._tokenHandler
+                  });
+                  resolve(args);
+               }).catch(reject);
             }).catch(reject);
          }
          else {
