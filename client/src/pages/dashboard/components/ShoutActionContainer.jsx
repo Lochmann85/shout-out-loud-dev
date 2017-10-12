@@ -80,7 +80,7 @@ class ShoutActionContainer extends React.Component {
    }
 
    render() {
-      const { shoutsQueueQuery: { getShoutsQueue } } = this.props;
+      const { shoutsQueueQuery: { getShoutsQueue }, viewer } = this.props;
 
       const ShoutsGroup = [];
       for (let index = 0; index < this.state.shownShouts; ++index) {
@@ -95,7 +95,7 @@ class ShoutActionContainer extends React.Component {
             <Grid>
                <Grid.Row>
                   <Grid.Column>
-                     <PushShoutForm />
+                     <PushShoutForm viewer={viewer} />
                   </Grid.Column>
                </Grid.Row>
             </Grid>

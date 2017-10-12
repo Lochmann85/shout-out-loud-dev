@@ -13,6 +13,7 @@ import browserHistory from './storeHandler/routerHistory';
 import apolloClient from './storeHandler/apolloClient';
 import RouterMatcher from './helper/RouterMatcher';
 import { checkForUnauthorizedInErrors } from './components/errorHandling/checkForErrorTypes';
+import { addFunctionalityToViewerData } from './storeHandler/viewerObject';
 
 import BaseLayoutLoader from './components/layout/BaseLayoutLoader';
 import { FullHeightWrapper } from './assets/styled/Wrapper';
@@ -64,19 +65,21 @@ class App extends React.Component {
          return <BaseLayoutLoader />;
       }
       else {
-         let getViewer = null;
+         let getViewer = null,
+            viewer = null;
          if (getViewerQuery && !getViewerQuery.error) {
             getViewer = getViewerQuery.getViewer;
 
             if (localStorage.getItem("jwtToken") && getViewer.token) {
                localStorage.setItem("jwtToken", getViewer.token);
             }
+            viewer = addFunctionalityToViewerData(getViewer);
          }
 
          return (
             <FullHeightWrapper>
                <Navigation
-                  viewer={getViewer}
+                  viewer={viewer}
                   currentPathState={state}
                   onLoginSuccess={this._handleLoginSuccess}
                   onLogout={this._handleLogout} />
@@ -84,7 +87,7 @@ class App extends React.Component {
                   <AppRow>
                      <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
                      <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>
-                        <Routes viewer={getViewer} />
+                        <Routes viewer={viewer} />
                      </Grid.Column>
                   </AppRow>
                </FullHeightGrid>

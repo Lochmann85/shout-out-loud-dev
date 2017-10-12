@@ -84,6 +84,13 @@ class PushShoutForm extends React.Component {
    }
 
    render() {
+      const { viewer } = this.props;
+
+      let enabled = false;
+      if (viewer) {
+         enabled = viewer.has(["shout"]);
+      }
+
       return (
          <Form onSubmit={this._onSubmit}>
             <FlexRoot>
@@ -91,12 +98,21 @@ class PushShoutForm extends React.Component {
                   <ThoughtLabel>Your thought</ThoughtLabel>
                   <ShoutInputColumn>
                      <Form.Field>
-                        <Input name="message" onChange={this._onInputChange} />
+                        <Input
+                           name="message"
+                           onChange={this._onInputChange}
+                           readOnly={!enabled}
+                        />
                      </Form.Field>
                   </ShoutInputColumn>
                   <ButtonColumn>
                      <Form.Field>
-                        <Button primary type="submit" content="Shout!" />
+                        <Button
+                           primary
+                           type="submit"
+                           content="Shout!"
+                           disabled={!enabled}
+                        />
                      </Form.Field>
                   </ButtonColumn>
                </FlexRowStd>
@@ -104,7 +120,8 @@ class PushShoutForm extends React.Component {
             <SmallestDeviceInput
                name="message"
                onChange={this._onInputChange}
-               action={<Button primary type="submit" content="Shout!" />} />
+               readOnly={!enabled}
+               action={<Button primary type="submit" content="Shout!" disabled={!enabled} />} />
          </Form>
       );
    }

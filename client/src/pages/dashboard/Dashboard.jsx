@@ -23,7 +23,7 @@ class Dashboard extends React.Component {
    }
 
    render() {
-      const { shoutsQueueQuery } = this.props;
+      const { shoutsQueueQuery, viewer } = this.props;
 
       if (shoutsQueueQuery.loading) {
          return <BaseLayoutLoader />;
@@ -39,7 +39,7 @@ class Dashboard extends React.Component {
                <h1>Shout out your thought!</h1>
             </HiddenWrapper>
             <ShoutScreen />
-            <ShoutActionContainer shoutsQueueQuery={shoutsQueueQuery} />
+            <ShoutActionContainer shoutsQueueQuery={shoutsQueueQuery} viewer={viewer} />
          </WrapperWithOffset >
       );
    }
