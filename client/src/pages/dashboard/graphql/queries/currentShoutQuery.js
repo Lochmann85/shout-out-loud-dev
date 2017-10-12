@@ -1,4 +1,4 @@
-import { graphql, gql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import graphQLStore from './../../../../storeHandler/graphQLStore';
 
@@ -22,32 +22,35 @@ if (shoutsFragment) {
    }
    ${shoutsFragment.document}`;
 
-   query = graphql(currentShoutQuery, {
-      name: "currentShoutQuery",
-      props: props => ({
-         currentShoutQuery: {
-            ...props.currentShoutQuery,
-            subscribeToCurrentShoutChanged: () => {
+   query = {
+      document: currentShoutQuery,
+      config: {
+         name: "currentShoutQuery",
+         props: props => ({
+            currentShoutQuery: {
+               ...props.currentShoutQuery,
+               subscribeToCurrentShoutChanged: () => {
 
-               return props.currentShoutQuery.subscribeToMore({
-                  document: currentShoutSubscription,
+                  return props.currentShoutQuery.subscribeToMore({
+                     document: currentShoutSubscription,
 
-                  updateQuery: (previousResult, { subscriptionData }) => {
-                     if (subscriptionData.data) {
-                        const newShout = Object.assign({}, previousResult, {
-                           getCurrentShout: subscriptionData.data.currentShoutChanged,
-                        });
-                        return newShout;
+                     updateQuery: (previousResult, { subscriptionData }) => {
+                        if (subscriptionData.data) {
+                           const newShout = Object.assign({}, previousResult, {
+                              getCurrentShout: subscriptionData.data.currentShoutChanged,
+                           });
+                           return newShout;
+                        }
+                        return previousResult;
                      }
-                     return previousResult;
-                  }
 
-               });
+                  });
 
-            },
-         }
-      }),
-   });
+               },
+            }
+         }),
+      }
+   };
 }
 else {
    throw new Error("FATAL ERROR, could not generate currentShoutQuery");
