@@ -8,6 +8,18 @@ import {
 } from './../../../errorsApi';
 
 /**
+ * @private
+ * @function _populated
+ * @description adds the needed user population
+ * @returns {Promise} of mongoose query
+ */
+const _populated = (query) => {
+   return query.populate("role")
+      .populate({ path: "role", populate: { path: "rules" } })
+      .exec();
+};
+
+/**
  * @public
  * @function findUser
  * @description searches a user from the given mongoose query
@@ -16,7 +28,7 @@ import {
  */
 const findUser = (mongooseQuery) => {
    return new Promise((resolve, reject) => {
-      mongooseQuery.exec().then(knownUser => {
+      _populated(mongooseQuery).then(knownUser => {
          if (knownUser) {
             resolve(knownUser);
          }
@@ -38,7 +50,7 @@ const findUser = (mongooseQuery) => {
  * @returns {Promise} of user
  */
 const findUserById = (userId) => {
-   const userQuery = userModel.findById(userId).populate("role").populate({ path: "role", populate: { path: "rules" } });
+   const userQuery = userModel.findById(userId);
 
    return findUser(userQuery);
 };
@@ -50,7 +62,7 @@ const findUserById = (userId) => {
  * @returns {Promise} of users
  */
 const findAllUsers = () => {
-   return userModel.find().populate("role").exec()
+   return _populated(userModel.find())
       .catch(error => new MongooseSingleError(error));
 };
 
@@ -64,16 +76,9 @@ const findAllUsers = () => {
 const createUser = (userData) => {
    const user = new userModel(userData); // eslint-disable-line new-cap
 
-   return user.save().then(newUser => new Promise((resolve, reject) => {
-      newUser.populate("role", (error, populatedUser) => {
-         if (error) {
-            convertMongooseError(error).catch(reject);
-         }
-         else {
-            resolve(populatedUser);
-         }
-      });
-   })).catch(convertMongooseError);
+   return user.save().then(newUser => {
+      return findUserById(newUser.id);
+   }).catch(convertMongooseError);
 };
 
 /**
@@ -92,8 +97,8 @@ const updateUser = (userData, userId) => {
    if (userData.role) {
       set.role = userData.role;
    }
-   return userModel.findByIdAndUpdate(userId, { $set: set })
-      .populate("role").exec().catch(convertMongooseError);
+   return _populated(userModel.findByIdAndUpdate(userId, { $set: set }))
+      .catch(convertMongooseError);
 };
 
 /**
@@ -166,8 +171,7 @@ const changeUserPassword = (passwordChangeData, userId) => {
  * @returns {Promise} of deleted user
  */
 const deleteUser = (userId) => {
-   return userModel.findByIdAndRemove(userId)
-      .populate("role").exec()
+   return _populated(userModel.findByIdAndRemove(userId))
       .then(user => {
          if (user) {
             return user;
