@@ -29,10 +29,6 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
             searchString: "login"
          },
          {
-            operationName: "pushShoutMutation",
-            searchString: "pushShout"
-         },
-         {
             operationName: "sendResetPasswordMutation",
             searchString: "sendResetPassword"
          },

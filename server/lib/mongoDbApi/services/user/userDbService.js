@@ -38,7 +38,7 @@ const findUser = (mongooseQuery) => {
  * @returns {Promise} of user
  */
 const findUserById = (userId) => {
-   const userQuery = userModel.findById(userId).populate("role");
+   const userQuery = userModel.findById(userId).populate("role").populate({ path: "role", populate: { path: "rules" } });
 
    return findUser(userQuery);
 };

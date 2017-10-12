@@ -46,12 +46,8 @@ const _queriesResolver = {
    Query: {
       getViewer(_, args, { viewer, tokenHandler }) {
          return tokenHandler.encrypt(viewer).then(token => {
-            return {
-               id: viewer.id,
-               name: viewer.name,
-               role: viewer.role,
-               token,
-            };
+            viewer.token = token;
+            return viewer;
          });
       }
    }
