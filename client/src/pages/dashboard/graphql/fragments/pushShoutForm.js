@@ -6,6 +6,13 @@ export default {
       document: gql`
       fragment PushShoutFormViewer on IAuthorized {
          id
+         role {
+            id
+            rules {
+               id
+               name
+            }
+         }
       }`
    }
 };
