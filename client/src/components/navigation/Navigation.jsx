@@ -86,6 +86,10 @@ class Navigation extends React.Component {
       };
    }
 
+   componentDidMount() {
+      this._handleLoginSuccess = this._handleLoginSuccess.bind(this);
+   }
+
    componentWillReceiveProps(nextProp) {
       if (nextProp.currentPathState && nextProp.currentPathState.isLoginModalOpen) {
          this.setState({ isLoginModalOpen: nextProp.currentPathState.isLoginModalOpen });
@@ -93,7 +97,7 @@ class Navigation extends React.Component {
    }
 
    render() {
-      const { viewer, onLoginSuccess, onLogout } = this.props;
+      const { viewer, onLogout } = this.props;
 
       let controlMenuItem;
       if (viewer) {
@@ -108,7 +112,7 @@ class Navigation extends React.Component {
             <LoginModal
                open={this.state.isLoginModalOpen}
                onCloseClick={this._closeLoginModal}
-               onLoginSuccess={onLoginSuccess} />
+               onLoginSuccess={this._handleLoginSuccess} />
          </FullHeightMenuMenu>;
       }
 
@@ -140,7 +144,11 @@ class Navigation extends React.Component {
    _openLoginModal = () => {
       localStorage.removeItem("jwtToken");
       this.setState({ isLoginModalOpen: true });
-   };
+   }
+
+   _handleLoginSuccess = function (token) {
+      this.setState({ isLoginModalOpen: false }, this.props.onLoginSuccess(token));
+   }
 
    _closeLoginModal = () => this.setState({ isLoginModalOpen: false });
 
