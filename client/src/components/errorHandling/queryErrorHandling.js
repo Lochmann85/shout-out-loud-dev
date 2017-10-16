@@ -11,6 +11,12 @@ const queryErrorHandling = (queryDefinition) => {
 
    return (WrappedComponent) => {
       class ErrorHandling extends React.Component {
+         constructor(props) {
+            super(props);
+
+            this.loaded = false;
+         }
+
          componentWillReceiveProps(nextProp) {
             if (nextProp[queryDefinition.config.name]) {
 
@@ -38,7 +44,8 @@ const queryErrorHandling = (queryDefinition) => {
          render() {
             const query = this.props[queryDefinition.config.name];
 
-            if (query && (query.loading || query.error)) {
+            if (query && (query.loading || query.error) && !this.loaded) {
+               this.loaded = true;
                return <BaseLayoutLoader />;
             }
             else {
