@@ -67,7 +67,7 @@ class UpdateUser extends React.Component {
    }
 
    _onSubmit = (userData) => {
-      this.props.updateUser(userData, this.props.getUserQuery.getUser.id, 0/*this.props.viewer.id*/)
+      this.props.updateUser(userData, this.props.getUserQuery.getUser.id, this.props.viewer.id)
          .then(response => {
             if (response.data.updateUser) {
                browserHistory.goBack();
