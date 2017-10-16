@@ -26,6 +26,11 @@ const initializeGraphQLService = (serverConfig) => {
       // Express only serves static assets in production
       if (process.env.NODE_ENV === "production") {
          appServer.use(express.static(reactAppDirectory));
+
+         app.get("/*", (request, response) => {
+            // catch all routes and return index.html for production
+            response.sendFile(path.join(reactAppDirectory, "index.html"));
+         });
       }
       else {
          appServer.use("/graphiql", graphiqlExpress({
