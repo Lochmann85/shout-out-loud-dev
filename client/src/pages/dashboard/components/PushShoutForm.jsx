@@ -13,7 +13,7 @@ const FlexRoot = styled(BasicFlexWrapper) `
    flex-wrap: wrap;
    -ms-flex-align: stretch;
    align-items: stretch;
-   @media only screen and (max-width: 330px) {
+   @media only screen and (max-width: 399px) {
       display: none;
    };
 `;
@@ -21,7 +21,7 @@ const FlexRoot = styled(BasicFlexWrapper) `
 const SmallestDeviceInput = styled(Form.Input) `
    margin-left: 1rem!important;
    margin-right: 1rem!important;
-   @media only screen and (min-width: 331px) {
+   @media only screen and (min-width: 400px) {
       display: none;
    };
 `;
