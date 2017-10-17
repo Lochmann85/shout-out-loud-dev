@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import { Grid, Menu, Image, Button } from 'semantic-ui-react';
 
+import { BasicFlexWrapper } from './../../assets/styled/Wrapper';
 import logo from './../../assets/images/shout-out-loud-logo.svg';
 import colors from './../../assets/colors/shout-out-loud-colors.json';
 
@@ -17,6 +18,23 @@ import navigationFragments from './navigationFragments';
 const NavigationWrapper = styled.div`
    background-color:${colors.logoText};
    border-bottom:1px solid ${colors.logoDarkerBackground};
+`;
+
+const StyledMenu = styled(Menu) `
+   margin: 0!important;
+`;
+
+const LargeScreensMenuGroup = styled(Grid) `
+   @media only screen and (max-width: 389px) {
+      display: none!important;
+   };
+`;
+
+const HeaderItem = styled(Menu.Item) `
+   @media only screen and (min-width: 390px) {
+      padding-left: 0!important;
+   };
+   margin-left: 0!important;
 `;
 
 const HeaderText = styled.span`
@@ -51,6 +69,9 @@ const FullHeightMenuMenu = styled(Menu.Menu) `
    height:100%;
    float:right;
    color:${colors.logoLighterBackground}!important;
+   @media only screen and (min-width: 768px) {
+      margin-left: auto!important;
+   };
 `;
 
 const FullHeightMenuItem = styled(Menu.Item) `
@@ -62,6 +83,14 @@ const SingupButton = styled(Button) `
    margin: 0.75rem 0!important;
    @media only screen and (max-width: 767px) {
       margin: 0.5rem 0!important;
+   };
+`;
+
+const SmallestScreenMenuGroup = styled(BasicFlexWrapper) `
+   width: 100%;
+   margin-right: 1rem;
+   @media only screen and (min-width: 390px) {
+      display: none!important;
    };
 `;
 
@@ -116,27 +145,38 @@ class Navigation extends React.Component {
          </FullHeightMenuMenu>;
       }
 
+      const logoItem = <LogoImage src={logo} />;
+
       return (
          <NavigationWrapper>
-            <Menu secondary>
-               <Grid container>
+            <StyledMenu secondary>
+               <LargeScreensMenuGroup container>
                   <Grid.Row>
                      <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
-                     <Grid.Column mobile={10} tablet={9} computer={10} largeScreen={8} widescreen={8}>
-                        <Menu.Item header >
+                     <Grid.Column mobile={8} tablet={9} computer={10} largeScreen={8} widescreen={8}>
+                        <HeaderItem header>
                            <Link to="/">
-                              <LogoImage src={logo} />
+                              {logoItem}
                               <HeaderText>Shout Out Loud</HeaderText>
                               <MobileHeaderText>S-O-L</MobileHeaderText>
                            </Link>
-                        </Menu.Item>
+                        </HeaderItem>
                      </Grid.Column>
-                     <Grid.Column mobile={6} tablet={5} computer={4} largeScreen={4} widescreen={4}>
+                     <Grid.Column mobile={8} tablet={5} computer={4} largeScreen={4} widescreen={4}>
                         {controlMenuItem}
                      </Grid.Column>
                   </Grid.Row>
-               </Grid>
-            </Menu>
+               </LargeScreensMenuGroup>
+               <SmallestScreenMenuGroup>
+                  <HeaderItem header>
+                     <Link to="/">
+                        {logoItem}
+                        <MobileHeaderText>S-O-L</MobileHeaderText>
+                     </Link>
+                  </HeaderItem>
+                  {controlMenuItem}
+               </SmallestScreenMenuGroup>
+            </StyledMenu>
          </NavigationWrapper>
       );
    }
