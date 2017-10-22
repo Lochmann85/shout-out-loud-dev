@@ -32,6 +32,7 @@ shoutSchema.statics.getEmptyShout = () => ({
    id: "",
    message: "",
    type: "Empty",
+   user: { id: "", name: "" },
    shouldBeShown: false,
 });
 

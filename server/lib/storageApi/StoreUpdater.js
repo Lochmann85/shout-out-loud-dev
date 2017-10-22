@@ -62,6 +62,19 @@ class StoreUpdater {
    getCurrentShownShout = () => {
       return this._currentShownShout;
    }
+
+   /**
+    * @public
+    * @function removeShoutsOfUser
+    * @description removes all pending shouts of user
+    * @param {string} userId - user id
+    */
+   removeShoutsOfUser = (userId) => {
+      if (this._currentShownShout.user == userId) { // eslint-disable-line eqeqeq
+         this._currentShownShout = shoutModel.getEmptyShout();
+      }
+      this._pendingShoutsQueue.removeItems(item => item.user != userId); // eslint-disable-line eqeqeq
+   }
 };
 
 export default StoreUpdater;

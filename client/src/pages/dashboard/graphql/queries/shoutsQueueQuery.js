@@ -51,6 +51,8 @@ if (shoutsFragment) {
          }),
       }
    };
+
+   graphQLStore.addQuery(query);
 }
 else {
    throw new Error("FATAL ERROR, could not generate shoutsQueueQuery");

@@ -6,6 +6,9 @@ import {
    CustomError,
    MongooseSingleError
 } from './../../../errorsApi';
+import { removeShoutsOfUser } from './../shout/shoutDbService';
+import { storeUpdater } from './../../../storageApi/storageService';
+
 
 /**
  * @private
@@ -174,7 +177,8 @@ const deleteUser = (userId) => {
    return _populated(userModel.findByIdAndRemove(userId))
       .then(user => {
          if (user) {
-            return user;
+            storeUpdater.removeShoutsOfUser(user.id);
+            return removeShoutsOfUser(user.id).then(() => user);
          }
          else {
             return Promise.reject({

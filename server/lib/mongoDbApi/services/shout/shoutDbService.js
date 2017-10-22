@@ -87,8 +87,20 @@ const createShout = (shoutData) => new Promise((resolve, reject) => {
    });
 });
 
+/**
+ * @public
+ * @function removeShoutsOfUser
+ * @description removes all shouts of a given user
+ * @param {object} userId - user id
+ * @returns {Promise} of deleted shouts
+ */
+const removeShoutsOfUser = (userId) => {
+   return shoutModel.remove({ user: userId }).exec();
+};
+
 export {
    findAllShouts,
    cycle,
-   createShout
+   createShout,
+   removeShoutsOfUser
 };
