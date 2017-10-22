@@ -34,7 +34,6 @@ class StoreUpdater {
                subscriptionHandler.publish("shoutsQueueChangedChannel", cycle(this._currentShownShout));
 
                this._currentShownShout = shoutModel.getEmptyShout();
-               subscriptionHandler.publish("currentShoutChangedChannel", this._currentShownShout);
             }
          }
          resolve();
@@ -62,6 +61,19 @@ class StoreUpdater {
     */
    getCurrentShownShout = () => {
       return this._currentShownShout;
+   }
+
+   /**
+    * @public
+    * @function removeShoutsOfUser
+    * @description removes all pending shouts of user
+    * @param {string} userId - user id
+    */
+   removeShoutsOfUser = (userId) => {
+      if (this._currentShownShout.user == userId) { // eslint-disable-line eqeqeq
+         this._currentShownShout = shoutModel.getEmptyShout();
+      }
+      this._pendingShoutsQueue.removeItems(item => item.user != userId); // eslint-disable-line eqeqeq
    }
 };
 

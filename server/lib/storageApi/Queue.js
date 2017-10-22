@@ -54,6 +54,16 @@ class Queue {
    hasAnItem() {
       return this.size > 0;
    }
+
+   /**
+    * @public
+    * @function removeItems
+    * @description removes all items from the filter function
+    * @param {function} filter - filter function to delete shouts from user
+    */
+   removeItems(filter) {
+      this._array = this._array.filter(filter);
+   }
 };
 
 export default Queue;

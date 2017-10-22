@@ -11,8 +11,11 @@ import subscriptionHandler from './../../graphQLApi/subscription/subscriptionHan
 
 const types = `
 type Shout {
+   id: ID!
    message: String!
    type: String!
+   user: User!
+   createdAt: String!
 }
 input ShoutInput {
    message: String
@@ -41,7 +44,8 @@ pushShout(shout: ShoutInput): Boolean
 
 const _mutationsResolver = {
    Mutation: {
-      pushShout(_, { shout }) {
+      pushShout(_, { shout }, { viewer }) {
+         shout.user = viewer.id;
          return storeUpdater.enqueue(shout);
       },
    }

@@ -70,6 +70,11 @@ class ShoutPreview extends React.Component {
    render() {
       const { shout } = this.props;
 
+      let user = { name: "" };
+      if (shout && shout.user) {
+         user = shout.user;
+      }
+
       return (
          <Background>
             <ShoutMessage
@@ -80,7 +85,7 @@ class ShoutPreview extends React.Component {
                </VerticalAlignTextWrapper>
             </ShoutMessage>
             <ShoutOfUser>
-               User
+               {user.name}
             </ShoutOfUser>
          </Background>
       );

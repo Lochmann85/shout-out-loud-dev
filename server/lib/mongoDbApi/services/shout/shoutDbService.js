@@ -9,13 +9,23 @@ import {
 } from './../../../errorsApi';
 
 /**
+ * @private
+ * @function _populated
+ * @description adds the needed shout population
+ * @returns {Promise} of mongoose query
+ */
+const _populated = (query) => {
+   return query.populate("user").exec();
+};
+
+/**
  * @public
  * @function findAllShouts
  * @description looks for all Shouts
  * @returns {Promise} of Shouts
  */
 const findAllShouts = () => {
-   return shoutModel.find().exec()
+   return _populated(shoutModel.find())
       .then(shoutsQueue => shoutsQueue.reverse())
       .catch(error => new MongooseSingleError(error));
 };
@@ -77,8 +87,20 @@ const createShout = (shoutData) => new Promise((resolve, reject) => {
    });
 });
 
+/**
+ * @public
+ * @function removeShoutsOfUser
+ * @description removes all shouts of a given user
+ * @param {object} userId - user id
+ * @returns {Promise} of deleted shouts
+ */
+const removeShoutsOfUser = (userId) => {
+   return shoutModel.remove({ user: userId }).exec();
+};
+
 export {
    findAllShouts,
    cycle,
-   createShout
+   createShout,
+   removeShoutsOfUser
 };
