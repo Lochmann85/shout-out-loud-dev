@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
 const shoutSchema = new mongoose.Schema({
    message: {
       type: String,
@@ -7,6 +9,11 @@ const shoutSchema = new mongoose.Schema({
    },
    type: {
       type: String,
+      required: true,
+   },
+   user: {
+      type: ObjectId,
+      ref: "User",
       required: true,
    },
    shouldBeShown: {
@@ -35,6 +42,7 @@ shoutSchema.statics.getEmptyShout = () => ({
  */
 shoutSchema.statics.alterShoutInput = (shoutData) => ({
    message: shoutData ? shoutData.message : "",
+   user: shoutData ? shoutData.user : "",
    type: "Custom",
    shouldBeShown: true,
 });

@@ -7,8 +7,15 @@ export default {
       fragment ShoutPreviewShouts on Shout {
          message
          type
+         user {
+            ...ShoutUser
+         }
+         createdAt
       }
-      `
+      fragment ShoutUser on User {
+         id
+         name
+      }`
    },
    viewer: {
       name: "ShoutPreviewViewer",

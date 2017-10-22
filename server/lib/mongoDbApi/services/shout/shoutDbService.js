@@ -9,13 +9,23 @@ import {
 } from './../../../errorsApi';
 
 /**
+ * @private
+ * @function _populated
+ * @description adds the needed shout population
+ * @returns {Promise} of mongoose query
+ */
+const _populated = (query) => {
+   return query.populate("user").exec();
+};
+
+/**
  * @public
  * @function findAllShouts
  * @description looks for all Shouts
  * @returns {Promise} of Shouts
  */
 const findAllShouts = () => {
-   return shoutModel.find().exec()
+   return _populated(shoutModel.find())
       .then(shoutsQueue => shoutsQueue.reverse())
       .catch(error => new MongooseSingleError(error));
 };
