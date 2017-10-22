@@ -8,6 +8,10 @@ import './helper/initialization';
 
 import { Grid } from 'semantic-ui-react';
 
+import {
+   windowSize,
+   windowIsMobile
+} from './storeHandler/windowSizeStore';
 import graphQLStore from './storeHandler/graphQLStore';
 import browserHistory from './storeHandler/routerHistory';
 import apolloClient from './storeHandler/apolloClient';
@@ -21,14 +25,13 @@ import Navigation from './components/navigation/Navigation';
 import Routes from './pages/Routes';
 
 const FullHeightGrid = styled(Grid) `
-   height:calc(100% - 59px);
-   @media only screen and (max-width: 767px) {
-      height:calc(100% - 41px);
-   }
+   min-height: 500px;
+   min-width: 280px;
+   height: ${props => props.height}px!important;
 `;
 
 const AppRow = styled(Grid.Row) `
-   padding-bottom:0!important;
+   padding-bottom: 0!important;
 `;
 
 class App extends React.Component {
@@ -47,6 +50,17 @@ class App extends React.Component {
          ${Navigation.fragments.viewer.document}`
       }
    };
+
+   constructor(props) {
+      super(props);
+
+      if (windowIsMobile()) {
+         this.height = windowSize.height - 42;
+      }
+      else {
+         this.height = windowSize.height - 59;
+      }
+   }
 
    componentWillReceiveProps(nextProp) {
       if (nextProp.getViewerQuery) {
@@ -83,7 +97,7 @@ class App extends React.Component {
                   currentPathState={state}
                   onLoginSuccess={this._handleLoginSuccess}
                   onLogout={this._handleLogout} />
-               <FullHeightGrid container>
+               <FullHeightGrid container height={this.height}>
                   <AppRow>
                      <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
                      <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>

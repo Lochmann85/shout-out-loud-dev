@@ -26,30 +26,39 @@ const TABLET_WIDTH = 991;
 
 /**
  * @public
- * @function addResizeObserver
+ * @function addWindowObserver
  * @description add resize observers
  * @param {Function} observer - the observer function which is called
  */
-const addResizeObserver = (observer) => {
-   if (observer.hasOwnProperty("updateOnResize")) {
-      _observers.push(observer);
-   }
-   else {
-      throw new Error("FATAL ERROR: resize observer needs an updateOnResize function.");
-   }
+const addWindowObserver = (observer) => {
+   _observers.push(observer);
 };
 
 /**
  * @public
- * @function removeResizeObserver
+ * @function removeWindowObserver
  * @description removes resize observers
  * @param {Function} observer - the observer function which is called
  */
-const removeResizeObserver = (observer) => {
+const removeWindowObserver = (observer) => {
    let index = _observers.indexOf(observer);
    if (index !== -1) {
       _observers.splice(index, 1);
    }
+};
+
+/**
+ * @private
+ * @function _handleEvent
+ * @description handles the updating of the observers
+ * @param {string} updateFunctionName - the name of the update function
+ */
+const _handleEvent = (updateFunctionName) => {
+   _observers.forEach(observer => {
+      if (observer.hasOwnProperty(updateFunctionName)) {
+         observer[updateFunctionName]();
+      }
+   });
 };
 
 /**
@@ -63,7 +72,7 @@ const _handleResize = (event) => {
       windowSize.height = event.target.innerHeight;
       windowSize.width = event.target.innerWidth;
    }
-   _observers.forEach(observer => observer.updateOnResize());
+   _handleEvent("updateOnResize");
 };
 
 /**
@@ -90,19 +99,19 @@ const windowIsMobile = () => {
 
 /**
  * @public
- * @function windowIsAtLeastTablet
+ * @function windowIsSmallerAsPc
  * @description checks if the window is mobile or tablet size
  * @returns {bool} true when window is mobile
  */
-const windowIsAtLeastTablet = () => {
+const windowIsSmallerAsPc = () => {
    return windowSize.width <= TABLET_WIDTH;
 };
 
 export {
    windowSize,
    initializeStore,
-   addResizeObserver,
-   removeResizeObserver,
+   addWindowObserver,
+   removeWindowObserver,
    windowIsMobile,
-   windowIsAtLeastTablet,
+   windowIsSmallerAsPc,
 };
