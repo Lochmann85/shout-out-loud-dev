@@ -5,6 +5,7 @@ export default {
       name: "ShoutPreviewShouts",
       document: gql`
       fragment ShoutPreviewShouts on Shout {
+         id
          message
          type
          user {

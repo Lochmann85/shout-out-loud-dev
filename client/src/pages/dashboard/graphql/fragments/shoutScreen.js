@@ -7,6 +7,7 @@ const fragment = {
       name: "ShoutScreenShouts",
       document: gql`
       fragment ShoutScreenShouts on Shout {
+         id
          message
          type
       }`

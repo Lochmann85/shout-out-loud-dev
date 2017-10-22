@@ -88,6 +88,7 @@ class ShoutsScreen extends React.Component {
       this.unsubscribe = null;
 
       this.loaded = false;
+      this.currentShoutId = "";
 
       this.state = {
          fontSize: "0px",
@@ -122,12 +123,16 @@ class ShoutsScreen extends React.Component {
    }
 
    componentWillReceiveProps(nextProps) {
-      if (nextProps.currentShoutQuery.getCurrentShout && nextProps.currentShoutQuery.getCurrentShout.type !== "Empty") {
-         this.setState({ transitionClass: "init" }, () => {
-            setTimeout(() => this.setState({ transitionClass: "visible" }, () => {
-               setTimeout(() => this.setState({ transitionClass: "" }), 5600);
-            }), 100);
-         });
+      if (nextProps.currentShoutQuery.getCurrentShout) {
+         const shout = nextProps.currentShoutQuery.getCurrentShout;
+         if (shout.id !== this.currentShoutId && shout.type !== "Empty") {
+            this.currentShoutId = shout.id;
+            this.setState({ transitionClass: "init" }, () => {
+               setTimeout(() => this.setState({ transitionClass: "visible" }, () => {
+                  setTimeout(() => this.setState({ transitionClass: "" }), 5600);
+               }), 100);
+            });
+         }
       }
    }
 

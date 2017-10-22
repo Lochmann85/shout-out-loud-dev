@@ -34,7 +34,6 @@ class StoreUpdater {
                subscriptionHandler.publish("shoutsQueueChangedChannel", cycle(this._currentShownShout));
 
                this._currentShownShout = shoutModel.getEmptyShout();
-               subscriptionHandler.publish("currentShoutChangedChannel", this._currentShownShout);
             }
          }
          resolve();

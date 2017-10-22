@@ -11,6 +11,7 @@ import subscriptionHandler from './../../graphQLApi/subscription/subscriptionHan
 
 const types = `
 type Shout {
+   id: ID!
    message: String!
    type: String!
    user: User!

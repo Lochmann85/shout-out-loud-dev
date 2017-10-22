@@ -29,6 +29,7 @@ const shoutSchema = new mongoose.Schema({
  * @returns {object} empty shout skeleton
  */
 shoutSchema.statics.getEmptyShout = () => ({
+   id: "",
    message: "",
    type: "Empty",
    shouldBeShown: false,
