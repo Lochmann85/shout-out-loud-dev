@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import { Grid } from 'semantic-ui-react';
 
 import {
-   addResizeObserver,
-   removeResizeObserver,
-   windowIsAtLeastTablet,
+   addWindowObserver,
+   removeWindowObserver,
+   windowIsSmallerAsPc,
 } from './../../../storeHandler/windowSizeStore';
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
@@ -63,12 +63,12 @@ class ShoutActionContainer extends React.Component {
 
       this.unsubscribe = null;
       this.state = {
-         shownShouts: windowIsAtLeastTablet() ? SHOWN_SHOUTS_MOBILE : SHOWN_SHOUTS_COMPUTER,
+         shownShouts: windowIsSmallerAsPc() ? SHOWN_SHOUTS_MOBILE : SHOWN_SHOUTS_COMPUTER,
       };
    }
 
    componentDidMount() {
-      addResizeObserver(this);
+      addWindowObserver(this);
       this.unsubscribe = this.props.shoutsQueueQuery.subscribeToShoutsQueueChanged();
    }
 
@@ -76,7 +76,7 @@ class ShoutActionContainer extends React.Component {
       if (this.unsubscribe) {
          this.unsubscribe();
       }
-      removeResizeObserver(this);
+      removeWindowObserver(this);
    }
 
    render() {
@@ -110,7 +110,7 @@ class ShoutActionContainer extends React.Component {
 
    updateOnResize = () => {
       this.setState({
-         shownShouts: windowIsAtLeastTablet() ? SHOWN_SHOUTS_MOBILE : SHOWN_SHOUTS_COMPUTER,
+         shownShouts: windowIsSmallerAsPc() ? SHOWN_SHOUTS_MOBILE : SHOWN_SHOUTS_COMPUTER,
       });
    }
 };

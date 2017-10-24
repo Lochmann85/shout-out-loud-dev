@@ -16,7 +16,38 @@ import PasswordChanger from './PasswordChanger';
 import RoleSelection from './RoleSelection';
 
 const ButtonWithOffset = styled(Button) `
-margin-left: 0.75rem!important;
+   margin-left: 0.75rem!important;
+   @media only screen and (max-width:460px) { 
+      margin-left: 0!important;
+      margin-right: 0!important;
+      -webkit-flex: 1 1 auto!important;
+      -ms-flex: 1 1 auto!important;
+      flex: 1 1 auto!important;
+   };
+`;
+
+const ButtonWrapperPc = styled(BasicFlexWrapper) `
+   @media only screen and (max-width:460px) { 
+      display: none!important;
+   };
+`;
+
+const ButtonWrapperMobile = styled(BasicFlexWrapper) `
+@media only screen and (min-width:461px) { 
+   display: none!important;
+};
+`;
+
+const NewPasswordButton = styled(ButtonWithOffset) `
+   @media only screen and (max-width:460px) {
+      margin-bottom: 2rem!important;
+   };
+`;
+
+const CancelButton = styled(ButtonWithOffset) `
+   @media only screen and (max-width:460px) { 
+      margin-right: 1rem!important;
+   };
 `;
 
 class UserForm extends React.Component {
@@ -71,7 +102,7 @@ class UserForm extends React.Component {
          email = this.props.user.email;
 
          if (!readOnly) {
-            changePasswordButton = <ButtonWithOffset
+            changePasswordButton = <NewPasswordButton
                content="New password"
                as={"a"}
                onClick={this._onPasswordChangeClick} />;
@@ -97,6 +128,9 @@ class UserForm extends React.Component {
          </ColoredFormField>;
       }
 
+      const submitButton = <ButtonWithOffset primary type="submit" content={this.props.submitButtonTitle} disabled={readOnly} />,
+         cancelButton = <CancelButton as={"a"} onClick={browserHistory.goBack} content="Cancel" />;
+
       return (
          <Form onSubmit={this._onSubmit}>
             <ColoredFormField error={emailHasError}>
@@ -120,15 +154,19 @@ class UserForm extends React.Component {
             <Message error visible hidden={errors.length === 0}>
                <Message.List items={errors.map(error => error.message)} />
             </Message>
-            <BasicFlexWrapper direction="row-reverse">
-               <ButtonWithOffset primary
-                  type="submit"
-                  content={this.props.submitButtonTitle}
-                  disabled={readOnly} />
+            <ButtonWrapperPc direction="row-reverse">
+               {submitButton}
                {changePasswordButton}
-               {changePasswordModal}
-               <Button as={"a"} onClick={browserHistory.goBack} content="Cancel" floated="right" />
-            </BasicFlexWrapper>
+               {cancelButton}
+            </ButtonWrapperPc>
+            <ButtonWrapperMobile direction="column">
+               {changePasswordButton}
+               <BasicFlexWrapper direction="row">
+                  {cancelButton}
+                  {submitButton}
+               </BasicFlexWrapper>
+            </ButtonWrapperMobile>
+            {changePasswordModal}
          </Form>
       );
    };

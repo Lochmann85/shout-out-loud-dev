@@ -18,6 +18,30 @@ class BaseAuthenticationMiddleware {
    }
 
    /**
+    * @private
+    * @function _checkForAllowedRequests
+    * @description checks for the requests which do not need authorization
+    * @param {array} args the args array
+    * @param {object} tokenHandler the token handler
+    * @returns {Promise} of executed graphql schema
+    */
+   _checkForAllowedRequests(args, tokenHandler) {
+      return new Promise((resolve, reject) => {
+         try {
+            if (this._allowedRequests(args)) {
+               this._addContext(args, { tokenHandler });
+               resolve(args);
+            }
+            else {
+               reject(new UnauthorizedError());
+            }
+         } catch (error) {
+            reject(new ForbiddenError());
+         }
+      });
+   }
+
+   /**
     * @public
     * @function apply
     * @description checks for the token in the variable and executes the graphql call
@@ -43,21 +67,15 @@ class BaseAuthenticationMiddleware {
                      tokenHandler
                   });
                   resolve(args);
-               }).catch(reject);
-            }).catch(reject);
+               }).catch(error => Promise.reject(error));
+            }).catch(error => {
+               this._checkForAllowedRequests(args, tokenHandler)
+                  .then(resolve).catch(reject);
+            });
          }
          else {
-            try {
-               if (this._allowedRequests(args)) {
-                  this._addContext(args, { tokenHandler });
-                  resolve(args);
-               }
-               else {
-                  reject(new UnauthorizedError());
-               }
-            } catch (error) {
-               reject(new ForbiddenError());
-            }
+            return this._checkForAllowedRequests(args, tokenHandler)
+               .then(resolve).catch(reject);
          }
       });
    }

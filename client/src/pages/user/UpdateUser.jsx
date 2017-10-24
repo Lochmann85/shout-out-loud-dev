@@ -39,7 +39,13 @@ class UpdateUser extends React.Component {
             roles = getAllRolesForUserUpdateQuery.getAllRoles;
          }
 
-         title = `Update user: ${getUser.name}`;
+         if (getUser.id === viewer.id) {
+            title = `Your profile settings`;
+         }
+         else {
+            title = `Update user: ${getUser.name}`;
+         }
+
          updateUserContent = <SegmentBackground>
             <UserForm
                user={getUser}

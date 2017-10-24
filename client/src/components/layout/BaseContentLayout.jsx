@@ -1,9 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Header } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import colors from './../../assets/colors/shout-out-loud-colors.json';
+
+const BaseLayoutWrapper = styled.div`
+   margin: 0 1rem;
+   @media only screen and (max-width:767px) { 
+      margin: 0 -1rem;
+   };
+`;
 
 const ColoredHeader = styled(Header) `
    color:${colors.logoDarkerBackground}!important;
@@ -14,20 +21,12 @@ const ContentColumn = styled.div`
 `;
 
 const BaseContentLayout = ({ title, children }) => (
-   <Grid container>
-      <Grid.Row>
-         <Grid.Column>
-            <ColoredHeader as="h1" content={title} />
-         </Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-         <Grid.Column>
-            <ContentColumn>
-               {children}
-            </ContentColumn>
-         </Grid.Column>
-      </Grid.Row>
-   </Grid>
+   <BaseLayoutWrapper>
+      <ColoredHeader as="h1" content={title} />
+      <ContentColumn>
+         {children}
+      </ContentColumn>
+   </BaseLayoutWrapper>
 );
 
 BaseContentLayout.propTypes = {
