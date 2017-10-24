@@ -10,7 +10,10 @@ import { Grid } from 'semantic-ui-react';
 
 import {
    windowSize,
-   windowIsMobile
+   windowIsMobile,
+   windowIsLandscape,
+   addWindowObserver,
+   removeWindowObserver
 } from './storeHandler/windowSizeStore';
 import graphQLStore from './storeHandler/graphQLStore';
 import browserHistory from './storeHandler/routerHistory';
@@ -54,12 +57,13 @@ class App extends React.Component {
    constructor(props) {
       super(props);
 
-      if (windowIsMobile()) {
-         this.height = windowSize.height - 42;
-      }
-      else {
-         this.height = windowSize.height - 59;
-      }
+      this.state = {
+         height: this._calculateHeight(),
+      };
+   }
+
+   componentDidMount() {
+      addWindowObserver(this);
    }
 
    componentWillReceiveProps(nextProp) {
@@ -70,6 +74,28 @@ class App extends React.Component {
             checkForUnauthorizedInErrors(query.error);
          }
       }
+   }
+
+   _calculateHeight = () => {
+      if (windowIsMobile()) {
+         if (windowIsLandscape()) {
+            return windowSize.width * 1.1;
+         }
+         else {
+            return windowSize.height - 42;
+         }
+      }
+      else {
+         return windowSize.height - 59;
+      }
+   }
+
+   componentWillUnmount() {
+      removeWindowObserver(this);
+   }
+
+   updateOnResize = () => {
+      this.setState({ height: this._calculateHeight() });
    }
 
    render() {
@@ -97,7 +123,7 @@ class App extends React.Component {
                   currentPathState={state}
                   onLoginSuccess={this._handleLoginSuccess}
                   onLogout={this._handleLogout} />
-               <FullHeightGrid container height={this.height}>
+               <FullHeightGrid container height={this.state.height}>
                   <AppRow>
                      <Grid.Column only="tablet" tablet={1} computer={1} largeScreen={2} widescreen={2} />
                      <Grid.Column mobile={16} tablet={14} computer={14} largeScreen={12} widescreen={12}>

@@ -107,6 +107,16 @@ const windowIsSmallerAsPc = () => {
    return windowSize.width <= TABLET_WIDTH;
 };
 
+/**
+ * @public
+ * @function windowIsLandscape
+ * @description checks if the window is landscape
+ * @returns {bool} true when window is landscape
+ */
+const windowIsLandscape = () => {
+   return windowSize.width >= windowSize.height;
+};
+
 export {
    windowSize,
    initializeStore,
@@ -114,4 +124,5 @@ export {
    removeWindowObserver,
    windowIsMobile,
    windowIsSmallerAsPc,
+   windowIsLandscape
 };
