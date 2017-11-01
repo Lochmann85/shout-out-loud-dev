@@ -3,6 +3,12 @@ import { addResolveFunctionsToSchema } from 'graphql-tools';
 import {
    findAllRules,
 } from './../../mongoDbApi/services/rule/ruleDbService';
+import {
+   authorizationMiddleware,
+   ReadRoleChecker
+} from './../../authorizationApi/authorizationService';
+
+const readRole = new ReadRoleChecker();
 
 const types = `
 type Rule {
@@ -16,9 +22,9 @@ getAllRules: [Rule!]
 
 const _queriesResolver = {
    Query: {
-      getAllRules: () => {
+      getAllRules: authorizationMiddleware(readRole)(() => {
          return findAllRules();
-      }
+      })
    }
 };
 

@@ -1,0 +1,62 @@
+
+class BaseChecker {
+   constructor() {
+      this._next = null;
+      this._relation = null;
+   }
+
+   /**
+    * @private
+    * @function _and
+    * @description and combines two checker
+    * @param {object} args - the args of the request
+    * @param {object} viewer - the user model of the viewer
+    * @returns {Promise} of permission
+    */
+   _and(args, viewer) {
+      return this._internalCheck(args, viewer)
+         .then(() => this._next.check(args, viewer));
+   }
+
+   /**
+    * @public
+    * @function and
+    * @description and setter for the succeeding checker
+    * @param {object} successor - the next checker
+    */
+   and(successor) {
+      this._next = successor;
+      this._relation = this._and;
+   }
+
+   /**
+    * @private
+    * @function check
+    * @description starts the check for the authorization
+    * @param {object} args - the args of the request
+    * @param {object} viewer - the user model of the viewer
+    * @returns {Promise} of permission
+    */
+   check(args, viewer) {
+      if (this._next) {
+         return this._relation(args, viewer);
+      }
+      else {
+         return this._internalCheck(args, viewer);
+      }
+   }
+
+   /**
+    * @protected
+    * @function _internalCheck
+    * @description the internal check of the inherited class
+    * @param {object} args - the args of the request
+    * @param {object} viewer - the user model of the viewer
+    * @returns {Promise} of permission
+    */
+   _internalCheck(args, viewer) {
+      throw new Error("FATAL ERROR: inherited class needs to implement _internalCheck.");
+   }
+};
+
+export default BaseChecker;

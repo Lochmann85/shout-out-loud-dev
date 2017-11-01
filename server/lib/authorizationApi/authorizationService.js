@@ -1,0 +1,29 @@
+
+import {
+   UnauthorizedError,
+} from './../errorsApi';
+
+/**
+ * @public
+ * @function authorizationMiddleware
+ * @description middleware to check the authorization
+ * @param {object} allowance - the needed allowance
+ * @param {function} wrappedResolver - the wrapped resolver function
+ * @returns {Promise} of executed graphQL resolver
+ */
+const authorizationMiddleware = (allowance) => (wrappedResolver) =>
+   (_, args, context, info) => {
+      if (context && context.viewer) {
+         return context.viewer.check(allowance, args).then(() => {
+            return wrappedResolver(_, args, context, info);
+         });
+      }
+      else {
+         return Promise.reject(new UnauthorizedError());
+      }
+   };
+
+export {
+   authorizationMiddleware
+};
+export { default as ReadRoleChecker } from './checker/ReadRoleChecker';
