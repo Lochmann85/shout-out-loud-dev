@@ -1,8 +1,8 @@
 
 class BaseChecker {
-   constructor() {
-      this._next = null;
-      this._relation = null;
+   constructor(predecessor, relation) {
+      this._predecessor = predecessor || null;
+      this._relation = this[`_${relation}`] || null;
    }
 
    /**
@@ -15,18 +15,18 @@ class BaseChecker {
     */
    _and(args, viewer) {
       return this._internalCheck(args, viewer)
-         .then(() => this._next.check(args, viewer));
+         .then(() => this._predecessor.check(args, viewer));
    }
 
    /**
     * @public
     * @function and
     * @description and setter for the succeeding checker
-    * @param {object} successor - the next checker
+    * @param {object} SuccessorClass - the successor class checker
     */
-   and(successor) {
-      this._next = successor;
-      this._relation = this._and;
+   and(SuccessorClass) {
+      const successor = new SuccessorClass(this, "and");
+      return successor;
    }
 
    /**
@@ -38,7 +38,7 @@ class BaseChecker {
     * @returns {Promise} of permission
     */
    check(args, viewer) {
-      if (this._next) {
+      if (this._predecessor) {
          return this._relation(args, viewer);
       }
       else {

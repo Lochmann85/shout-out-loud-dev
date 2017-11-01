@@ -27,3 +27,7 @@ export {
    authorizationMiddleware
 };
 export { default as ReadRoleChecker } from './checker/ReadRoleChecker';
+export { default as WriteRoleChecker } from './checker/WriteRoleChecker';
+export { default as DeleteRoleChecker } from './checker/DeleteRoleChecker';
+export { default as ShoutChecker } from './checker/ShoutChecker';
+export { default as NotOwnRoleChecker } from './checker/NotOwnRoleChecker';

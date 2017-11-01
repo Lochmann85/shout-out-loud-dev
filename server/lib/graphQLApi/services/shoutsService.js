@@ -6,8 +6,14 @@ import {
 import {
    findAllShouts
 } from './../../mongoDbApi/services/shout/shoutDbService';
+import {
+   authorizationMiddleware,
+   ShoutChecker
+} from './../../authorizationApi/authorizationService';
 
 import subscriptionHandler from './../../graphQLApi/subscription/subscriptionHandler';
+
+const shout = new ShoutChecker();
 
 const types = `
 type Shout {
@@ -44,10 +50,10 @@ pushShout(shout: ShoutInput): Boolean
 
 const _mutationsResolver = {
    Mutation: {
-      pushShout(_, { shout }, { viewer }) {
+      pushShout: authorizationMiddleware(shout)((_, { shout }, { viewer }) => {
          shout.user = viewer.id;
          return storeUpdater.enqueue(shout);
-      },
+      }),
    }
 };
 
