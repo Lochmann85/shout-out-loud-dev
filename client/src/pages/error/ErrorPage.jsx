@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Message, Button } from 'semantic-ui-react';
+import { Message } from 'semantic-ui-react';
 
 import { SegmentBackground } from './../../assets/styled/UI';
 import { WrapperWithOffset } from './../../assets/styled/Wrapper';
@@ -31,7 +30,6 @@ const ErrorPage = ({ location: { state } }) => {
             header={"Error " + errorStatus + " occured"}
             list={shownErrors.map(error => error.message)}
          />
-         <Button as={Link} to="/" content="Home" />
       </div>;
    }
    else {
