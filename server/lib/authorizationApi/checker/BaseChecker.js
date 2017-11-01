@@ -31,6 +31,30 @@ class BaseChecker {
 
    /**
     * @private
+    * @function _or
+    * @description or combines two checker
+    * @param {object} args - the args of the request
+    * @param {object} viewer - the user model of the viewer
+    * @returns {Promise} of permission
+    */
+   _or(args, viewer) {
+      return this._internalCheck(args, viewer)
+         .catch(error => this._predecessor.check(args, viewer));
+   }
+
+   /**
+    * @public
+    * @function or
+    * @description or setter for the succeeding checker
+    * @param {object} SuccessorClass - the successor class checker
+    */
+   or(SuccessorClass) {
+      const successor = new SuccessorClass(this, "or");
+      return successor;
+   }
+
+   /**
+    * @private
     * @function check
     * @description starts the check for the authorization
     * @param {object} args - the args of the request

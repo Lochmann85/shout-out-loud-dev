@@ -88,7 +88,7 @@ class PushShoutForm extends React.Component {
 
       let enabled = false;
       if (viewer) {
-         enabled = viewer.has(["shout"]);
+         enabled = viewer.has("shout");
       }
 
       return (

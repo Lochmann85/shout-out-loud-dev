@@ -96,7 +96,7 @@ export default queryErrorHandling(getUserQuery)(
       config: {
          name: "getAllRolesForUserUpdateQuery",
          skip: ({ viewer, getUserQuery }) => {
-            return false;
+            return !viewer.has("readRole");
          }
       }
    })(updateUserMutation(UpdateUser)));

@@ -1,14 +1,7 @@
 
-function _has(ruleNames) {
+function _has(ruleName) {
    if (this.role && Array.isArray(this.role.rules)) {
-      let hasAllRules = true;
-      ruleNames.forEach(ruleName => {
-         const foundRule = this.role.rules.find(viewerRule => viewerRule.name === ruleName);
-         if (!foundRule) {
-            hasAllRules = false;
-         }
-      });
-      return hasAllRules;
+      return this.role.rules.find(viewerRule => viewerRule.name === ruleName);
    }
    else {
       return false;
