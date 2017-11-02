@@ -15,6 +15,13 @@ import RoleTableRow from './components/RoleTableRow';
 import mutationErrorHandling from './../../components/errorHandling/mutationErrorHandling';
 import deleteRoleMutation from './graphql/mutations/deleteRole';
 
+import {
+   ReadRoleChecker,
+   WriteRoleChecker,
+} from './../../authorization';
+
+const readRole = new ReadRoleChecker();
+
 class RoleTable extends React.Component {
 
    static propTypes = {
@@ -35,7 +42,7 @@ class RoleTable extends React.Component {
 
       let TableContent = null,
          selectedRole = null,
-         showAddButton = true;
+         showAddButton = false;
 
       if (getAllRoles && Array.isArray(getAllRoles) && getAllRoles.length !== 0) {
          selectedRole = getAllRoles.find(role => role.id === this.state.selectedRoleId);
@@ -71,9 +78,9 @@ class RoleTable extends React.Component {
          deleteMessage = `The role with name "${selectedRole.name}" will be deleted.`;
       }
 
-      // if (viewer) {
-      //    showAddButton = readWriteRoleAdministration.isAllowed(viewer.role);
-      // }
+      if (viewer) {
+         showAddButton = readRole.and(WriteRoleChecker).check(null, viewer);
+      }
 
       return (
          <BaseContentLayout title={<HeadingWithAddButton

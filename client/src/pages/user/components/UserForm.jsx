@@ -185,6 +185,9 @@ class UserForm extends React.Component {
          if (this.props.user && this.props.user.role.id !== this.state.roleId) {
             userData.role = this.state.roleId;
          }
+         else {
+            userData.role = this.state.roleId;
+         }
       }
 
       this.props.onSubmit(userData);

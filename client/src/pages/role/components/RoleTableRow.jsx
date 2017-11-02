@@ -8,6 +8,15 @@ import { Table } from 'semantic-ui-react';
 import roleTableRowFragments from './../graphql/fragments/roleTableRow';
 import DescriptionWithEditAndDelete from './../../../components/table/DescriptionWithEditAndDelete';
 
+import {
+   ReadRoleChecker,
+   DeleteRoleChecker,
+   NotOwnRoleChecker
+} from './../../../authorization';
+
+const readRole = new ReadRoleChecker();
+const deleteRole = new DeleteRoleChecker();
+
 class RoleTableRow extends React.Component {
 
    static propTypes = {
@@ -24,21 +33,21 @@ class RoleTableRow extends React.Component {
    }
 
    render() {
-      const { role, onDeleteClick } = this.props;
+      const { role, onDeleteClick, viewer } = this.props;
 
-      let isSelected = this.state.mouseIsOver,
+      let isSelected,
+         parentOnDeleteClick;
+
+      if (readRole.check(null, viewer)) {
+         isSelected = this.state.mouseIsOver;
+      }
+      else {
+         isSelected = false;
+      }
+
+      if (deleteRole.and(NotOwnRoleChecker).check({ roleId: role.id }, viewer) && !role.isStatic) {
          parentOnDeleteClick = onDeleteClick;
-
-      // if (readRoleAdministration.isAllowed(viewer.role)) {
-      //    isSelected = this.state.mouseIsOver;
-      // }
-      // else {
-      //    isSelected = false;
-      // }
-
-      // if (deleteRoleAdministration.isAllowed(viewer.role) && !role.isStatic && notOwnRole.isAllowed()) {
-      //    parentOnDeleteClick = onDeleteClick;
-      // }
+      }
 
       return (
          <Table.Row id={role.id}

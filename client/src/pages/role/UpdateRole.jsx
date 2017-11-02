@@ -14,6 +14,15 @@ import updateRoleFragments from './graphql/fragments/updateRole';
 import updateRoleMutation from './graphql/mutations/updateRole';
 import getRoleQuery from './graphql/queries/getRole';
 
+import {
+   ReadRoleChecker,
+   WriteRoleChecker,
+   NotOwnRoleChecker,
+} from './../../authorization';
+
+const readRole = new ReadRoleChecker();
+const notOwnRole = new NotOwnRoleChecker();
+
 class UpdateRole extends React.Component {
 
    static propTypes = {
@@ -59,7 +68,9 @@ class UpdateRole extends React.Component {
    }
 
    _formIsReadOnly = (role, viewer) => {
-      return false;
+      return !readRole.and(WriteRoleChecker).check({}, viewer)
+         || role.isStatic
+         || !notOwnRole.check({ roleId: role.id }, viewer);
    }
 
    _onSubmit = (roleData) => {

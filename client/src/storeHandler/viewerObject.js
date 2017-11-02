@@ -1,7 +1,7 @@
 
 function _has(ruleName) {
    if (this.role && Array.isArray(this.role.rules)) {
-      return this.role.rules.find(viewerRule => viewerRule.name === ruleName);
+      return this.role.rules.findIndex(viewerRule => viewerRule.name === ruleName) > -1;
    }
    else {
       return false;
