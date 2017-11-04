@@ -13,6 +13,18 @@ import mutationErrorHandling from './../../components/errorHandling/mutationErro
 import queryErrorHandling from './../../components/errorHandling/queryErrorHandling';
 import getUserQuery from './graphql/queries/getUser';
 
+import {
+   ReadUserChecker,
+   WriteUserChecker,
+   ReadRoleChecker,
+   SelfChecker,
+   NotSelfChecker
+} from './../../authorization';
+
+const readUser = new ReadUserChecker();
+const readRole = new ReadRoleChecker();
+const self = new SelfChecker();
+
 class UpdateUser extends React.Component {
 
    static propTypes = {
@@ -69,7 +81,9 @@ class UpdateUser extends React.Component {
    }
 
    _formIsReadOnly = (user, viewer) => {
-      return false;
+      return (!readUser.and(WriteUserChecker).and(ReadRoleChecker).check({}, viewer)
+         && !self.check({ userId: user.id }, viewer));
+
    }
 
    _onSubmit = (userData) => {
@@ -96,7 +110,13 @@ export default queryErrorHandling(getUserQuery)(
       config: {
          name: "getAllRolesForUserUpdateQuery",
          skip: ({ viewer, getUserQuery }) => {
-            return !viewer.has("readRole");
+            const user = getUserQuery.getUser;
+            if (user) {
+               return !readRole.and(NotSelfChecker).check({ userId: user.id }, viewer);
+            }
+            else {
+               return true;
+            }
          }
       }
    })(updateUserMutation(UpdateUser)));

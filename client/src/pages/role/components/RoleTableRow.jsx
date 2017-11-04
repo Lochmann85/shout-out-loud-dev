@@ -38,7 +38,7 @@ class RoleTableRow extends React.Component {
       let isSelected,
          parentOnDeleteClick;
 
-      if (readRole.check(null, viewer)) {
+      if (readRole.check({}, viewer)) {
          isSelected = this.state.mouseIsOver;
       }
       else {
