@@ -8,6 +8,12 @@ import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
 import pushShoutMutation from './../graphql/mutations/pushShoutMutation';
 
+import {
+   ShoutChecker
+} from './../../../authorization';
+
+const shout = new ShoutChecker();
+
 const FlexRoot = styled(BasicFlexWrapper) `
    -ms-flex-wrap: wrap;
    flex-wrap: wrap;
@@ -88,7 +94,7 @@ class PushShoutForm extends React.Component {
 
       let enabled = false;
       if (viewer) {
-         enabled = viewer.has("shout");
+         enabled = shout.check({}, viewer);
       }
 
       return (
