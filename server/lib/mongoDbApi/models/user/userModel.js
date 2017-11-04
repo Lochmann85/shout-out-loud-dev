@@ -5,7 +5,8 @@ import { isEmail } from 'validator';
 
 import {
    CustomError,
-   InternalServerError
+   InternalServerError,
+   ForbiddenError
 } from './../../../errorsApi';
 
 const SALT_ROUNDS = 10;
@@ -160,6 +161,45 @@ userSchema.methods.comparePassword = function (password) {
          message: error.message,
          key: "BCRYPT_ERROR"
       })));
+   });
+};
+
+/**
+ * @public
+ * @function check
+ * @description checks the allowance dependend on the own rules
+ * @param {object} allowance - the needed allowance
+ * @param {object} args - the args of the request
+ * @returns {Promise} of permission granted
+ */
+userSchema.methods.check = function (allowance, args) {
+   return new Promise((resolve, reject) => {
+      if (this.role && Array.isArray(this.role.rules)) {
+         resolve(true);
+      }
+      else {
+         reject(new ForbiddenError());
+      }
+   })
+      .then(() => allowance.check(args, this));
+};
+
+/**
+ * @public
+ * @function has
+ * @description checks if the user has a rule
+ * @param {string} ruleName - the name of the rule
+ * @returns {Promise} of found rule
+ */
+userSchema.methods.has = function (ruleName) {
+   return new Promise((resolve, reject) => {
+      const foundRule = this.role.rules.find(viewerRule => viewerRule.name === ruleName);
+      if (foundRule) {
+         resolve(true);
+      }
+      else {
+         reject(new ForbiddenError());
+      }
    });
 };
 

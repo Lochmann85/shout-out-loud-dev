@@ -1,5 +1,7 @@
 import { addResolveFunctionsToSchema } from 'graphql-tools';
 
+import { CustomError } from './../../errorsApi';
+
 import {
    findAllUsers,
    findUserById,
@@ -8,6 +10,21 @@ import {
    changeUserPassword,
    deleteUser
 } from './../../mongoDbApi/services/user/userDbService';
+import {
+   authorizationMiddleware,
+   ReadRoleChecker,
+   ReadUserChecker,
+   WriteUserChecker,
+   DeleteUserChecker,
+   SelfChecker,
+   NotSelfChecker,
+} from './../../authorizationApi/authorizationService';
+
+const readUser = new ReadUserChecker();
+const createUserRead = new ReadUserChecker();
+const updateUserRead = new ReadUserChecker();
+const updatePasswordRead = new ReadUserChecker();
+const deleteUserRead = new ReadUserChecker();
 
 const types = `
 interface IUser {
@@ -42,12 +59,14 @@ getUser(userId: ID!): User!
 
 const _queriesResolver = {
    Query: {
-      getAllUsers: () => {
+      getAllUsers: authorizationMiddleware(readUser)(() => {
          return findAllUsers();
-      },
-      getUser: (_, { userId }) => {
+      }),
+      getUser: authorizationMiddleware(
+         readUser.or(SelfChecker)
+      )((_, { userId }) => {
          return findUserById(userId);
-      }
+      })
    }
 };
 
@@ -60,18 +79,44 @@ deleteUser(userId: ID!): User!
 
 const _mutationsResolver = {
    Mutation: {
-      createUser: (_, { userData }) => {
+      createUser: authorizationMiddleware(
+         createUserRead.and(WriteUserChecker).and(ReadRoleChecker)
+      )((_, { userData }) => {
          return createUser(userData);
-      },
-      updateUser: (_, { userData, userId }, { viewer }) => {
-         return updateUser(userData, userId);
-      },
-      changeUserPassword: (_, { passwordChangeData, userId }, context) => {
+      }),
+      updateUser: authorizationMiddleware(
+         updateUserRead.and(WriteUserChecker).and(ReadRoleChecker).or(SelfChecker)
+      )((_, { userData, userId }, { viewer }) => {
+         const notSelf = new NotSelfChecker();
+         if (userData.role) {
+            return notSelf.check({ userId }, viewer).then(() => {
+               return updateUser(userData, userId);
+            }).catch(error => {
+               if (error.name === "Forbidden") {
+                  return new CustomError("ChangeRoleNotAllowed", {
+                     message: "You cannot change the role.",
+                     key: "role"
+                  });
+               }
+               else {
+                  return error;
+               }
+            });
+         }
+         else {
+            return updateUser(userData, userId);
+         }
+      }),
+      changeUserPassword: authorizationMiddleware(
+         updatePasswordRead.and(WriteUserChecker).or(SelfChecker)
+      )((_, { passwordChangeData, userId }, context) => {
          return changeUserPassword(passwordChangeData, userId);
-      },
-      deleteUser: (_, { userId }) => {
+      }),
+      deleteUser: authorizationMiddleware(
+         deleteUserRead.and(DeleteUserChecker).and(NotSelfChecker)
+      )((_, { userId }) => {
          return deleteUser(userId);
-      }
+      })
    }
 };
 

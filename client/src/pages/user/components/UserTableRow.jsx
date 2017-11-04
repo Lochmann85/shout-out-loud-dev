@@ -6,7 +6,20 @@ import dateFormat from 'dateformat';
 import { Table } from 'semantic-ui-react';
 
 import userTableRowFragments from './../graphql/fragments/userTableRow';
+
 import DescriptionWithEditAndDelete from './../../../components/table/DescriptionWithEditAndDelete';
+
+import {
+   ReadUserChecker,
+   DeleteUserChecker,
+   ReadRoleChecker,
+   SelfChecker,
+   NotSelfChecker,
+} from './../../../authorization';
+
+const readUser = new ReadUserChecker();
+const deleteUser = new DeleteUserChecker();
+const self = new SelfChecker();
 
 class UserTableRow extends React.Component {
 
@@ -25,12 +38,24 @@ class UserTableRow extends React.Component {
    }
 
    render() {
-      const { user, onDeleteClick } = this.props;
+      const { user, onDeleteClick, viewer } = this.props;
 
       let isSelected,
-         parentOnDeleteClick = onDeleteClick;
+         parentOnDeleteClick = null;
 
-      isSelected = this.state.mouseIsOver;
+      if (readUser.and(ReadRoleChecker).check({}, viewer)) {
+         isSelected = this.state.mouseIsOver;
+      }
+      else if (self.check({ userId: user.id }, viewer)) {
+         isSelected = this.state.mouseIsOver;
+      }
+      else {
+         isSelected = false;
+      }
+
+      if (deleteUser.and(NotSelfChecker).check({ userId: user.id }, viewer)) {
+         parentOnDeleteClick = onDeleteClick;
+      }
 
       return (
          <Table.Row id={user.id}

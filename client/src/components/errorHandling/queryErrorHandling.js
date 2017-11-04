@@ -42,9 +42,10 @@ const queryErrorHandling = (queryDefinition) => {
          }
 
          render() {
-            const query = this.props[queryDefinition.config.name];
+            const query = this.props[queryDefinition.config.name],
+               queryHasError = query && query.error ? true : false;
 
-            if (query && (query.loading || query.error) && !this.loaded) {
+            if (query && (query.loading || queryHasError) && (!this.loaded || queryHasError)) {
                this.loaded = true;
                return <BaseLayoutLoader />;
             }

@@ -15,6 +15,14 @@ import queryErrorHandling from './../../components/errorHandling/queryErrorHandl
 import mutationErrorHandling from './../../components/errorHandling/mutationErrorHandling';
 import deleteUserMutation from './graphql/mutations/deleteUser';
 
+import {
+   ReadRoleChecker,
+   ReadUserChecker,
+   WriteUserChecker,
+} from './../../authorization';
+
+const readUser = new ReadUserChecker();
+
 class UserTable extends React.Component {
 
    static propTypes = {
@@ -36,7 +44,7 @@ class UserTable extends React.Component {
 
       let TableContent = null,
          selectedUser = null,
-         showAddButton = true;
+         showAddButton = false;
 
       if (getAllUsers && Array.isArray(getAllUsers) && getAllUsers.length !== 0) {
          selectedUser = getAllUsers.find(user => user.id === this.state.selectedUserId);
@@ -73,10 +81,9 @@ class UserTable extends React.Component {
          deleteMessage = `The user with name "${selectedUser.name}" will be deleted.`;
       }
 
-      // if (viewer) {
-      //    showAddButton = readWriteUserAdministration.isAllowed(viewer.role) &&
-      //       readRoleAdministration.isAllowed(viewer.role);
-      // }
+      if (viewer) {
+         showAddButton = readUser.and(WriteUserChecker).and(ReadRoleChecker).check({}, viewer);
+      }
 
       return (
          <BaseContentLayout title={<HeadingWithAddButton

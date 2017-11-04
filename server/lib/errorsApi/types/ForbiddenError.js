@@ -10,7 +10,7 @@ function ForbiddenError() {
    this.status = 403;
 
    BaseError.call(this, {
-      message: `You are not allowed to enter this page.`,
+      message: `You do not have the permissions.`,
       key: "NOT_ALLOWED"
    });
 }

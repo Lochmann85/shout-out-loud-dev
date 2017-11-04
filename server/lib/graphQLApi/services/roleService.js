@@ -7,8 +7,18 @@ import {
    updateRole,
    deleteRole
 } from './../../mongoDbApi/services/role/roleDbService';
-// import { and } from './../../helper/compositions';
-// import { roleAdministration, notOwnRole } from './../../authorizationApi/authorizationService';
+import {
+   authorizationMiddleware,
+   ReadRoleChecker,
+   WriteRoleChecker,
+   DeleteRoleChecker,
+   NotOwnRoleChecker,
+} from './../../authorizationApi/authorizationService';
+
+const readRole = new ReadRoleChecker();
+const createRoleRead = new ReadRoleChecker();
+const updateRoleRead = new ReadRoleChecker();
+const deleteRoleRead = new ReadRoleChecker();
 
 const types = `
 type Role {
@@ -36,10 +46,10 @@ const mutations = `
 
 const _queriesResolver = {
    Query: {
-      getAllRoles: /*roleAdministration("r")*/(() => {
+      getAllRoles: authorizationMiddleware(readRole)(() => {
          return findAllRoles();
       }),
-      getRole: /*roleAdministration("r")*/((_, { roleId }) => {
+      getRole: authorizationMiddleware(readRole)((_, { roleId }) => {
          return findRoleById(roleId);
       }),
    }
@@ -47,13 +57,17 @@ const _queriesResolver = {
 
 const _mutationsResolver = {
    Mutation: {
-      createRole: /*roleAdministration("rw")*/((_, { roleData }) => {
+      createRole: authorizationMiddleware(createRoleRead.and(WriteRoleChecker))((_, { roleData }) => {
          return createRole(roleData);
       }),
-      updateRole: /*and(roleAdministration("rw"), notOwnRole())*/((_, { roleData, roleId }, { viewer }) => {
+      updateRole: authorizationMiddleware(
+         updateRoleRead.and(WriteRoleChecker).and(NotOwnRoleChecker)
+      )((_, { roleData, roleId }, { viewer }) => {
          return updateRole(roleData, roleId);
       }),
-      deleteRole: /*and(roleAdministration("rd"), notOwnRole())*/((_, { roleId }) => {
+      deleteRole: authorizationMiddleware(
+         deleteRoleRead.and(DeleteRoleChecker).and(NotOwnRoleChecker)
+      )((_, { roleId }) => {
          return deleteRole(roleId);
       }),
    }
