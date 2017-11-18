@@ -36,7 +36,8 @@ class CreateUser extends React.Component {
                   errors={this.state.errors}
                   submitButtonTitle="Create"
                   roles={roles}
-                  readOnly={false} />
+                  readOnly={false}
+                  isEMailReadOnly={false} />
             </SegmentBackground>
          </BaseContentLayout>
       );

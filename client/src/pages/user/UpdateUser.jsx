@@ -65,7 +65,8 @@ class UpdateUser extends React.Component {
                errors={this.state.errors}
                submitButtonTitle="Update"
                roles={roles}
-               readOnly={this._formIsReadOnly(getUser, viewer)} />
+               readOnly={this._formIsReadOnly(getUser, viewer)}
+               isEMailReadOnly={this._isEMailReadOnly(getUser, viewer)} />
          </SegmentBackground>;
       }
       else {
@@ -84,6 +85,10 @@ class UpdateUser extends React.Component {
       return (!readUser.and(WriteUserChecker).and(ReadRoleChecker).check({}, viewer)
          && !self.check({ userId: user.id }, viewer));
 
+   }
+
+   _isEMailReadOnly = (user, viewer) => {
+      return self.check({ userId: user.id }, viewer); I
    }
 
    _onSubmit = (userData) => {

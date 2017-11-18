@@ -58,6 +58,7 @@ class UserForm extends React.Component {
       roles: PropTypes.arrayOf(propType(userFormFragments.roles.document)),
       submitButtonTitle: PropTypes.string.isRequired,
       readOnly: PropTypes.bool.isRequired,
+      isEMailReadOnly: PropTypes.bool.isRequired,
       errors: errorsProps,
    }
 
@@ -74,7 +75,7 @@ class UserForm extends React.Component {
    }
 
    render() {
-      const { readOnly, user, roles } = this.props;
+      const { readOnly, user, roles, isEMailReadOnly } = this.props;
       const errors = this.props.errors ? this.props.errors : [];
       const emailHasError = checkForErrorInInput("email", errors),
          nameHasError = checkForErrorInInput("name", errors),
@@ -139,7 +140,7 @@ class UserForm extends React.Component {
                   name="email"
                   onChange={this._handleChange}
                   defaultValue={email}
-                  readOnly={readOnly} />
+                  readOnly={readOnly || isEMailReadOnly} />
             </ColoredFormField>
             <ColoredFormField error={nameHasError}>
                <label>Name</label>
@@ -175,10 +176,13 @@ class UserForm extends React.Component {
       event.preventDefault();
 
       const userData = {
-         email: this.state.email,
          name: this.state.name,
          password: this.state.password
       };
+
+      if (!this.props.isEMailReadOnly) {
+         userData.email = this.state.email;
+      }
       if (this.props.roles) {
          if (this.props.user && this.props.user.role.id !== this.state.roleId) {
             userData.role = this.state.roleId;
