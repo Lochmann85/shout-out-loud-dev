@@ -77,6 +77,7 @@ const findAllUsers = () => {
  * @returns {Promise} of new user
  */
 const createUser = (userData) => {
+   userData.email = userData.email.toLowerCase();
    const user = new userModel(userData); // eslint-disable-line new-cap
 
    return user.save().then(newUser => {
@@ -94,7 +95,7 @@ const createUser = (userData) => {
  */
 const updateUser = (userData, userId) => {
    const set = {
-      email: userData.email,
+      email: userData.email.toLowerCase(),
       name: userData.name
    };
    if (userData.role) {
