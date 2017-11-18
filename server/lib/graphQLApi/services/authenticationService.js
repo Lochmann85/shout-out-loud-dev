@@ -10,27 +10,16 @@ import {
 } from './../../jwtApi/jwtService';
 
 const types = `
-type MenuItem {
-   label: String!
-   path: String!
-}
-type MenuGroup {
-   label: String!
-   menuItems: [MenuItem!]!
-   subMenus: [MenuGroup!]
-}
 interface IAuthorized {
    id: ID!
    name: String!
    role: Role!
-   navigation: [MenuGroup!]
 }
 type Viewer implements IUser, IAuthorized {
    id: ID!
    name: String!
    token: String!
    role: Role!
-   navigation: [MenuGroup!]
 }
 input Credentials {
    email: String

@@ -8,6 +8,13 @@ export default {
       document: gql`
       fragment ControlCenterViewer on IAuthorized {
          ...${viewerInfoFragment.viewer.name}
+         role {
+            id
+            rules {
+               id
+               name
+            }
+         }
       }
       ${viewerInfoFragment.viewer.document}`
    }
