@@ -95,9 +95,12 @@ const createUser = (userData) => {
  */
 const updateUser = (userData, userId) => {
    const set = {
-      email: userData.email.toLowerCase(),
       name: userData.name
    };
+
+   if (userData.email) {
+      set.email = userData.email.toLowerCase();
+   }
    if (userData.role) {
       set.role = userData.role;
    }
