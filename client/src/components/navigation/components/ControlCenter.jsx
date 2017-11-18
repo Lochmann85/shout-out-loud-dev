@@ -12,6 +12,14 @@ import ViewerInfo from './ViewerInfo';
 
 import controlCenterFragments from './../graphql/fragments/controlCenter';
 
+import {
+   ReadUserChecker,
+   ReadRoleChecker,
+} from './../../../authorization';
+
+const readUser = new ReadUserChecker();
+const readRole = new ReadRoleChecker();
+
 const FullHeightDrowdown = styled(Dropdown) `
    height: 100%;
    > .icon {
@@ -46,13 +54,26 @@ class ControlCenter extends React.Component {
    render() {
       const { viewer } = this.props;
 
+      let managmentHeader,
+         userManagmentLink,
+         roleManagmentLink;
+      if (readUser.check({}, viewer)) {
+         userManagmentLink = <Dropdown.Item as={Link} to="/user" content={<ColoredSpan>User</ColoredSpan>} />;
+      }
+      if (readRole.check({}, viewer)) {
+         roleManagmentLink = <Dropdown.Item as={Link} to="/role" content={<ColoredSpan>Role</ColoredSpan>} />;
+      }
+      if (userManagmentLink || roleManagmentLink) {
+         managmentHeader = <StyledDropdownHeader content={"Managment"} />;
+      }
+
       return (
          <FullHeightDrowdown item icon="content">
             <ColoredDrowdownMenu>
                <ViewerInfo viewer={viewer} />
-               <StyledDropdownHeader content={"Managment"} />
-               <Dropdown.Item as={Link} to="/user" content={<ColoredSpan>User</ColoredSpan>} />
-               <Dropdown.Item as={Link} to="/role" content={<ColoredSpan>Role</ColoredSpan>} />
+               {managmentHeader}
+               {userManagmentLink}
+               {roleManagmentLink}
                <StyledDropdownHeader content={"Action"} />
                <Dropdown.Item onClick={this._logout} content={<ColoredSpan>Logout</ColoredSpan>} />
             </ColoredDrowdownMenu>
