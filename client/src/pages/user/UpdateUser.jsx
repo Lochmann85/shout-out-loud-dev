@@ -88,7 +88,7 @@ class UpdateUser extends React.Component {
    }
 
    _isEMailReadOnly = (user, viewer) => {
-      return self.check({ userId: user.id }, viewer); I
+      return self.check({ userId: user.id }, viewer);
    }
 
    _onSubmit = (userData) => {
