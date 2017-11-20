@@ -3,7 +3,7 @@ import { propType } from 'graphql-anywhere';
 
 import { Table } from 'semantic-ui-react';
 
-import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
+import TableWithPaginationBase from './../../components/table/TableWithPaginationBase';
 
 import userTableFragments from './graphql/fragments/userTable';
 import DeleteConfirmation from './../../components/modal/DeleteConfirmation';
@@ -39,46 +39,47 @@ class UserTable extends React.Component {
       };
    }
 
+   _createTableBody = (visibleUsers) => {
+      const { viewer } = this.props;
+
+      const visibleTableRows = visibleUsers.map((user, index) =>
+         <UserTableRow
+            key={index}
+            user={user}
+            viewer={viewer}
+            onDeleteClick={this._onDeleteClick} />
+      );
+
+      return (
+         <Table.Body>
+            {visibleTableRows}
+         </Table.Body>
+      );
+   }
+
+   _createTableHeader = () => {
+      return (
+         <Table.Header>
+            <Table.Row>
+               <Table.HeaderCell width={8} content="E-Mail" />
+               <Table.HeaderCell width={4} content="Role" />
+               <Table.HeaderCell width={4} content="Created at" />
+            </Table.Row>
+         </Table.Header>
+      );
+   }
+
    render() {
       const { getAllUsersQuery: { getAllUsers }, viewer } = this.props;
 
-      let TableContent = null,
-         selectedUser = null,
+      let deleteMessage = "",
          showAddButton = false;
 
       if (getAllUsers && Array.isArray(getAllUsers) && getAllUsers.length !== 0) {
-         selectedUser = getAllUsers.find(user => user.id === this.state.selectedUserId);
-
-         const tableRows = getAllUsers.map((user, index) =>
-            <UserTableRow
-               key={index}
-               user={user}
-               viewer={viewer}
-               onDeleteClick={this._onDeleteClick} />
-         );
-
-         TableContent = <SegmentBackground>
-            <Table celled compact selectable unstackable>
-               <Table.Header>
-                  <Table.Row>
-                     <Table.HeaderCell width={8} content="E-Mail" />
-                     <Table.HeaderCell width={4} content="Role" />
-                     <Table.HeaderCell width={4} content="Created At" />
-                  </Table.Row>
-               </Table.Header>
-               <Table.Body>
-                  {tableRows}
-               </Table.Body>
-            </Table>
-         </SegmentBackground>;
-      }
-      else {
-         TableContent = <InfoMessage visible content="No users were found." />;
-      }
-
-      let deleteMessage = "";
-      if (selectedUser) {
-         deleteMessage = `The user with name "${selectedUser.name}" will be deleted.`;
+         const selectedUser = getAllUsers.find(user => user.id === this.state.selectedUserId);
+         if (selectedUser) {
+            deleteMessage = `The user with name "${selectedUser.name}" will be deleted.`;
+         }
       }
 
       if (viewer) {
@@ -90,7 +91,13 @@ class UserTable extends React.Component {
             title="Table of all users"
             linkUrl="/user/create"
             showAddButton={showAddButton} />}>
-            {TableContent}
+            <TableWithPaginationBase
+               tableEntries={getAllUsers}
+               noEntriesFoundComment={"No users were found."}
+               createTableBody={this._createTableBody}
+               createTableHeader={this._createTableHeader}
+               numberOfColumns={3}
+            />
             <DeleteConfirmation
                open={this.state.openDeleteConfirmation}
                description={deleteMessage}
