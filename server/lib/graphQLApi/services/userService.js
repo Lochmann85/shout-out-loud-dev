@@ -25,7 +25,6 @@ const createUserRead = new ReadUserChecker();
 const updateUserRead = new ReadUserChecker();
 const updatePasswordRead = new ReadUserChecker();
 const deleteUserRead = new ReadUserChecker();
-const self = new SelfChecker();
 
 const types = `
 interface IUser {
@@ -88,8 +87,8 @@ const _mutationsResolver = {
       updateUser: authorizationMiddleware(
          updateUserRead.and(WriteUserChecker).and(ReadRoleChecker).or(SelfChecker)
       )((_, { userData, userId }, { viewer }) => {
-         const notSelf = new NotSelfChecker();
          if (userData.role) {
+            const notSelf = new NotSelfChecker();
             return notSelf.and(WriteUserChecker).check({ userId }, viewer).then(() => {
                return updateUser(userData, userId);
             }).catch(error => {
@@ -104,16 +103,16 @@ const _mutationsResolver = {
                }
             });
          }
-         else if (self.check({ userId }, viewer)) {
-            if (userData.role || userData.email) {
+         else if (userData.email) {
+            const notSelf = new NotSelfChecker();
+            return notSelf.and(WriteUserChecker).check({ userId }, viewer).then(() => {
+               return updateUser(userData, userId);
+            }).catch(error => {
                return new CustomError("ChangeSelfParametersNotAllowed", {
                   message: "You cannot change your email.",
                   key: "email"
                });
-            }
-            else {
-               return updateUser(userData, userId);
-            }
+            });
          }
          else {
             return updateUser(userData, userId);

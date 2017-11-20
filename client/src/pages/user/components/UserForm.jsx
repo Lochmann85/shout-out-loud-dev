@@ -58,6 +58,7 @@ class UserForm extends React.Component {
       roles: PropTypes.arrayOf(propType(userFormFragments.roles.document)),
       submitButtonTitle: PropTypes.string.isRequired,
       readOnly: PropTypes.bool.isRequired,
+      isEMailReadOnly: PropTypes.bool.isRequired,
       errors: errorsProps,
    }
 
@@ -74,7 +75,7 @@ class UserForm extends React.Component {
    }
 
    render() {
-      const { readOnly } = this.props;
+      const { readOnly, user, roles, isEMailReadOnly } = this.props;
       const errors = this.props.errors ? this.props.errors : [];
       const emailHasError = checkForErrorInInput("email", errors),
          nameHasError = checkForErrorInInput("name", errors),
@@ -87,7 +88,7 @@ class UserForm extends React.Component {
          changePasswordModal = null,
          roleSelection = null;
 
-      if (!this.props.user) {
+      if (!user) {
          passwordInput = <ColoredFormField error={passwordHasError}>
             <label>Password</label>
             <Form.Input
@@ -99,7 +100,7 @@ class UserForm extends React.Component {
          </ColoredFormField>;
       }
       else {
-         email = this.props.user.email;
+         email = user.email;
 
          if (!readOnly) {
             changePasswordButton = <NewPasswordButton
@@ -108,7 +109,7 @@ class UserForm extends React.Component {
                onClick={this._onPasswordChangeClick} />;
 
             changePasswordModal = <PasswordChanger
-               user={this.props.user}
+               user={user}
                header="Change Password"
                description={`You are going to change the password for the user with email '${email}'.`}
                onCloseClick={this._onCloseClick}
@@ -116,11 +117,11 @@ class UserForm extends React.Component {
          }
       }
 
-      if (this.props.roles) {
+      if (roles) {
          roleSelection = <ColoredFormField error={roleHasError}>
             <label>Roles</label>
             <RoleSelection fluid selection
-               roles={this.props.roles}
+               roles={roles}
                name="roleId"
                defaultValue={this.state.roleId}
                onChange={this._handleChange}
@@ -139,7 +140,7 @@ class UserForm extends React.Component {
                   name="email"
                   onChange={this._handleChange}
                   defaultValue={email}
-                  readOnly={readOnly} />
+                  readOnly={readOnly || isEMailReadOnly} />
             </ColoredFormField>
             <ColoredFormField error={nameHasError}>
                <label>Name</label>
@@ -171,16 +172,17 @@ class UserForm extends React.Component {
       );
    };
 
-   _handleChange = (event, { name, value }) => this.setState({ [name]: value });
-
    _onSubmit = (event) => {
       event.preventDefault();
 
       const userData = {
-         email: this.state.email,
          name: this.state.name,
          password: this.state.password
       };
+
+      if (!this.props.isEMailReadOnly) {
+         userData.email = this.state.email;
+      }
       if (this.props.roles) {
          if (this.props.user && this.props.user.role.id !== this.state.roleId) {
             userData.role = this.state.roleId;
@@ -193,27 +195,11 @@ class UserForm extends React.Component {
       this.props.onSubmit(userData);
    };
 
-   /**
-    * @private
-    * @function _onPasswordChangeClick
-    * @description change-password-button clicked: opens passwordchange-window.
-    */
-   _onPasswordChangeClick = () => {
-      this.setState({
-         openPasswordChangeModal: true,
-      });
-   };
+   _handleChange = (event, { name, value }) => this.setState({ [name]: value });
 
-   /**
-    * @private
-    * @function _onCloseClick
-    * @description Close button in info window has been clicked. Closes the window.
-    */
-   _onCloseClick = () => {
-      this.setState({
-         openPasswordChangeModal: false,
-      });
-   };
+   _onPasswordChangeClick = () => this.setState({ openPasswordChangeModal: true });
+
+   _onCloseClick = () => this.setState({ openPasswordChangeModal: false });
 };
 
 export default UserForm;
