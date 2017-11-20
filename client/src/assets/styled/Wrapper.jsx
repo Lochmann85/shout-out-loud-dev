@@ -28,12 +28,17 @@ const VerticalAlignTextWrapper = styled(TextEllipsisWrapper) `
 `;
 
 const BasicFlexWrapper = styled.div.attrs({ direction: props => props.direction || "row" }) `
+   display: -webkit-box;
+   display: -moz-box;
    display: -ms-flexbox;
    display: -webkit-flex;
    display: flex;
    -webkit-flex-direction: ${props => props.direction};
    -ms-flex-direction: ${props => props.direction};
    flex-direction: ${props => props.direction};
+   -webkit-align-items: center;
+   -ms-flex-align: center;
+   align-items: center;
 `;
 
 export {
