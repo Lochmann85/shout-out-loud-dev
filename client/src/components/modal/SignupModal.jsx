@@ -38,11 +38,17 @@ class SignUpModal extends React.Component {
 
    _onSubmit = (credentials) => {
       this.props.signup(credentials)
-         .then(() => this.setState({ isConfirmationVisible: true }))
+         .then(() => this.setState({
+            errors: [],
+            isConfirmationVisible: true
+         }))
          .catch(error => mutationErrorHandling(error, this._onShowError));
    }
 
-   _onShowError = (errors) => this.setState({ errors });
+   _onShowError = (errors) => this.setState({
+      errors,
+      isConfirmationVisible: false,
+   });
 
    _onCloseClick = () => {
       this.setState({
