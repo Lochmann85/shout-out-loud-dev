@@ -4,7 +4,11 @@ import convertMongooseError from './../../convertMongooseToReadableError';
 import { CustomError } from './../../../errorsApi';
 import { userModel } from './../../models';
 
-import { findUser } from './userDbService';
+import {
+   findUser,
+   createUser,
+} from './userDbService';
+import { findDefaultRole } from './../role/roleDbService';
 
 /**
  * @public
@@ -15,7 +19,10 @@ import { findUser } from './userDbService';
  */
 const findUserByEMail = (email) => {
    if (isEmail(email)) {
-      const userQuery = userModel.findOne({ email: email.toLowerCase() });
+      const userQuery = userModel.findOne({
+         email: email.toLowerCase(),
+         isActive: true,
+      });
 
       return findUser(userQuery);
    }
@@ -82,9 +89,24 @@ const updatePasswordAndTokenInUser = (password, resetPasswordToken, user) => {
    }
 };
 
+/**
+ * @public
+ * @function createNewAccount
+ * @description creates a new account that is not active
+ * @param {object} newAccount - the new account data
+ * @returns {Promise} of created user
+ */
+const createNewAccount = (newAccount) => {
+   return findDefaultRole().then(defaultRole => {
+      newAccount.role = defaultRole.id;
+      return createUser(newAccount, false);
+   });
+};
+
 export {
    findUserByEMail,
    authenticateUser,
    updateResetPwdTokenInUser,
    updatePasswordAndTokenInUser,
+   createNewAccount,
 };

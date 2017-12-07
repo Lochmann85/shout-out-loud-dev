@@ -4,6 +4,7 @@ import {
    authenticateUser,
    findUserByEMail,
    updateResetPwdTokenInUser,
+   createNewAccount,
 } from './../../mongoDbApi/services/user/authenticationDbService';
 import {
    createNewResetPasswordToken
@@ -25,6 +26,11 @@ input Credentials {
    email: String
    password: String
 }
+input NewAccount {
+   email: String
+   name: String
+   password: String
+}
 `;
 
 const queries = `
@@ -44,6 +50,7 @@ const _queriesResolver = {
 
 const mutations = `
 login(credentials: Credentials): Viewer!
+signup(newAccount: NewAccount): Boolean!
 sendResetPassword(email: String): Boolean!
 resetPassword(password: String, token: String): Boolean!
 `;
@@ -61,6 +68,10 @@ const _mutationsResolver = {
                token
             };
          });
+      },
+      signup(_, { newAccount }, { tokenHandler }) {
+         return createNewAccount(newAccount)
+            .then(() => true);
       },
       sendResetPassword(_, { email }) {
          return findUserByEMail(email).then(knownUser => {

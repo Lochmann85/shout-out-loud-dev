@@ -82,7 +82,7 @@ const _mutationsResolver = {
       createUser: authorizationMiddleware(
          createUserRead.and(WriteUserChecker).and(ReadRoleChecker)
       )((_, { userData }) => {
-         return createUser(userData);
+         return createUser(userData, true);
       }),
       updateUser: authorizationMiddleware(
          updateUserRead.and(WriteUserChecker).and(ReadRoleChecker).or(SelfChecker)

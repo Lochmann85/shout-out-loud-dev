@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema({
    name: {
       type: String,
       required: true,
+      unique: true,
    },
    password: {
       type: String,
@@ -46,6 +47,10 @@ const userSchema = new mongoose.Schema({
    resetPasswordToken: {
       type: String
    },
+   isActive: {
+      type: Boolean,
+      required: true,
+   },
    role: {
       type: ObjectId,
       ref: "Role",
@@ -53,7 +58,7 @@ const userSchema = new mongoose.Schema({
    }
 }, { timestamps: true });
 
-const duplicateErrorMessage = "There already exists a user with the given E-Mail.";
+const duplicateErrorMessage = "There already exists a user with the given {PATH}.";
 
 userSchema.plugin(uniqueValidator, { message: duplicateErrorMessage });
 
