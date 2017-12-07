@@ -13,12 +13,12 @@ import convertMongooseError from './../../convertMongooseToReadableError';
  * @returns {Promise} of rejected errors
  */
 const _handleError = (errors) => {
-   if (errors.length !== 0) {
+   if (Object.keys(errors).length !== 0) {
       const error = { errors };
       return Promise.reject(error);
    }
    else {
-      return true;
+      return Promise.resolve(true);
    }
 };
 
@@ -27,9 +27,10 @@ const _handleError = (errors) => {
  * @function createAccountConfirmation
  * @description creates a new account that is not active
  * @param {object} newAccount - the new account data
+ * @param {object} tokenHandler - the token handler
  * @returns {Promise} of created user
  */
-const createAccountConfirmation = (newAccount) => {
+const createAccountConfirmation = (newAccount, tokenHandler) => {
    const errors = {};
    let accountConfirmation = null;
 
@@ -50,6 +51,11 @@ const createAccountConfirmation = (newAccount) => {
             newAccount.email = newAccount.email.toLowerCase();
          }
          accountConfirmation = new accountConfirmationModel(newAccount); // eslint-disable-line new-cap
+
+         return tokenHandler.encrypt(accountConfirmation);
+      })
+      .then(jwtToken => {
+         accountConfirmation.confirmAccountToken = jwtToken;
 
          return accountConfirmation.validate()
             .catch(error => {

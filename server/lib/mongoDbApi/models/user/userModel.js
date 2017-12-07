@@ -11,8 +11,8 @@ import {
    InternalServerError,
    ForbiddenError
 } from './../../../errorsApi';
+import { continueWithHashedPassword } from './../../passwordEncription';
 
-const SALT_ROUNDS = 10;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const userSchema = new mongoose.Schema({
@@ -48,23 +48,6 @@ userSchema.plugin(uniqueValidator, { message: duplicateErrorMessage });
 
 /**
  * @private
- * @function _continueWithHashedPassword
- * @description hashes the passwor dand continues
- * @param {function} next - next step in pre mongoose middleware
- * @param {object} user - user object
- * @returns {Promise} of hash action
- */
-const _continueWithHashedPassword = (next, user) => {
-   return bcrypt.hash(user.password, SALT_ROUNDS).then(hashedPassword => {
-      user.password = hashedPassword;
-      next();
-   }).catch(error => {
-      next(error);
-   });
-};
-
-/**
- * @private
  * @function pre("save")
  * @description pre save middleware, hashes the password of each new user
  */
@@ -74,7 +57,7 @@ userSchema.pre("save", function (next) {
    // only hash the password if it has been modified (or is new)
    if (!newUser.isModified("password")) return next();
 
-   _continueWithHashedPassword(next, newUser);
+   continueWithHashedPassword(next, newUser);
 });
 
 /**
@@ -87,43 +70,17 @@ userSchema.pre("findOneAndUpdate", function (next) {
    this.options.context = "query";
 
    let update = this.getUpdate();
-
    if (update["$set"] && update["$set"].hasOwnProperty("password")) {
       if (passwordValidation.validator(update["$set"].password)) {
-         _continueWithHashedPassword(next, update["$set"]);
+         continueWithHashedPassword(next, update["$set"]);
       }
       else {
          next({ errors: { new: { message: passwordValidation.message } } });
       }
    }
-   else if (update["$set"] && update["$set"].email && update["$set"].email !== "") {
-      this.options.runValidators = true;
-      if (emailValidation.validator(update["$set"].email)) {
-         return next();
-      }
-      else {
-         next({ errors: { email: { message: emailValidation.message } } });
-      }
-   }
    else {
       this.options.runValidators = true;
       return next();
-   }
-});
-
-/**
- * @private
- * @function post("findOneAndUpdate")
- * @description post findOneAndUpdate middleware,
- * if the single username validation does not pass the error message is changed
- */
-userSchema.post("findOneAndUpdate", (error, user, next) => {
-   if (error.name === "MongoError" && error.code === 11000) {
-      next({
-         errors: { name: { message: duplicateErrorMessage } }
-      });
-   } else {
-      next(error);
    }
 });
 

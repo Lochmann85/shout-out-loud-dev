@@ -19,7 +19,7 @@ signup(newAccount: NewAccount): Boolean!
 const _mutationsResolver = {
    Mutation: {
       signup(_, { newAccount }, { tokenHandler }) {
-         return createAccountConfirmation(newAccount)
+         return createAccountConfirmation(newAccount, tokenHandler)
             .then(() => true);
       },
    }
