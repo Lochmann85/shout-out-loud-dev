@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import uniqueValidator from 'mongoose-unique-validator';
-import { isEmail } from 'validator';
+import {
+   emailValidation,
+   passwordValidation
+} from './../../validations';
 
 import {
    CustomError,
@@ -10,29 +13,14 @@ import {
 } from './../../../errorsApi';
 
 const SALT_ROUNDS = 10;
-const PASSWORD_LENGTH = 6;
 const ObjectId = mongoose.Schema.Types.ObjectId;
-
-const passwordValidate = {
-   validator: function (newPassword) {
-      return (newPassword.length >= PASSWORD_LENGTH);
-   },
-   message: "The new password is not of the required length (6+)."
-};
-
-const emailValidate = {
-   validator: function (newEMail) {
-      return isEmail(newEMail);
-   },
-   message: "Please provide a correct E-Mail."
-};
 
 const userSchema = new mongoose.Schema({
    email: {
       type: String,
       required: true,
       unique: true,
-      validate: emailValidate
+      validate: emailValidation
    },
    name: {
       type: String,
@@ -42,14 +30,10 @@ const userSchema = new mongoose.Schema({
    password: {
       type: String,
       required: true,
-      validate: passwordValidate,
+      validate: passwordValidation,
    },
    resetPasswordToken: {
       type: String
-   },
-   isActive: {
-      type: Boolean,
-      required: true,
    },
    role: {
       type: ObjectId,
@@ -105,20 +89,20 @@ userSchema.pre("findOneAndUpdate", function (next) {
    let update = this.getUpdate();
 
    if (update["$set"] && update["$set"].hasOwnProperty("password")) {
-      if (passwordValidate.validator(update["$set"].password)) {
+      if (passwordValidation.validator(update["$set"].password)) {
          _continueWithHashedPassword(next, update["$set"]);
       }
       else {
-         next({ errors: { new: { message: passwordValidate.message } } });
+         next({ errors: { new: { message: passwordValidation.message } } });
       }
    }
    else if (update["$set"] && update["$set"].email && update["$set"].email !== "") {
       this.options.runValidators = true;
-      if (emailValidate.validator(update["$set"].email)) {
+      if (emailValidation.validator(update["$set"].email)) {
          return next();
       }
       else {
-         next({ errors: { email: { message: emailValidate.message } } });
+         next({ errors: { email: { message: emailValidation.message } } });
       }
    }
    else {

@@ -76,11 +76,10 @@ const findAllUsers = () => {
  * @param {object} userData - data for the new user
  * @returns {Promise} of new user
  */
-const createUser = (userData, isActive) => {
+const createUser = (userData) => {
    if (userData.email) {
       userData.email = userData.email.toLowerCase();
    }
-   userData.isActive = isActive;
    const user = new userModel(userData); // eslint-disable-line new-cap
 
    return user.save().then(newUser => {
