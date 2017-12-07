@@ -7,6 +7,7 @@ import { Menu, Button } from 'semantic-ui-react';
 
 import ControlCenter from './ControlCenter';
 import LoginModal from './../../modal/LoginModal';
+import SignupModal from './../../modal/SignupModal';
 import colors from './../../../assets/colors/shout-out-loud-colors.json';
 
 import mainMenuFragments from './../graphql/fragments/mainMenu';
@@ -63,11 +64,14 @@ class MainMenu extends React.Component {
          return (
             <FullHeightMenuMenu position="right">
                <FullHeightMenuItem onClick={this._openLoginModal}>Log In</FullHeightMenuItem>
-               <SingupButton primary content="Sign Up" onClick={this._openSignUpModal} />
+               <SingupButton primary content="Sign Up" onClick={this._openSignupModal} />
                <LoginModal
                   open={this.state.isLoginModalOpen}
                   onCloseClick={this._closeLoginModal}
                   onLoginSuccess={this._handleLoginSuccess} />
+               <SignupModal
+                  open={this.state.isSignupModalOpen}
+                  onCloseClick={this._closeSignupModal} />
             </FullHeightMenuMenu>
          );
       }
@@ -83,6 +87,7 @@ class MainMenu extends React.Component {
    }
 
    _closeLoginModal = () => this.setState({ isLoginModalOpen: false });
+
 
    _openSignupModal = () => this.setState({ isSignupModalOpen: true });
 
