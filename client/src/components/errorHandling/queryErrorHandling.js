@@ -32,7 +32,7 @@ const queryErrorHandling = (queryDefinition) => {
                      }
                   });
                   if (hasUnauthorized) {
-                     browserHistory.push("/", { isLoginModalOpen: true });
+                     browserHistory.push("/");
                   }
                   else {
                      browserHistory.push("/error", { errors: errors });

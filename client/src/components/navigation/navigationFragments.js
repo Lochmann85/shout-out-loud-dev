@@ -1,14 +1,14 @@
 import gql from 'graphql-tag';
 
-import controlCenterFragment from './graphql/fragments/controlCenter';
+import mainMenuFragment from './graphql/fragments/mainMenu';
 
 export default {
    viewer: {
       name: "NavigationViewer",
       document: gql`
       fragment NavigationViewer on IAuthorized {
-         ...${controlCenterFragment.viewer.name}
+         ...${mainMenuFragment.viewer.name}
       }
-      ${controlCenterFragment.viewer.document}`
+      ${mainMenuFragment.viewer.document}`
    }
 };

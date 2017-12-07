@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import { propType } from 'graphql-anywhere';
 import styled from 'styled-components';
 
-import { Grid, Menu, Image, Button } from 'semantic-ui-react';
+import { Grid, Menu, Image } from 'semantic-ui-react';
 
 import { BasicFlexWrapper } from './../../assets/styled/Wrapper';
 import logo from './../../assets/images/shout-out-loud-logo.svg';
 import colors from './../../assets/colors/shout-out-loud-colors.json';
 
-import ControlCenter from './components/ControlCenter';
-import LoginModal from './../modal/LoginModal';
+import MainMenu from './components/MainMenu';
 
 import navigationFragments from './navigationFragments';
 
@@ -65,27 +64,6 @@ const LogoImage = styled(Image) `
    display:inline-block!important;
 `;
 
-const FullHeightMenuMenu = styled(Menu.Menu) `
-   height:100%;
-   float:right;
-   color:${colors.logoLighterBackground}!important;
-   @media only screen and (min-width: 768px) {
-      margin-left: auto!important;
-   };
-`;
-
-const FullHeightMenuItem = styled(Menu.Item) `
-   height:100%;
-   color:${colors.logoLighterBackground}!important;
-`;
-
-const SingupButton = styled(Button) `
-   margin: 0.75rem 0!important;
-   @media only screen and (max-width: 767px) {
-      margin: 0.5rem 0!important;
-   };
-`;
-
 const SmallestScreenMenuGroup = styled(BasicFlexWrapper) `
    width: 100%;
    margin-right: 1rem;
@@ -98,7 +76,6 @@ class Navigation extends React.Component {
 
    static propTypes = {
       viewer: propType(navigationFragments.viewer.document),
-      currentPathState: PropTypes.object,
       onLoginSuccess: PropTypes.func.isRequired,
       onLogout: PropTypes.func.isRequired,
    };
@@ -107,45 +84,11 @@ class Navigation extends React.Component {
       viewer: navigationFragments.viewer
    };
 
-   constructor(props) {
-      super(props);
-
-      this.state = {
-         isLoginModalOpen: false
-      };
-   }
-
-   componentDidMount() {
-      this._handleLoginSuccess = this._handleLoginSuccess.bind(this);
-   }
-
-   componentWillReceiveProps(nextProp) {
-      if (nextProp.currentPathState && nextProp.currentPathState.isLoginModalOpen) {
-         this.setState({ isLoginModalOpen: nextProp.currentPathState.isLoginModalOpen });
-      }
-   }
-
    render() {
-      const { viewer, onLogout } = this.props;
+      const { viewer, onLogout, onLoginSuccess } = this.props;
 
-      let controlMenuItem;
-      if (viewer) {
-         controlMenuItem = <FullHeightMenuMenu position="right">
-            <ControlCenter viewer={viewer} onLogout={onLogout} />
-         </FullHeightMenuMenu>;
-      }
-      else {
-         controlMenuItem = <FullHeightMenuMenu position="right">
-            <FullHeightMenuItem onClick={this._openLoginModal}>Log In</FullHeightMenuItem>
-            <SingupButton primary content="Sign Up" onClick={this._openSignUpModal} />
-            <LoginModal
-               open={this.state.isLoginModalOpen}
-               onCloseClick={this._closeLoginModal}
-               onLoginSuccess={this._handleLoginSuccess} />
-         </FullHeightMenuMenu>;
-      }
-
-      const logoItem = <LogoImage src={logo} />;
+      const logoItem = <LogoImage src={logo} />,
+         controlMenuItem = <MainMenu viewer={viewer} onLogout={onLogout} onLoginSuccess={onLoginSuccess} />;
 
       return (
          <NavigationWrapper>
@@ -180,21 +123,6 @@ class Navigation extends React.Component {
          </NavigationWrapper>
       );
    }
-
-   _openLoginModal = () => {
-      localStorage.removeItem("jwtToken");
-      this.setState({ isLoginModalOpen: true });
-   }
-
-   _handleLoginSuccess = function (token) {
-      this.setState({ isLoginModalOpen: false }, this.props.onLoginSuccess(token));
-   }
-
-   _closeLoginModal = () => this.setState({ isLoginModalOpen: false });
-
-   _openSignupModal = () => this.setState({ isSignupModalOpen: true });
-
-   _closeSignupModal = () => this.setState({ isSignupModalOpen: false });
 };
 
 export default Navigation;
