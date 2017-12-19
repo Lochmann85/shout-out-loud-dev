@@ -1,5 +1,6 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
+import { compose } from 'react-apollo';
 
 import { Table } from 'semantic-ui-react';
 
@@ -129,4 +130,7 @@ class RoleTable extends React.Component {
 
 };
 
-export default queryErrorHandling(getAllRolesQuery)(deleteRoleMutation(RoleTable));
+export default compose(
+   queryErrorHandling(getAllRolesQuery),
+   deleteRoleMutation,
+)(RoleTable);

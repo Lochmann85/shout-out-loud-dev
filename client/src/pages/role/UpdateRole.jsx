@@ -1,6 +1,6 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import gql from 'graphql-tag';
+import { compose, gql } from 'react-apollo';
 
 import { SegmentBackground } from './../../assets/styled/UI';
 
@@ -88,7 +88,8 @@ class UpdateRole extends React.Component {
    _onShowError = (errors) => this.setState({ errors });
 };
 
-export default queryErrorHandling(getRoleQuery)(
+export default compose(
+   queryErrorHandling(getRoleQuery),
    queryErrorHandling({
       document: gql`
       query getAllRulesForRoleUpdateQuery {
@@ -100,4 +101,6 @@ export default queryErrorHandling(getRoleQuery)(
       config: {
          name: "getAllRulesForRoleUpdateQuery",
       }
-   })(updateRoleMutation(UpdateRole)));
+   }),
+   updateRoleMutation,
+)(UpdateRole);

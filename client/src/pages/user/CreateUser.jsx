@@ -1,5 +1,5 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import { compose, gql } from 'react-apollo';
 
 import { SegmentBackground } from './../../assets/styled/UI';
 
@@ -54,15 +54,18 @@ class CreateUser extends React.Component {
    _onShowError = (errors) => this.setState({ errors });
 };
 
-export default queryErrorHandling({
-   document: gql`
-   query getAllRolesForUserCreateQuery {
-      getAllRoles {
-         ...${createUserFragments.roles.name}
+export default compose(
+   queryErrorHandling({
+      document: gql`
+      query getAllRolesForUserCreateQuery {
+         getAllRoles {
+            ...${createUserFragments.roles.name}
+         }
       }
-   }
-   ${createUserFragments.roles.document}`,
-   config: {
-      name: "getAllRolesForUserCreateQuery",
-   }
-})(createUserMutation(CreateUser));
+      ${createUserFragments.roles.document}`,
+      config: {
+         name: "getAllRolesForUserCreateQuery",
+      }
+   }),
+   createUserMutation,
+)(CreateUser);
