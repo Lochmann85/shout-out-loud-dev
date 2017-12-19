@@ -1,8 +1,8 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import gql from 'graphql-tag';
+import { compose, gql } from 'react-apollo';
 
-import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
+import { SegmentBackground } from './../../assets/styled/UI';
 
 import BaseContentLayout from './../../components/layout/BaseContentLayout';
 import RoleForm from './components/RoleForm';
@@ -13,6 +13,7 @@ import mutationErrorHandling from './../../components/errorHandling/mutationErro
 import updateRoleFragments from './graphql/fragments/updateRole';
 import updateRoleMutation from './graphql/mutations/updateRole';
 import getRoleQuery from './graphql/queries/getRole';
+import LoadedQueryNotFoundMessage from './../../components/layout/LoadedQueryNotFoundMessage';
 
 import {
    ReadRoleChecker,
@@ -57,7 +58,9 @@ class UpdateRole extends React.Component {
       }
       else {
          title = "";
-         updateRoleContent = <InfoMessage visible content="Role could not be found." />;
+         updateRoleContent = <LoadedQueryNotFoundMessage
+            query={this.props.getRoleQuery}
+            message="Role could not be found." />;
       }
 
       return (
@@ -85,7 +88,8 @@ class UpdateRole extends React.Component {
    _onShowError = (errors) => this.setState({ errors });
 };
 
-export default queryErrorHandling(getRoleQuery)(
+export default compose(
+   queryErrorHandling(getRoleQuery),
    queryErrorHandling({
       document: gql`
       query getAllRulesForRoleUpdateQuery {
@@ -97,4 +101,6 @@ export default queryErrorHandling(getRoleQuery)(
       config: {
          name: "getAllRulesForRoleUpdateQuery",
       }
-   })(updateRoleMutation(UpdateRole)));
+   }),
+   updateRoleMutation,
+)(UpdateRole);

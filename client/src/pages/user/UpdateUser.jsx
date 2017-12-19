@@ -1,8 +1,8 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
-import gql from 'graphql-tag';
+import { compose, gql } from 'react-apollo';
 
-import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
+import { SegmentBackground } from './../../assets/styled/UI';
 
 import updateUserFragments from './graphql/fragments/updateUser';
 import BaseContentLayout from './../../components/layout/BaseContentLayout';
@@ -12,6 +12,7 @@ import updateUserMutation from './graphql/mutations/updateUser';
 import mutationErrorHandling from './../../components/errorHandling/mutationErrorHandling';
 import queryErrorHandling from './../../components/errorHandling/queryErrorHandling';
 import getUserQuery from './graphql/queries/getUser';
+import LoadedQueryNotFoundMessage from './../../components/layout/LoadedQueryNotFoundMessage';
 
 import {
    ReadUserChecker,
@@ -71,7 +72,9 @@ class UpdateUser extends React.Component {
       }
       else {
          title = "";
-         updateUserContent = <InfoMessage visible content="User could not be found." />;
+         updateUserContent = <LoadedQueryNotFoundMessage
+            query={this.props.getUserQuery}
+            message="User could not be found." />;
       }
 
       return (
@@ -103,7 +106,8 @@ class UpdateUser extends React.Component {
    _onShowError = (errors) => this.setState({ errors });
 };
 
-export default queryErrorHandling(getUserQuery)(
+export default compose(
+   queryErrorHandling(getUserQuery),
    queryErrorHandling({
       document: gql`
       query getAllRolesForUserUpdateQuery {
@@ -124,4 +128,6 @@ export default queryErrorHandling(getUserQuery)(
             }
          }
       }
-   })(updateUserMutation(UpdateUser)));
+   }),
+   updateUserMutation,
+)(UpdateUser);
