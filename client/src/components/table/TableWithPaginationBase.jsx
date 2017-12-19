@@ -4,8 +4,9 @@ import styled from 'styled-components';
 
 import { Table, Button, Dropdown } from 'semantic-ui-react';
 
-import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
+import { SegmentBackground } from './../../assets/styled/UI';
 import { BasicFlexWrapper } from './../../assets/styled/Wrapper';
+import LoadedQueryNotFoundMessage from './../../components/layout/LoadedQueryNotFoundMessage';
 
 const RightAlignedContent = styled(BasicFlexWrapper) `
    -webkit-flex: 1 1 auto;
@@ -108,7 +109,9 @@ class TableWithPaginationBase extends React.Component {
          );
       }
       else {
-         return <InfoMessage visible content={noEntriesFoundComment} />;
+         return <LoadedQueryNotFoundMessage
+            query={this.props.query}
+            message={noEntriesFoundComment} />;
       }
    };
 

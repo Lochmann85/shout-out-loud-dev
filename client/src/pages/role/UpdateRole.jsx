@@ -2,7 +2,7 @@ import React from 'react';
 import { propType } from 'graphql-anywhere';
 import gql from 'graphql-tag';
 
-import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
+import { SegmentBackground } from './../../assets/styled/UI';
 
 import BaseContentLayout from './../../components/layout/BaseContentLayout';
 import RoleForm from './components/RoleForm';
@@ -13,6 +13,7 @@ import mutationErrorHandling from './../../components/errorHandling/mutationErro
 import updateRoleFragments from './graphql/fragments/updateRole';
 import updateRoleMutation from './graphql/mutations/updateRole';
 import getRoleQuery from './graphql/queries/getRole';
+import LoadedQueryNotFoundMessage from './../../components/layout/LoadedQueryNotFoundMessage';
 
 import {
    ReadRoleChecker,
@@ -57,7 +58,9 @@ class UpdateRole extends React.Component {
       }
       else {
          title = "";
-         updateRoleContent = <InfoMessage visible content="Role could not be found." />;
+         updateRoleContent = <LoadedQueryNotFoundMessage
+            query={this.props.getRoleQuery}
+            message="Role could not be found." />;
       }
 
       return (

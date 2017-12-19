@@ -97,6 +97,7 @@ class UserTable extends React.Component {
                createTableBody={this._createTableBody}
                createTableHeader={this._createTableHeader}
                numberOfColumns={3}
+               query={this.props.getAllUsersQuery}
             />
             <DeleteConfirmation
                open={this.state.openDeleteConfirmation}
