@@ -1,9 +1,10 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
+import { compose } from 'react-apollo';
 
 import { Table } from 'semantic-ui-react';
 
-import { InfoMessage, SegmentBackground } from './../../assets/styled/UI';
+import { SegmentBackground } from './../../assets/styled/UI';
 
 import DeleteConfirmation from './../../components/modal/DeleteConfirmation';
 import getAllRolesQuery from './graphql/queries/getAllRoles';
@@ -14,6 +15,7 @@ import queryErrorHandling from './../../components/errorHandling/queryErrorHandl
 import RoleTableRow from './components/RoleTableRow';
 import mutationErrorHandling from './../../components/errorHandling/mutationErrorHandling';
 import deleteRoleMutation from './graphql/mutations/deleteRole';
+import LoadedQueryNotFoundMessage from './../../components/layout/LoadedQueryNotFoundMessage';
 
 import {
    ReadRoleChecker,
@@ -40,7 +42,7 @@ class RoleTable extends React.Component {
    render() {
       const { getAllRolesQuery: { getAllRoles }, viewer } = this.props;
 
-      let TableContent = null,
+      let tableContent = null,
          selectedRole = null,
          showAddButton = false;
 
@@ -55,7 +57,7 @@ class RoleTable extends React.Component {
                onDeleteClick={this._onDeleteClick} />
          );
 
-         TableContent = <SegmentBackground>
+         tableContent = <SegmentBackground>
             <Table celled compact selectable unstackable>
                <Table.Header>
                   <Table.Row>
@@ -70,7 +72,9 @@ class RoleTable extends React.Component {
          </SegmentBackground>;
       }
       else {
-         TableContent = <InfoMessage visible content="No roles were found." />;
+         tableContent = <LoadedQueryNotFoundMessage
+            query={this.props.getAllRolesQuery}
+            message="No roles were found." />;
       }
 
       let deleteMessage = "";
@@ -87,7 +91,7 @@ class RoleTable extends React.Component {
             title="Table of all roles"
             linkUrl="/role/create"
             showAddButton={showAddButton} />}>
-            {TableContent}
+            {tableContent}
             <DeleteConfirmation
                open={this.state.openDeleteConfirmation}
                description={deleteMessage}
@@ -126,4 +130,7 @@ class RoleTable extends React.Component {
 
 };
 
-export default queryErrorHandling(getAllRolesQuery)(deleteRoleMutation(RoleTable));
+export default compose(
+   queryErrorHandling(getAllRolesQuery),
+   deleteRoleMutation,
+)(RoleTable);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { propType } from 'graphql-anywhere';
+import { compose } from 'react-apollo';
 
 import { Table } from 'semantic-ui-react';
 
@@ -97,6 +98,7 @@ class UserTable extends React.Component {
                createTableBody={this._createTableBody}
                createTableHeader={this._createTableHeader}
                numberOfColumns={3}
+               query={this.props.getAllUsersQuery}
             />
             <DeleteConfirmation
                open={this.state.openDeleteConfirmation}
@@ -136,4 +138,7 @@ class UserTable extends React.Component {
 
 };
 
-export default queryErrorHandling(getAllUsersQuery)(deleteUserMutation(UserTable));
+export default compose(
+   queryErrorHandling(getAllUsersQuery),
+   deleteUserMutation,
+)(UserTable);

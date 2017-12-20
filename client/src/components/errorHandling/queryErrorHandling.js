@@ -9,13 +9,10 @@ const queryErrorHandling = (queryDefinition) => {
       throw new Error(`FATAL ERROR: the query in the queryErrorHandling must be named`);
    }
 
+   let hasLoaded = false;
+
    return (WrappedComponent) => {
       class ErrorHandling extends React.Component {
-         constructor(props) {
-            super(props);
-
-            this.loaded = false;
-         }
 
          componentWillReceiveProps(nextProp) {
             if (nextProp[queryDefinition.config.name]) {
@@ -42,15 +39,29 @@ const queryErrorHandling = (queryDefinition) => {
          }
 
          render() {
-            const query = this.props[queryDefinition.config.name],
-               queryHasError = query && query.error ? true : false;
-
-            if (query && (query.loading || queryHasError) && (!this.loaded || queryHasError)) {
-               this.loaded = true;
+            if (this._queryIsLoading()) {
                return <BaseLayoutLoader />;
             }
             else {
                return <WrappedComponent {...this.props} />;
+            }
+         }
+
+         _queryIsLoading = () => {
+            const query = this.props[queryDefinition.config.name];
+
+            if (query) {
+               const queryHasError = query.error ? true : false;
+
+               const isLoading = (query.loading && !hasLoaded) || queryHasError;
+               if (!query.loading && !queryHasError) {
+                  hasLoaded = true;
+               }
+
+               return isLoading;
+            }
+            else {
+               return false;
             }
          }
       }
