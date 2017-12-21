@@ -22,7 +22,7 @@ const _setupSmtpTransporter = (serverConfig) => {
    if (serverConfig.isInProductionMode) {
       const transport = sendgridTransport({
          auth: {
-            api_key: serverConfig.SMTP.API_KEY,
+            api_key: serverConfig.SMTP.API_KEY, //eslint-disable-line camelcase
          }
       });
 
