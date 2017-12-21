@@ -3,6 +3,10 @@ import { addResolveFunctionsToSchema } from 'graphql-tools';
 import {
    createAccountConfirmation
 } from './../../mongoDbApi/services/accountConfirmation/accountConfirmationDbService';
+import {
+   signupTemplate,
+   sendEMail
+} from './../../sendEMailApi/sendEMailService';
 
 const types = `
 input NewAccount {
@@ -20,7 +24,9 @@ const _mutationsResolver = {
    Mutation: {
       signup(_, { newAccount }, { tokenHandler }) {
          return createAccountConfirmation(newAccount, tokenHandler)
-            .then(() => true);
+            .then(accountConfirmation => {
+               return sendEMail(signupTemplate, accountConfirmation);
+            });
       },
    }
 };

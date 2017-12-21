@@ -8,6 +8,8 @@ import { buildSchema } from './graphQLApi/schema/graphQLSchemaBuilder';
 import { initializeGraphQLService } from './graphQLApi/graphQLService';
 import { initializeSubscriptionService } from './graphQLApi/subscriptionService';
 
+import { initializeEMailTransport } from './sendEMailApi/sendEMailService';
+
 import { startTimer } from './infiniteTimerApi/infiniteTimerService';
 
 initializeMongoDb(serverConfig)
@@ -18,6 +20,9 @@ initializeMongoDb(serverConfig)
    })
    .then(() => {
       return initializeSubscriptionService(serverConfig);
+   })
+   .then(() => {
+      return initializeEMailTransport(serverConfig);
    })
    .then(() => {
       return startTimer();
