@@ -6,6 +6,14 @@ const TIMER_INTERVAL = process.env.TIMER_INTERVAL || 7000,
 const serverConfig = {
    PORT: process.env.PORT || 8000,
    MONGODB_URI: process.env.MONGODB_URI || "mongodb://shout-out-loud:storage@127.0.0.1:27017/solDb",
+   isInProductionMode: process.env.NODE_ENV === "production",
+   SMTP: {
+      IP: process.env.SMTP_SERVER || "localhost",
+      PORT: process.env.SMTP_PORT || "8025",
+      USER: process.env.SENDGRID_USERNAME || "smtpUser",
+      PASSWORD: process.env.SENDGRID_PASSWORD || "pwd",
+      API_KEY: process.env.SENDGRID_API_KEY || "api_key",
+   },
 };
 
 export {
