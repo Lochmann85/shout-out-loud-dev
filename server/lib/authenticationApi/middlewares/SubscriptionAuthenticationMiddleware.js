@@ -17,6 +17,7 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
          sendResetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
          resetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
          signupMutation: new SignupTokenHandler(),
+         signupConfirmationQuery: new SignupTokenHandler(),
          default: new GraphQLTokenHandler(),
       });
       this._notAuthenticatedRequests = [
@@ -39,6 +40,10 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
          {
             operationName: "signupMutation",
             searchString: "signup"
+         },
+         {
+            operationName: "signupConfirmationQuery",
+            searchString: "signupConfirmation"
          },
          {
             operationName: "sendResetPasswordMutation",
