@@ -47,18 +47,25 @@ const duplicateErrorMessage = "There already exists a user with the given {PATH}
 userSchema.plugin(uniqueValidator, { message: duplicateErrorMessage });
 
 /**
- * @private
- * @function pre("save")
- * @description pre save middleware, hashes the password of each new user
+ * @public
+ * @function saveWithHashedPassword
+ * @param {object} userData - the new user data
+ * @description hashes the password of each new user
  */
-userSchema.pre("save", function (next) {
-   const newUser = this;
-
-   // only hash the password if it has been modified (or is new)
-   if (!newUser.isModified("password")) return next();
-
-   continueWithHashedPassword(next, newUser);
-});
+userSchema.methods.saveWithHashedPassword = function () {
+   return new Promise((resolve, reject) => {
+      continueWithHashedPassword(error => {
+         if (error) {
+            reject(error);
+         }
+         else {
+            this.save()
+               .then(resolve)
+               .catch(reject);
+         }
+      }, this);
+   });
+};
 
 /**
  * @private

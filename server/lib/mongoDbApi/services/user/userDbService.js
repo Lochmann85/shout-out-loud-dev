@@ -82,7 +82,7 @@ const createUser = (userData) => {
    }
    const user = new userModel(userData); // eslint-disable-line new-cap
 
-   return user.save().then(newUser => {
+   return user.saveWithHashedPassword().then(newUser => {
       return findUserById(newUser.id);
    }).catch(convertMongooseError);
 };
