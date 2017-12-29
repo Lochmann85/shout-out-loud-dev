@@ -77,10 +77,12 @@ const findAllUsers = () => {
  * @returns {Promise} of new user
  */
 const createUser = (userData) => {
-   userData.email = userData.email.toLowerCase();
+   if (userData.email) {
+      userData.email = userData.email.toLowerCase();
+   }
    const user = new userModel(userData); // eslint-disable-line new-cap
 
-   return user.save().then(newUser => {
+   return user.saveWithHashedPassword().then(newUser => {
       return findUserById(newUser.id);
    }).catch(convertMongooseError);
 };

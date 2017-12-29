@@ -130,7 +130,7 @@ class UserForm extends React.Component {
       }
 
       const submitButton = <ButtonWithOffset primary type="submit" content={this.props.submitButtonTitle} disabled={readOnly} />,
-         cancelButton = <CancelButton as={"a"} onClick={browserHistory.goBack} content="Cancel" />;
+         cancelButton = <CancelButton as={"a"} onClick={this._handleCancelClick} content="Cancel" />;
 
       return (
          <Form onSubmit={this._onSubmit}>
@@ -197,7 +197,15 @@ class UserForm extends React.Component {
 
    _handleChange = (event, { name, value }) => this.setState({ [name]: value });
 
-   _onPasswordChangeClick = () => this.setState({ openPasswordChangeModal: true });
+   _handleCancelClick = (event) => {
+      event.preventDefault();
+      browserHistory.goBack();
+   }
+
+   _onPasswordChangeClick = (event) => {
+      event.preventDefault();
+      this.setState({ openPasswordChangeModal: true });
+   };
 
    _onCloseClick = () => this.setState({ openPasswordChangeModal: false });
 };

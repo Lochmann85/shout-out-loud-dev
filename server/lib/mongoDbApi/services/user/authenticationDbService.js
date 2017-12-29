@@ -15,7 +15,9 @@ import { findUser } from './userDbService';
  */
 const findUserByEMail = (email) => {
    if (isEmail(email)) {
-      const userQuery = userModel.findOne({ email: email.toLowerCase() });
+      const userQuery = userModel.findOne({
+         email: email.toLowerCase()
+      });
 
       return findUser(userQuery);
    }

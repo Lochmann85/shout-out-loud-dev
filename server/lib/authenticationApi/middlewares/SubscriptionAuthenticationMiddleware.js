@@ -1,6 +1,9 @@
 import BaseAuthenticationMiddleware from './../BaseAuthenticationMiddleware';
 
-import { GraphQLTokenHandler } from './../../jwtApi/jwtService';
+import {
+   GraphQLTokenHandler,
+   SignupTokenHandler,
+} from './../../jwtApi/jwtService';
 
 class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware {
 
@@ -13,6 +16,8 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
       super({
          sendResetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
          resetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
+         signupMutation: new SignupTokenHandler(),
+         signupConfirmationQuery: new SignupTokenHandler(),
          default: new GraphQLTokenHandler(),
       });
       this._notAuthenticatedRequests = [
@@ -31,6 +36,14 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
          {
             operationName: "loginMutation",
             searchString: "login"
+         },
+         {
+            operationName: "signupMutation",
+            searchString: "signup"
+         },
+         {
+            operationName: "signupConfirmationQuery",
+            searchString: "signupConfirmation"
          },
          {
             operationName: "sendResetPasswordMutation",
@@ -74,7 +87,7 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
    _getTokenHandlerFromRequest(args, tokenHandlerMap) {
       const [schema, document, root, context, variables, operation] = args; // eslint-disable-line no-unused-vars
 
-      const tokenHandler = tokenHandlerMap.operation;
+      const tokenHandler = tokenHandlerMap[operation];
       if (tokenHandler) {
          return tokenHandler;
       }

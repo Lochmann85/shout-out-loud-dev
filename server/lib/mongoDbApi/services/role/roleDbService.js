@@ -17,6 +17,13 @@ const staticRoleError = new CustomError("StaticRole", {
 });
 
 /**
+ * @private
+ * @member staticDefaultRoleName
+ * @description name of the default role
+ */
+const staticDefaultRoleName = "whisperer";
+
+/**
  * @public
  * @function findAllRoles
  * @description looks for all roles
@@ -103,6 +110,18 @@ const updateRole = (roleData, roleId) => {
 };
 
 /**
+ * @public
+ * @function findDefaultRole
+ * @description finds the default role for a user
+ * @returns {Promise} of default role
+ */
+const findDefaultRole = () => {
+   const roleQuery = roleModel.findOne({ name: staticDefaultRoleName });
+
+   return _findRole(roleQuery);
+};
+
+/**
  * @private
  * @function _updateRelatedUser
  * @description changes the role of the users to the default one
@@ -110,9 +129,7 @@ const updateRole = (roleData, roleId) => {
  * @returns {Promise} of default role
  */
 const _updateRelatedUser = (role) => {
-   const roleQuery = roleModel.findOne({ name: "whisperer" });
-
-   return _findRole(roleQuery).then(defaultRole => {
+   return findDefaultRole().then(defaultRole => {
       const searchParams = { role: role.id },
          set = { role: defaultRole.id };
       return updateUsers(searchParams, set).then(() => defaultRole);
@@ -152,4 +169,5 @@ export {
    createRole,
    updateRole,
    deleteRole,
+   findDefaultRole,
 };

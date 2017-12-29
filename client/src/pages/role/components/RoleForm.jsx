@@ -81,13 +81,18 @@ class RoleForm extends React.Component {
                   type="submit"
                   content={this.props.submitButtonTitle}
                   disabled={readOnly} />
-               <Button as={"a"} onClick={browserHistory.goBack} content="Cancel" />
+               <Button as={"a"} onClick={this._handleCancelClick} content="Cancel" />
             </BasicFlexWrapper>
          </Form>
       );
    };
 
    _handleChange = (event, { name, value }) => this.setState({ [name]: value });
+
+   _handleCancelClick = (event) => {
+      event.preventDefault();
+      browserHistory.goBack();
+   }
 
    _onSubmit = (event) => {
       event.preventDefault();

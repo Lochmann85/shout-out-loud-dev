@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import {
-   UnauthorizedError,
-   InternalServerError,
-} from './../errorsApi';
+import { InternalServerError, } from './../errorsApi';
 
 class BaseJwtTokenHandler {
 
@@ -33,7 +30,7 @@ class BaseJwtTokenHandler {
          }
          else {
             if (error.name === "TokenExpiredError") {
-               reject(new UnauthorizedError());
+               reject(this._tokenExpiredError());
             }
             else {
                reject(new InternalServerError({
@@ -71,6 +68,16 @@ class BaseJwtTokenHandler {
          }
       });
    });
+
+   /**
+    * @protected
+    * @function _tokenExpiredError
+    * @description the error which is used when the token is expired
+    * @returns {object} error object
+    */
+   _tokenExpiredError = () => {
+      throw new Error("BaseJwtTokenHandler._tokenExpiredError has to be implemented.");
+   }
 
 };
 

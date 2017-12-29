@@ -1,47 +1,36 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import uniqueValidator from 'mongoose-unique-validator';
-import { isEmail } from 'validator';
+import {
+   emailValidation,
+   passwordValidation
+} from './../../validations';
 
 import {
    CustomError,
    InternalServerError,
    ForbiddenError
 } from './../../../errorsApi';
+import { continueWithHashedPassword } from './../../passwordEncription';
 
-const SALT_ROUNDS = 10;
-const PASSWORD_LENGTH = 6;
 const ObjectId = mongoose.Schema.Types.ObjectId;
-
-const passwordValidate = {
-   validator: function (newPassword) {
-      return (newPassword.length >= PASSWORD_LENGTH);
-   },
-   message: "The new password is not of the required length (6+)."
-};
-
-const emailValidate = {
-   validator: function (newEMail) {
-      return isEmail(newEMail);
-   },
-   message: "Please provide a correct E-Mail."
-};
 
 const userSchema = new mongoose.Schema({
    email: {
       type: String,
       required: true,
       unique: true,
-      validate: emailValidate
+      validate: emailValidation
    },
    name: {
       type: String,
       required: true,
+      unique: true,
    },
    password: {
       type: String,
       required: true,
-      validate: passwordValidate,
+      validate: passwordValidation,
    },
    resetPasswordToken: {
       type: String
@@ -53,40 +42,30 @@ const userSchema = new mongoose.Schema({
    }
 }, { timestamps: true });
 
-const duplicateErrorMessage = "There already exists a user with the given E-Mail.";
+const duplicateErrorMessage = "There already exists a user with the given {PATH}.";
 
 userSchema.plugin(uniqueValidator, { message: duplicateErrorMessage });
 
 /**
- * @private
- * @function _continueWithHashedPassword
- * @description hashes the passwor dand continues
- * @param {function} next - next step in pre mongoose middleware
- * @param {object} user - user object
- * @returns {Promise} of hash action
+ * @public
+ * @function saveWithHashedPassword
+ * @param {object} userData - the new user data
+ * @description hashes the password of each new user
  */
-const _continueWithHashedPassword = (next, user) => {
-   return bcrypt.hash(user.password, SALT_ROUNDS).then(hashedPassword => {
-      user.password = hashedPassword;
-      next();
-   }).catch(error => {
-      next(error);
+userSchema.methods.saveWithHashedPassword = function () {
+   return new Promise((resolve, reject) => {
+      continueWithHashedPassword(error => {
+         if (error) {
+            reject(error);
+         }
+         else {
+            this.save()
+               .then(resolve)
+               .catch(reject);
+         }
+      }, this);
    });
 };
-
-/**
- * @private
- * @function pre("save")
- * @description pre save middleware, hashes the password of each new user
- */
-userSchema.pre("save", function (next) {
-   const newUser = this;
-
-   // only hash the password if it has been modified (or is new)
-   if (!newUser.isModified("password")) return next();
-
-   _continueWithHashedPassword(next, newUser);
-});
 
 /**
  * @private
@@ -98,43 +77,17 @@ userSchema.pre("findOneAndUpdate", function (next) {
    this.options.context = "query";
 
    let update = this.getUpdate();
-
    if (update["$set"] && update["$set"].hasOwnProperty("password")) {
-      if (passwordValidate.validator(update["$set"].password)) {
-         _continueWithHashedPassword(next, update["$set"]);
+      if (passwordValidation.validator(update["$set"].password)) {
+         continueWithHashedPassword(next, update["$set"]);
       }
       else {
-         next({ errors: { new: { message: passwordValidate.message } } });
-      }
-   }
-   else if (update["$set"] && update["$set"].email && update["$set"].email !== "") {
-      this.options.runValidators = true;
-      if (emailValidate.validator(update["$set"].email)) {
-         return next();
-      }
-      else {
-         next({ errors: { email: { message: emailValidate.message } } });
+         next({ errors: { new: { message: passwordValidation.message } } });
       }
    }
    else {
       this.options.runValidators = true;
       return next();
-   }
-});
-
-/**
- * @private
- * @function post("findOneAndUpdate")
- * @description post findOneAndUpdate middleware,
- * if the single username validation does not pass the error message is changed
- */
-userSchema.post("findOneAndUpdate", (error, user, next) => {
-   if (error.name === "MongoError" && error.code === 11000) {
-      next({
-         errors: { name: { message: duplicateErrorMessage } }
-      });
-   } else {
-      next(error);
    }
 });
 
