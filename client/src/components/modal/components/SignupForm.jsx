@@ -10,7 +10,8 @@ class SignUpForm extends React.Component {
 
    static propTypes = {
       onSubmit: PropTypes.func.isRequired,
-      errors: errorsProps
+      errors: errorsProps,
+      readOnly: PropTypes.bool.isRequired,
    };
 
    constructor(props) {
@@ -24,6 +25,7 @@ class SignUpForm extends React.Component {
    };
 
    render() {
+      const { readOnly } = this.props;
       const errors = this.props.errors;
 
       const emailHasError = checkForErrorInInput("email", errors);
@@ -36,22 +38,30 @@ class SignUpForm extends React.Component {
                label="E-Mail"
                name="email"
                onChange={this._handleChange}
-               error={emailHasError} />
+               error={emailHasError}
+               readOnly={readOnly} />
             <Form.Input
                label="Name"
                name="name"
                onChange={this._handleChange}
-               error={nameHasError} />
+               error={nameHasError}
+               readOnly={readOnly} />
             <Form.Input
                label="Password"
                name="password"
                type="password"
                onChange={this._handleChange}
-               error={passwordHasError} />
+               error={passwordHasError}
+               readOnly={readOnly} />
             <Message error visible hidden={errors.length === 0}>
                <Message.List items={errors.map(error => error.message)} />
             </Message>
-            <Form.Field control={Button} primary type="submit" content="Create Account" />
+            <Form.Field
+               control={Button}
+               primary
+               type="submit"
+               content="Create Account"
+               disabled={readOnly} />
          </Form>
       );
    }

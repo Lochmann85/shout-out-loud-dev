@@ -29,7 +29,11 @@ class SignUpModal extends React.Component {
          <Modal size="tiny" {...others} closeIcon={<Icon name="close" onClick={this._onCloseClick} />}>
             <Modal.Header content="Sign up" />
             <Modal.Content>
-               <SignupForm onSubmit={this._onSubmit} errors={this.state.errors} />
+               <SignupForm
+                  onSubmit={this._onSubmit}
+                  errors={this.state.errors}
+                  readOnly={this.state.isConfirmationVisible}
+               />
                <Message positive visible hidden={!this.state.isConfirmationVisible} content="Please follow the instructions on the email to confirm your account." />
             </Modal.Content>
          </Modal>
