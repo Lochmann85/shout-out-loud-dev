@@ -1,8 +1,8 @@
 import BaseJwtTokenHandler from './../BaseJwtTokenHandler';
-
+import { CustomError } from './../../errorsApi';
 import { SIGNUP_JWT_SECRET } from './../../configurations';
 
-class GraphQLTokenHandler extends BaseJwtTokenHandler {
+class SignupTokenHandler extends BaseJwtTokenHandler {
 
    /**
    * @public
@@ -13,6 +13,19 @@ class GraphQLTokenHandler extends BaseJwtTokenHandler {
       super(SIGNUP_JWT_SECRET, 60 * 30 /*30 min*/);
    }
 
+   /**
+    * @protected
+    * @function _tokenExpiredError
+    * @description the error which is used when the token is expired
+    * @returns {object} error object
+    */
+   _tokenExpiredError = () => {
+      return new CustomError("SignupTokenExpired", {
+         message: "The signup E-Mail is expired. Please try again.",
+         key: "token"
+      });
+   }
+
 };
 
-export default GraphQLTokenHandler;
+export default SignupTokenHandler;
