@@ -48,7 +48,7 @@ class ShoutPreview extends React.Component {
 
    _updateFontSize() {
       let shoutFontSize;
-      if (this.props.shout) {
+      if (this.props.shout && this.shoutContainer) {
          shoutFontSize = fontSizeCalculation.calculate(this.shoutContainer, "10", this.props.shout.message);
       }
       shoutFontSize = `${shoutFontSize}px`;

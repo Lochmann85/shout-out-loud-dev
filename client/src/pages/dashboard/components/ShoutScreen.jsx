@@ -100,7 +100,7 @@ class ShoutsScreen extends React.Component {
       const currentShout = this.props.currentShoutQuery.getCurrentShout;
 
       let shoutFontSize;
-      if (currentShout) {
+      if (currentShout && this.shoutContainer) {
          shoutFontSize = fontSizeCalculation.calculate(this.shoutContainer, "60", currentShout.message);
       }
       shoutFontSize = `${shoutFontSize}px`;
