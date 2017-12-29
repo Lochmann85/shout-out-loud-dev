@@ -3,7 +3,21 @@ import {
    accountConfirmationModel
 } from './../../models';
 
+import { findDefaultRole } from './../role/roleDbService';
+
 import convertMongooseError from './../../convertMongooseToReadableError';
+
+/**
+ * @public
+ * @function findAccountConfirmation
+ * @description finds the account confirmation with the given id
+ * @param {id} accountConfirmationId - id of account confirmation
+ * @returns {Promise} of found account confirmation
+ */
+const findAccountConfirmation = (accountConfirmationId) => {
+   return accountConfirmationModel.findById(accountConfirmationId)
+      .catch(convertMongooseError);
+};
 
 /**
  * @private
@@ -34,6 +48,10 @@ const createAccountConfirmation = (newAccount, tokenHandler) => {
    const errors = {};
    let accountConfirmation = null;
 
+   if (newAccount.email) {
+      newAccount.email = newAccount.email.toLowerCase();
+   }
+
    return userModel.find({ $or: [{ email: newAccount.email }, { name: newAccount.name }] })
       .then(users => {
          if (users.findIndex(user => user.email === newAccount.email) > -1) {
@@ -47,9 +65,6 @@ const createAccountConfirmation = (newAccount, tokenHandler) => {
             };
          }
 
-         if (newAccount.email) {
-            newAccount.email = newAccount.email.toLowerCase();
-         }
          accountConfirmation = new accountConfirmationModel(newAccount); // eslint-disable-line new-cap
 
          return tokenHandler.encrypt(accountConfirmation);
@@ -81,10 +96,42 @@ const createAccountConfirmation = (newAccount, tokenHandler) => {
  */
 const deleteAccountConfirmation = (accountConfirmationId) => {
    return accountConfirmationModel.findByIdAndRemove(accountConfirmationId)
-      .catch(error => convertMongooseError(error));
+      .catch(convertMongooseError);
+};
+
+/**
+ * @public
+ * @function createUserFromAccountConfirmation
+ * @description creates a user from the account confirmation data
+ * @param {object} accountConfirmation - account confirmation
+ * @returns {Promise} of user
+ */
+const createUserFromAccountConfirmation = (accountConfirmation) => {
+   return findDefaultRole()
+      .then(defaultRole => {
+         const { email, name, password } = accountConfirmation;
+         const newUser = {
+            email,
+            name,
+            password,
+            role: defaultRole.id
+         };
+         return newUser;
+      })
+      .then(newUser => {
+         return deleteAccountConfirmation(accountConfirmation.id)
+            .then(() => newUser);
+      })
+      .then(newUser => {
+         const user = new userModel(newUser); // eslint-disable-line new-cap
+         return user.save();
+      })
+      .catch(convertMongooseError);
 };
 
 export {
+   findAccountConfirmation,
    createAccountConfirmation,
    deleteAccountConfirmation,
+   createUserFromAccountConfirmation,
 };
