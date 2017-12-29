@@ -67,7 +67,7 @@ class BaseAuthenticationMiddleware {
                      tokenHandler
                   });
                   resolve(args);
-               }).catch(error => Promise.reject(error));
+               }).catch(error => reject(error));
             }).catch(error => {
                this._checkForAllowedRequests(args, tokenHandler)
                   .then(resolve).catch(reject);
