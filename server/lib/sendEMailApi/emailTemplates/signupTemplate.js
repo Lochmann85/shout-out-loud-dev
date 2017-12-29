@@ -8,7 +8,7 @@ import { serverConfig } from './../../configurations';
  * @returns {function} generates html
  */
 export default (accountConfirmation) => {
-   const link = `http://${serverConfig.APP_URL}/signup/${accountConfirmation.confirmAccountToken}`;
+   const link = `${serverConfig.URL}/signup/${accountConfirmation.confirmAccountToken}`;
 
    return {
       subject: `Shout Out Loud signup`,

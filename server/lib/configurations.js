@@ -5,6 +5,7 @@ const TIMER_INTERVAL = process.env.TIMER_INTERVAL || 7000,
 
 const serverConfig = {
    PORT: process.env.PORT || 8000,
+   URL: process.env.URL || "http://localhost:3000",
    MONGODB_URI: process.env.MONGODB_URI || "mongodb://shout-out-loud:storage@127.0.0.1:27017/solDb",
    isInProductionMode: process.env.NODE_ENV === "production",
    SMTP: {

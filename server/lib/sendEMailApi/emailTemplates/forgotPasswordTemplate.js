@@ -8,7 +8,7 @@ import { serverConfig } from './../../configurations';
  * @returns {function} generates html
  */
 export default (user) => {
-   const link = `http://${serverConfig.APP_URL}/resetPassword/${user.resetPasswordToken}`;
+   const link = `${serverConfig.URL}/resetPassword/${user.resetPasswordToken}`;
 
    return {
       subject: `WiFli password reset`,
