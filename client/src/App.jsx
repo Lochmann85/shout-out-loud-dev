@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { graphql, gql } from 'react-apollo';
+import { graphql, gql, compose } from 'react-apollo';
 import styled from 'styled-components';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -156,12 +156,26 @@ class App extends React.Component {
 
 graphQLStore.addFragment(App.fragments.viewer);
 
-export default withRouter(graphql(
-   gql`query getViewerQuery {
-      getViewer {
-         ...${App.fragments.viewer.name}
+export default compose(
+   withRouter,
+   graphql(
+      gql`query getViewerQuery {
+         getViewer {
+            ...${App.fragments.viewer.name}
+         }
       }
-   }
-   ${App.fragments.viewer.document}`,
-   { name: "getViewerQuery" }
-)(App));
+      ${App.fragments.viewer.document}`,
+      {
+         name: "getViewerQuery",
+         skip: (ownProps) => {
+            const routerMatcher = new RouterMatcher(ownProps);
+
+            if (routerMatcher.isMatching("/signup") ||
+               routerMatcher.isMatching("/error")) {
+               return true;
+            }
+            return false;
+         }
+      }
+   )
+)(App);
