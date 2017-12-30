@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Message, Form, Button } from 'semantic-ui-react';
 
+import { BasicFlexWrapper } from './../../../assets/styled/Wrapper';
 import errorsProps from './../../../helper/errorsProps';
 import checkForErrorInInput from './../../../helper/validation';
 
@@ -56,12 +57,12 @@ class SignUpForm extends React.Component {
             <Message error visible hidden={errors.length === 0}>
                <Message.List items={errors.map(error => error.message)} />
             </Message>
-            <Form.Field
-               control={Button}
-               primary
-               type="submit"
-               content="Create Account"
-               disabled={readOnly} />
+            <BasicFlexWrapper direction="row-reverse">
+               <Button primary
+                  type="submit"
+                  content="Create Account"
+                  disabled={readOnly} />
+            </BasicFlexWrapper>
          </Form>
       );
    }
