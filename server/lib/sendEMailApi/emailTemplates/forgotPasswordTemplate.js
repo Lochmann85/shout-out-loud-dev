@@ -11,11 +11,11 @@ export default (user) => {
    const link = `${serverConfig.URL}/resetPassword/${user.resetPasswordToken}`;
 
    return {
-      subject: `WiFli password reset`,
-      html: `<h3>Hallo ${user.name}</h3>
-      <p>Klicken Sie auf den folgenden Link um ihr Password zu ändern:</p>
-      <a href="${link}">Link to reset Password</a>
+      subject: `Shout Out Loud forgot password`,
+      html: `<h3>Hello ${user.name}</h3>
+      <p>Reenter the world of thoughts with a new password.</p>
+      <a href="${link}">Click the link to change yours!</a>
       <br />
-      <p>Mit freundlichen Grüßen,<br/>Ihr Software-Team</p>`,
+      <p>Best regards,<br/>the shout-out-loud-Team</p>`,
    };
 };

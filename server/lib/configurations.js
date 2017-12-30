@@ -1,7 +1,8 @@
 const TIMER_INTERVAL = process.env.TIMER_INTERVAL || 7000,
    MAX_SHOWN_SHOUTS = process.env.MAX_SHOWN_SHOUTS || 100,
    GRAPHQL_JWT_SECRET = process.env.GRAPHQL_JWT_SECRET || "development",
-   SIGNUP_JWT_SECRET = process.env.SIGNUP_JWT_SECRET || "signup";
+   SIGNUP_JWT_SECRET = process.env.SIGNUP_JWT_SECRET || "signup",
+   FORGOT_PASSWORD_JWT_SECRET = process.env.FORGOT_PASSWORD_JWT_SECRET || "forgotPassword";
 
 const serverConfig = {
    PORT: process.env.PORT || 8000,
@@ -22,5 +23,6 @@ export {
    TIMER_INTERVAL,
    MAX_SHOWN_SHOUTS,
    GRAPHQL_JWT_SECRET,
-   SIGNUP_JWT_SECRET
+   SIGNUP_JWT_SECRET,
+   FORGOT_PASSWORD_JWT_SECRET
 };
