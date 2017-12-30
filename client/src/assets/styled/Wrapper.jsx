@@ -41,11 +41,16 @@ const BasicFlexWrapper = styled.div.attrs({ direction: props => props.direction 
    align-items: center;
 `;
 
+const TopOffsetWrapper = styled.div`
+   padding-top: 2rem;
+`;
+
 export {
    FullHeightWrapper,
    WrapperWithOffset,
    HiddenWrapper,
    TextEllipsisWrapper,
    VerticalAlignTextWrapper,
-   BasicFlexWrapper
+   BasicFlexWrapper,
+   TopOffsetWrapper
 };
