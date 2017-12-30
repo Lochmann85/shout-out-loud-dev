@@ -171,7 +171,8 @@ export default compose(
             const routerMatcher = new RouterMatcher(ownProps);
 
             if (routerMatcher.isMatching("/signup") ||
-               routerMatcher.isMatching("/error")) {
+               routerMatcher.isMatching("/error") ||
+               routerMatcher.isMatching("/resetPassword")) {
                return true;
             }
             return false;
