@@ -3,6 +3,7 @@ import BaseAuthenticationMiddleware from './../BaseAuthenticationMiddleware';
 import {
    GraphQLTokenHandler,
    SignupTokenHandler,
+   ForgotPasswordTokenHandler
 } from './../../jwtApi/jwtService';
 
 class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware {
@@ -14,8 +15,8 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
     */
    constructor() {
       super({
-         sendResetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
-         resetPasswordMutation: new GraphQLTokenHandler(), //TODO: needs different token handler
+         forgotPasswordMutation: new ForgotPasswordTokenHandler(),
+         resetPasswordMutation: new ForgotPasswordTokenHandler(),
          signupMutation: new SignupTokenHandler(),
          signupConfirmationQuery: new SignupTokenHandler(),
          default: new GraphQLTokenHandler(),
@@ -46,8 +47,8 @@ class SubscriptionAuthenticationMiddleware extends BaseAuthenticationMiddleware 
             searchString: "signupConfirmation"
          },
          {
-            operationName: "sendResetPasswordMutation",
-            searchString: "sendResetPassword"
+            operationName: "forgotPasswordMutation",
+            searchString: "forgotPassword"
          },
          {
             operationName: "resetPasswordMutation",

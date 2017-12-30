@@ -138,7 +138,13 @@ class App extends React.Component {
 
    _handleLoginSuccess = (token) => {
       localStorage.setItem("jwtToken", token);
-      this.props.getViewerQuery.refetch().catch(checkForUnauthorizedInErrors);
+      const routerMatcher = new RouterMatcher(this.props);
+      if (routerMatcher.isMatchingExactly("/")) {
+         this.props.getViewerQuery.refetch().catch(checkForUnauthorizedInErrors);
+      }
+      else {
+         browserHistory.push("/", { resetStore: true });
+      }
    };
 
    _handleLogout = () => {
@@ -171,7 +177,8 @@ export default compose(
             const routerMatcher = new RouterMatcher(ownProps);
 
             if (routerMatcher.isMatching("/signup") ||
-               routerMatcher.isMatching("/error")) {
+               routerMatcher.isMatching("/error") ||
+               routerMatcher.isMatching("/resetPassword")) {
                return true;
             }
             return false;

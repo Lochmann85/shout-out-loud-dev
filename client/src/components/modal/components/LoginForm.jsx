@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -8,15 +7,17 @@ import { Message, Form, Button } from 'semantic-ui-react';
 import errorsProps from './../../../helper/errorsProps';
 import checkForErrorInInput from './../../../helper/validation';
 
-const ForgotPasswordLink = styled(Link) `
+const ForgotPasswordLink = styled.a`
    float: right;
+   cursor: pointer;
 `;
 
 class LoginForm extends React.Component {
 
    static propTypes = {
       onSubmit: PropTypes.func.isRequired,
-      errors: errorsProps
+      errors: errorsProps,
+      onChangeToForgotPassword: PropTypes.func.isRequired,
    };
 
    constructor(props) {
@@ -42,7 +43,9 @@ class LoginForm extends React.Component {
                onChange={this._handleChange}
                error={emailHasError} />
             <Form.Input
-               label={<div>Password<ForgotPasswordLink to="/forgotPassword" tabIndex="-1">Forgot password?</ForgotPasswordLink></div>}
+               label={<div>Password<ForgotPasswordLink
+                  onClick={this.props.onChangeToForgotPassword}
+                  tabIndex="-1">Forgot password?</ForgotPasswordLink></div>}
                name="password"
                type="password"
                onChange={this._handleChange}

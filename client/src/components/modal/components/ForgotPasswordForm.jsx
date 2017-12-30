@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import { Message, Form, Button } from 'semantic-ui-react';
 
@@ -7,12 +8,17 @@ import { BasicFlexWrapper } from './../../../assets/styled/Wrapper';
 import errorsProps from './../../../helper/errorsProps';
 import checkForErrorInInput from './../../../helper/validation';
 
-class SignUpForm extends React.Component {
+const ButtonWithOffset = styled(Button) `
+   margin-left: 0.75rem!important;
+`;
+
+class ForgotPasswordForm extends React.Component {
 
    static propTypes = {
       onSubmit: PropTypes.func.isRequired,
       errors: errorsProps,
-      readOnly: PropTypes.bool.isRequired,
+      onChangeToLogin: PropTypes.func.isRequired,
+      forgotPasswordSuccess: PropTypes.bool.isRequired,
    };
 
    constructor(props) {
@@ -20,18 +26,14 @@ class SignUpForm extends React.Component {
 
       this.state = {
          email: "",
-         name: "",
-         password: "",
       };
    };
 
    render() {
-      const { readOnly } = this.props;
+      const { forgotPasswordSuccess } = this.props;
       const errors = this.props.errors;
 
       const emailHasError = checkForErrorInInput("email", errors);
-      const nameHasError = checkForErrorInInput("name", errors);
-      const passwordHasError = checkForErrorInInput("password", errors);
 
       return (
          <Form onSubmit={this._onSubmit}>
@@ -40,39 +42,33 @@ class SignUpForm extends React.Component {
                name="email"
                onChange={this._handleChange}
                error={emailHasError}
-               readOnly={readOnly} />
-            <Form.Input
-               label="Name"
-               name="name"
-               onChange={this._handleChange}
-               error={nameHasError}
-               readOnly={readOnly} />
-            <Form.Input
-               label="Password"
-               name="password"
-               type="password"
-               onChange={this._handleChange}
-               error={passwordHasError}
-               readOnly={readOnly} />
+               readOnly={forgotPasswordSuccess} />
             <Message error visible hidden={errors.length === 0}>
                <Message.List items={errors.map(error => error.message)} />
             </Message>
             <BasicFlexWrapper direction="row-reverse">
-               <Button primary
+               <ButtonWithOffset primary
                   type="submit"
-                  content="Create Account"
-                  disabled={readOnly} />
+                  content="Request E-Mail"
+                  disabled={forgotPasswordSuccess} />
+               <Button as={"a"} onClick={this._handleCancelClick} content="Cancel" />
             </BasicFlexWrapper>
+            <Message positive visible hidden={!forgotPasswordSuccess} content="Please follow the instructions on the E-Mail to reset your password." />
          </Form>
       );
    }
 
    _handleChange = (event, { name, value }) => this.setState({ [name]: value });
 
+   _handleCancelClick = (event) => {
+      event.preventDefault();
+      this.props.onChangeToLogin();
+   }
+
    _onSubmit = (event) => {
       event.preventDefault();
-      this.props.onSubmit(this.state);
+      this.props.onSubmit(this.state.email);
    };
 };
 
-export default SignUpForm;
+export default ForgotPasswordForm;

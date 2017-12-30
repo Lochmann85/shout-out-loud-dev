@@ -34,7 +34,7 @@ class SignUpModal extends React.Component {
                   errors={this.state.errors}
                   readOnly={this.state.isConfirmationVisible}
                />
-               <Message positive visible hidden={!this.state.isConfirmationVisible} content="Please follow the instructions on the email to confirm your account." />
+               <Message positive visible hidden={!this.state.isConfirmationVisible} content="Please follow the instructions on the E-Mail to confirm your account." />
             </Modal.Content>
          </Modal>
       );
